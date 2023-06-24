@@ -13,14 +13,14 @@
     "replication": {
         "read": [
             {
-                "host": "localhost:5432",
-                "username": "postgres",
+                "host": "localhost",
+                "username": "rahul",
                 "password": "2565"
             }
         ],
         "write": {
-            "host": "localhost:5432",
-            "username": "postgres",
+            "host": "localhost",
+            "username": "rahul",
             "password": "2565"
         }
     },

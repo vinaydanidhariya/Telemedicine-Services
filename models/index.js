@@ -31,8 +31,8 @@ class db {
     // }).then(() => {
     //   console.log('Database & tables created!');
     // }, error => {
-    //   Logger.error('Error while syncing database');
-    //   Logger.error(error);
+    //   console.error('Error while syncing database');
+    //   console.error(error);
     //   throw new Error('Error while syncing database');
     // });
 
