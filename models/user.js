@@ -33,11 +33,6 @@ module.exports = (sequelize, DataTypes) => {
       field: 'last_name',
       allowNull: false
     },
-    slug: {
-      type: DataTypes.TEXT,
-      field: 'slug',
-      allowNull: true
-    },
     phone: {
       type: DataTypes.TEXT,
       field: 'phone',
@@ -46,6 +41,21 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.TEXT,
       field: 'email',
+      allowNull: false
+    },
+    gender: {
+      type: DataTypes.TEXT,
+      field: 'gender',
+      allowNull: false
+    },
+    qualifications: {
+      type: DataTypes.TEXT,
+      field: 'qualifications',
+      allowNull: false
+    },
+    specializations: {
+      type: DataTypes.TEXT,
+      field: 'specializations',
       allowNull: false
     },
     password: {
@@ -64,18 +74,6 @@ module.exports = (sequelize, DataTypes) => {
       field: 'status',
       allowNull: false
     },
-    randomPassword: {
-      type: DataTypes.BOOLEAN,
-      field: 'random_password',
-      allowNull: true,
-      defaultValue: true
-    },
-    editApplication: {
-      type: DataTypes.BOOLEAN,
-      field: 'edit_application',
-      allowNull: false,
-      defaultValue: true
-    },
     createdDate: {
       type: DataTypes.DATE,
       field: 'created_date',
@@ -92,7 +90,12 @@ module.exports = (sequelize, DataTypes) => {
       field: 'type',
       // values: [Constants.USER_TYPES.USER, Constants.USER_TYPES.CUSTOMER],
       allowNull: true,
-    }
+    },
+    photo_url: {
+      type: DataTypes.TEXT,
+      field: 'photo_url',
+      allowNull: false
+    },
   }, {
     sequelize,
     timestamps: false,
