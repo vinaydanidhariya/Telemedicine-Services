@@ -13,7 +13,13 @@ class db {
     }
 
     try {
-      sequelize = new Sequelize(Config.database, Config.username, Config.password, Config);
+      sequelize = new Sequelize(Config.database, Config.username, Config.password, Config, {
+        logging: console.log,
+        logging: function (str) {
+          console.log(str);
+          // do your own logging
+        }
+      });
     } catch (error) {
       console.log(error);
       throw 'Error while connecting database';
@@ -21,13 +27,15 @@ class db {
 
     // importing all tables here
     db.User = require('./user.js')(sequelize, Sequelize.DataTypes);
+    db.WhatsappUser = require('./wa-user.js')(sequelize, Sequelize.DataTypes);
 
     // Associates all tables here
     db.User.associate(db);
+    db.WhatsappUser.associate(db);
 
     // sequelize.sync({
+    //   logging: console.log,
     //   force: false
-    //   // logging: console.log
     // }).then(() => {
     //   console.log('Database & tables created!');
     // }, error => {

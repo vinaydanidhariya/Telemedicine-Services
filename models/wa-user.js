@@ -3,7 +3,7 @@ const { Sequelize, DataTypes, Model } = require("sequelize");
 const Config = require("../config/config.json");
 
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class WhatsappUser extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -15,28 +15,48 @@ module.exports = (sequelize, DataTypes) => {
       // models.User.hasMany(models.CompanyUserRole, { foreignKey: 'userId', targetKey: 'userId', sourceKey: 'userId', as: 'userCompanyRole' });
     }
   }
-  User.init(
+  WhatsappUser.init(
     {
       userId: {
         autoIncrement: true,
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         primaryKey: true,
-        field: "user_id",
+        field: "userId",
       },
-      firstName: {
+      fullName: {
         type: DataTypes.TEXT,
-        field: "first_name",
-        allowNull: false,
+        field: "fullName",
+        allowNull: true,
       },
-      lastName: {
+      profileName: {
         type: DataTypes.TEXT,
-        field: "last_name",
-        allowNull: false,
+        field: "profileName",
+        allowNull: true,
+      },
+      wa_id: {
+        type: DataTypes.TEXT,
+        field: "wa_id",
+        allowNull: true,
       },
       phone: {
         type: DataTypes.TEXT,
         field: "phone",
+        allowNull: true,
+      },
+      USerEnterNumber: {
+        type: DataTypes.TEXT,
+        field: "USerEnterNumber",
+        allowNull: true,
+      },
+      userStat: {
+        type: DataTypes.TEXT,
+        field: "userStat",
+        allowNull: true,
+      },
+      appointmentDate: {
+        type: DataTypes.TEXT,
+        field: "appointmentDate",
         allowNull: true,
       },
       price: {
@@ -47,49 +67,37 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.TEXT,
         field: "email",
-        allowNull: false,
+        allowNull: true,
+      },
+      age: {
+        type: DataTypes.TEXT,
+        field: "age",
+        allowNull: true,
+      },
+      category: {
+        type: DataTypes.TEXT,
+        field: "category",
+        allowNull: true,
       },
       gender: {
         type: DataTypes.TEXT,
         field: "gender",
-        allowNull: false,
-      },
-      qualifications: {
-        type: DataTypes.TEXT,
-        field: "qualifications",
-        allowNull: false,
-      },
-      specializations: {
-        type: DataTypes.TEXT,
-        field: "specializations",
-        allowNull: false,
-      },
-      password: {
-        type: DataTypes.TEXT,
-        field: "password",
         allowNull: true,
       },
-      isEmailVerified: {
-        type: DataTypes.BOOLEAN,
-        field: "email_verfication_status",
+      selectedDoctor: {
+        type: DataTypes.TEXT,
+        field: "selectedDoctor",
         allowNull: true,
-        defaultValue: true,
+      },
+      appointmentTime: {
+        type: DataTypes.TEXT,
+        field: "appointmentTime",
+        allowNull: true,
       },
       status: {
         type: DataTypes.TEXT,
         field: "status",
-        allowNull: false,
-      },
-      createdDate: {
-        type: DataTypes.DATE,
-        field: "created_date",
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
-      updatedDate: {
-        type: DataTypes.DATE,
-        field: "updated_date",
-        allowNull: false,
+        allowNull: true,
       },
       type: {
         type: DataTypes.TEXT,
@@ -98,30 +106,41 @@ module.exports = (sequelize, DataTypes) => {
       },
       photo_url: {
         type: DataTypes.TEXT,
-        field: "photo_url",
-        allowNull: false,
+        field: "photoUrl",
+        allowNull: true,
+      },
+      createdDate: {
+        type: DataTypes.DATE,
+        field: "createdDate",
+        allowNull: true,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedDate: {
+        type: DataTypes.DATE,
+        field: "updatedDate",
+        allowNull: true,
       },
     },
     {
       sequelize,
       timestamps: false,
-      modelName: "User",
-      tableName: "user",
+      modelName: "WhatsappUser",
+      tableName: "wa-user",
       schema: Config.schema,
       freezeTableName: true,
       hasTrigger: true,
       indexes: [
         {
-          name: "user_pkey",
+          name: "wa-user_pkey",
           unique: true,
           fields: [
             {
-              name: "user_id",
+              name: "userId",
             },
           ],
         },
       ],
     }
   );
-  return User;
+  return WhatsappUser;
 };

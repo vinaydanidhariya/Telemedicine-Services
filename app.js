@@ -1,13 +1,18 @@
 const createError = require("http-errors");
 const express = require("express");
+var logger = require('morgan');
 const path = require("path");
+require('dotenv').config();
 const cookieParser = require("cookie-parser");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
+const whatsappRouter = require("./routes/whatsapp-webhook/whatsapp-webhook");
+const razorPayROuter = require("./routes/payment-webhook/payment-webhook");
+const paymentRouter = require("./routes/payment");
 const app = express();
 const debug = require("debug")("shreehariclinic:server");
 const http = require("http");
-const port = normalizePort(process.env.PORT || "5000");
+const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 const server = http.createServer(app);
 server.listen(port);
@@ -42,6 +47,7 @@ function onListening() {
 }
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
+app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -56,6 +62,10 @@ app.use(function (request, response, next) {
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/wa-webhook", whatsappRouter);
+app.use("/whatsapp-payment", razorPayROuter);
+app.use("/payment", paymentRouter);
+
 app.use(function (req, res, next) {
   next(createError(404));
 });
