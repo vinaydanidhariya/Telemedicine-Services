@@ -14,6 +14,7 @@ const app = express();
 const debug = require("debug")("shreehariclinic:server");
 const http = require("http");
 const port = normalizePort(process.env.PORT || "3000");
+const exphbs = require('express-handlebars');
 app.set("port", port);
 const server = http.createServer(app);
 server.listen(port);
@@ -46,8 +47,12 @@ function onListening() {
   const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   debug("Listening on " + bind);
 }
+const hbs = exphbs.create(require('./utils/helpers.js'));
+app.engine('hbs', hbs.engine);
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
+var paginate = require('handlebars-paginate');
+hbs.handlebars.registerHelper('paginate', paginate);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

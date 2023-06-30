@@ -40,7 +40,7 @@ router.post("/create-doctor", async function (req, res, next) {
       updatedDate: new Date(),
     });
 
-    res.send("respond with a resource");
+    res.send("Add user");
   } catch (error) {
     console.log(error);
   }
@@ -58,12 +58,37 @@ router.post("/doctor-list", async function (req, res, next) {
           "price",
           "specializations",
           "qualifications",
+          "photo_url",
         ],
         where: {
           specializations: department,
         },
       });
 
+      console.log(USER);
+      res.send(USER);
+    } else {
+      res.send("error");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.post("/doctor-memeber-list", async function (req, res, next) {
+  console.log(req.body);
+  try {
+    const { code, department } = req.body;
+    if (code === "778899") {
+      const USER = await db.User.findAll({
+        attributes: [
+          "userId",
+          "firstName",
+          "lastName",
+          "specializations",
+          "qualifications",
+          "photo_url",
+        ],
+      });
       console.log(USER);
       res.send(USER);
     } else {
