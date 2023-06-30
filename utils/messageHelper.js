@@ -5,6 +5,8 @@ const appSecret = process.env.APP_SECRET;
 const apiVersion = process.env.VERSION;
 const recipientNumber = process.env.RECIPIENT_PHONE_NUMBER;
 const myNumberId = process.env.PHONE_NUMBER_ID;
+const Config = require('../config/config.json');
+const Sequelize = require('sequelize');
 
 function validatePhoneNumber(phoneNumber) {
     var phoneRegex = /^\d{10}$/;
@@ -14,6 +16,7 @@ function validateName(name) {
     var nameRegex = /^[A-Za-z\s]+$/;
     return nameRegex.test(name);
 }
+
 const getTextMessageInput = (recipient, text) => {
     return ({
         "messaging_product": "whatsapp",
@@ -26,6 +29,7 @@ const getTextMessageInput = (recipient, text) => {
         }
     });
 }
+
 const generateTimeSlots = (endTime, timeSlotDuration) => {
     const slots = [];
 
@@ -79,8 +83,47 @@ let messageObject = (recipient) => {
     }
     )
 };
-
-const sendMessage = (data) => {
+function getPaymentTemplatedMessageInput(recipient, name, amount, orderId) {
+    return {
+        "messaging_product": "whatsapp",
+        "to": recipient,
+        "type": "template",
+        "template": {
+            "name": "transaction_payment_confirmation",
+            "language": {
+                "code": "en"
+            },
+            "components": [
+                {
+                    "type": "body",
+                    "parameters": [
+                        {
+                            "type": "text",
+                            "text": name
+                        },
+                        // {
+                        //     "type": "currency",
+                        //     "currency": {
+                        //         "fallback_value": "122.14",
+                        //         "code": "INR",
+                        //         "amount_1000": amount
+                        //     }
+                        // },
+                        {
+                            "type": "text",
+                            "text": amount
+                        },
+                        {
+                            "type": "text",
+                            "text": orderId
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+function sendMessage(data) {
     var config = {
         method: 'post',
         url: `https://graph.facebook.com/${process.env.VERSION}/${process.env.PHONE_NUMBER_ID}/messages`,
@@ -266,47 +309,6 @@ const handleMessage = async (message, recipientNumber) => {
     const user = await db.WhatsappUser.findOne({ where: { phone: recipientNumber } });
     console.log(user, "+++++++++++++++++++++++++++++++++++++++++++++++++++=");
     switch (user.userStat) {
-        case 'START':
-            await db.WhatsappUser.update(
-                { userStat: 'FULLNAME' },
-                { where: { phone: recipientNumber } }
-            );
-            return "What's your full name?";
-
-        case 'FULLNAME':
-            if (validateName(message)) {
-                await db.WhatsappUser.update(
-                    { userStat: 'EMAIL', fullName: message },
-                    { where: { phone: recipientNumber } }
-                );
-                return "What's your email?";
-            } else {
-                return "Enter Proper Patient Name ❌";
-            }
-
-        case 'EMAIL':
-            var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            if (mailFormat.test(message)) {
-                await db.WhatsappUser.update(
-                    { userStat: 'AGE', email: message },
-                    { where: { phone: recipientNumber } }
-                );
-                return "What is your age?";
-            } else {
-                return "Enter Proper Email Address ❌";
-            }
-
-        case 'AGE':
-            if (!isNaN(message) && message > 0 && message <= 100) {
-                await db.WhatsappUser.update(
-                    { userStat: 'PHONE_NUMBER', age: message },
-                    { where: { phone: recipientNumber } }
-                );
-                return "What's your phone number?";
-            } else {
-                return "Please Enter valid age ❌";
-            }
-
         case 'PAYMENT_DONE':
             await db.WhatsappUser.update(
                 { userStat: 'END', paymentDone: message },
@@ -566,8 +568,57 @@ const appointmentListInteractiveObject = (listOfAppointment) => {
     }
     );
 }
+const findDrList = async () => {
+    const listOfDoctor = await db.User.findAll({
+        attributes: [
+            ['user_id', 'id'],
+            [
+                Sequelize.literal("CONCAT(first_name,' ', last_name)"),
+                'title'
+            ],
+            [
+                Sequelize.literal("CONCAT(qualifications, ' - ', specializations, ' - Price ', price)"),
+                'description'
+            ],
+        ],
+        raw: true,
+        tableName: "user"
+    });
+    return listOfDoctor
+}
 
+const GetPaymentUrl = async (wa_id) => {
+    try {
+        const user = await db.WhatsappUser.findOne({ where: { wa_id } });
+        const url = Config.Razorpay.paymentCreateUrl;
+        const response = await axios(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: user
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+const transactionMessage = async (name, amount, orderId) => {
+    try {
+        const response = `*PAYMENT CONFIRMATION*
+Hello *${name}*, we have received your payment of Rs *${amount}*.
+We have sent an email to your registered email address with the following details:
+Payment ID: *${orderId}*
+`
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 module.exports = {
+    findDrList,
+    GetPaymentUrl,
     generateTimeSlots,
     sendMessage,
     getTextMessageInput,
@@ -581,7 +632,9 @@ module.exports = {
     sendListAppointmentMessage,
     validateName,
     timeSlots,
-    validatePhoneNumber
+    validatePhoneNumber,
+    transactionMessage,
+    getPaymentTemplatedMessageInput
 };
 
 

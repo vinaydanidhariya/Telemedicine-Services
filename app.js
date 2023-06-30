@@ -8,7 +8,8 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const whatsappRouter = require("./routes/whatsapp-webhook/whatsapp-webhook");
 const razorPayROuter = require("./routes/payment-webhook/payment-webhook");
-const paymentRouter = require("./routes/payment");
+// const OnboardingRouter = require('./modules/onboarding/onboarding-route');
+
 const app = express();
 const debug = require("debug")("shreehariclinic:server");
 const http = require("http");
@@ -60,11 +61,12 @@ app.use(function (request, response, next) {
   next();
 });
 app.use(express.static(path.join(__dirname, "public")));
+// app.use('/onboarding', OnboardingRouter);
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/wa-webhook", whatsappRouter);
 app.use("/whatsapp-payment", razorPayROuter);
-app.use("/payment", paymentRouter);
+
 
 app.use(function (req, res, next) {
   next(createError(404));

@@ -27,7 +27,8 @@ class db {
 
     // importing all tables here
     db.User = require('./user.js')(sequelize, Sequelize.DataTypes);
-    db.WhatsappUser = require('./wa-user.js')(sequelize, Sequelize.DataTypes);
+    db.WhatsappUser = require('./wa_user.js')(sequelize, Sequelize.DataTypes);
+    db.PaymentTransaction = require('./payment_transaction')(sequelize, Sequelize.DataTypes);
 
     // Associates all tables here
     db.User.associate(db);

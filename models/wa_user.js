@@ -22,16 +22,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
         primaryKey: true,
-        field: "userId",
+        field: "user_id",
       },
       fullName: {
         type: DataTypes.TEXT,
-        field: "fullName",
+        field: "full_name",
         allowNull: true,
       },
       profileName: {
         type: DataTypes.TEXT,
-        field: "profileName",
+        field: "profile_name",
         allowNull: true,
       },
       wa_id: {
@@ -46,17 +46,17 @@ module.exports = (sequelize, DataTypes) => {
       },
       USerEnterNumber: {
         type: DataTypes.TEXT,
-        field: "USerEnterNumber",
+        field: "user_enter_number",
         allowNull: true,
       },
       userStat: {
         type: DataTypes.TEXT,
-        field: "userStat",
+        field: "user_stat",
         allowNull: true,
       },
       appointmentDate: {
         type: DataTypes.TEXT,
-        field: "appointmentDate",
+        field: "appointment_date",
         allowNull: true,
       },
       price: {
@@ -86,17 +86,22 @@ module.exports = (sequelize, DataTypes) => {
       },
       selectedDoctor: {
         type: DataTypes.TEXT,
-        field: "selectedDoctor",
+        field: "selected_doctor",
         allowNull: true,
       },
       appointmentTime: {
         type: DataTypes.TEXT,
-        field: "appointmentTime",
+        field: "appointment_time",
         allowNull: true,
       },
       status: {
         type: DataTypes.TEXT,
         field: "status",
+        allowNull: true,
+      },
+      paymentId: {
+        type: DataTypes.TEXT,
+        field: "payment_id",
         allowNull: true,
       },
       type: {
@@ -106,18 +111,18 @@ module.exports = (sequelize, DataTypes) => {
       },
       photo_url: {
         type: DataTypes.TEXT,
-        field: "photoUrl",
+        field: "photo_url",
         allowNull: true,
       },
       createdDate: {
         type: DataTypes.DATE,
-        field: "createdDate",
+        field: "created_date",
         allowNull: true,
         defaultValue: DataTypes.NOW,
       },
       updatedDate: {
         type: DataTypes.DATE,
-        field: "updatedDate",
+        field: "updated_date",
         allowNull: true,
       },
     },
@@ -135,7 +140,7 @@ module.exports = (sequelize, DataTypes) => {
           unique: true,
           fields: [
             {
-              name: "userId",
+              name: "user_id",
             },
           ],
         },
