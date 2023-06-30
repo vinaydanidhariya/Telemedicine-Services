@@ -8,6 +8,7 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const whatsappRouter = require("./routes/whatsapp-webhook/whatsapp-webhook");
 const razorPayROuter = require("./routes/payment-webhook/payment-webhook");
+const doctorRouter =require ("./routes/doctor.js")
 // const OnboardingRouter = require('./modules/onboarding/onboarding-route');
 
 const app = express();
@@ -71,7 +72,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/wa-webhook", whatsappRouter);
 app.use("/whatsapp-payment", razorPayROuter);
-
+app.use("/doctors", doctorRouter);
 
 app.use(function (req, res, next) {
   next(createError(404));
