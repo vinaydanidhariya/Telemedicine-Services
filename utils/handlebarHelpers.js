@@ -33,7 +33,7 @@ Handlebars.registerHelper('compare', function (lvalue, rvalue, options) {
 var helpers = require('handlebars-helpers')({
     handlebars: Handlebars
 });
-var moment = require('moment');
+
 module.exports = {
     defaultLayout: 'default',
     extname: '.hbs',
@@ -107,7 +107,3 @@ module.exports = {
         }
     }
 };
-
-function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}

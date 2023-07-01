@@ -1,21 +1,22 @@
 const createError = require("http-errors");
 const express = require("express");
-var logger = require('morgan');
+const logger = require('morgan');
 const path = require("path");
+const cors = require('cors');
 require('dotenv').config();
 const cookieParser = require("cookie-parser");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const whatsappRouter = require("./routes/whatsapp-webhook/whatsapp-webhook");
 const razorPayROuter = require("./routes/payment-webhook/payment-webhook");
-const doctorRouter =require ("./routes/doctor.js")
+const doctorRouter = require("./routes/doctor.js")
 // const OnboardingRouter = require('./modules/onboarding/onboarding-route');
 
 const app = express();
 const debug = require("debug")("shreehariclinic:server");
 const http = require("http");
 const port = normalizePort(process.env.PORT || "3000");
-const exphbs = require('express-handlebars');
+let expressHandlebar = require('express-handlebars');
 app.set("port", port);
 const server = http.createServer(app);
 server.listen(port);
@@ -48,24 +49,16 @@ function onListening() {
   const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   debug("Listening on " + bind);
 }
-const hbs = exphbs.create(require('./utils/helpers.js'));
+const hbs = expressHandlebar.create(require('./utils/handlebarHelpers.js'));
+
 app.engine('hbs', hbs.engine);
 app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "hbs");
-var paginate = require('handlebars-paginate');
-hbs.handlebars.registerHelper('paginate', paginate);
+app.set('view engine', 'hbs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(function (request, response, next) {
-  response.header("Access-Control-Allow-Origin", "*");
-  response.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+app.use(cors({ origin: '*' }));
 app.use(express.static(path.join(__dirname, "public")));
 // app.use('/onboarding', OnboardingRouter);
 app.use("/", indexRouter);

@@ -1,7 +1,7 @@
 // import path from 'path';
 const { Sequelize, DataTypes, QueryInterface } = require('sequelize');
 
-const Config = require('../config/config.json');
+const Config = require('../config/config.json')[process.env.NODE_ENV];
 
 // const db = {};
 let sequelize;
