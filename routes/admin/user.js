@@ -72,17 +72,6 @@ router.post("/", function (req, res, next) {
 
 });
 
-router.get("/dashboard", authentication, function (req, res, next) {
-    try {
-        res.render("dashboard/dashboard", {
-            title: "ChildDR | Dashboard",
-            // layout: 'default'
-            sessionUser: req.user
-        });
-    } catch (error) {
-        console.log(error)
-    }
-});
 
 router.get("/logout", function (req, res, next) {
     res.clearCookie(); //clear cookie

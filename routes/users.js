@@ -86,10 +86,12 @@ router.post("/admin-doctor-list", async function (req, res, next) {
         "userId",
         "firstName",
         "lastName",
+        "email",
         "price",
         "specializations",
         "qualifications",
         "photo_url",
+        "status"
       ],
     });
     console.log(USER);

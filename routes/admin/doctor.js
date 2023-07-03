@@ -6,14 +6,14 @@ const authentication = require("../../middleware/login_module").check_auth;
 router.get("/add-doctor", authentication, async function (req, res, next) {
   try {
     res.render("doctors/add-doctor", {
-      title: "ADD-DOCTORS",
+      title: "ADD-DOCTOR",
     });
   } catch (error) {
     console.log(error);
   }
 });
 
-router.get("/list-doctors", authentication, async function (req, res, next) {
+router.get("/doctors-list", authentication, async function (req, res, next) {
   try {
     res.render("doctors/list-doctors", {
       title: "LIST-DOCTORS",

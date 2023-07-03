@@ -99,7 +99,7 @@ module.exports = (sequelize, DataTypes) => {
       photo_url: {
         type: DataTypes.TEXT,
         field: "photo_url",
-        allowNull: false,
+        allowNull: true,
       },
     },
     {

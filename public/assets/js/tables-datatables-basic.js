@@ -1,25 +1,6 @@
 "use strict";
 let fv, offCanvasEl;
 document.addEventListener("DOMContentLoaded", function (e) {
-    $(document).ready(function () {
-        $('#doctorTable').DataTable({
-            ajax: {
-                url: 'https://40018dd7c14a-6958608321302419644.ngrok-free.app/users/admin-doctor-list',
-                type: 'POST',
-                dataSrc: ''
-            },
-            columns: [
-                { data: 'userId' },
-                { data: 'firstName' },
-                { data: 'lastName' },
-                { data: 'price' },
-                { data: 'specializations' },
-                { data: 'qualifications' },
-                { data: 'photo_url' }
-            ]
-        });
-    });
-
     var t;
     t = document.getElementById("form-add-new-record"), setTimeout(() => {
         const e = document.querySelector(".create-new"),
@@ -100,7 +81,11 @@ document.addEventListener("DOMContentLoaded", function (e) {
             s = $(".dt-row-grouping"),
             n = $(".dt-multilingual"),
             r = (e.length && (l = e.DataTable({
-                ajax: assetsPath + "json/table-datatable1.json",
+                ajax: {
+                    url: '/users/admin-doctor-list',
+                    type: 'POST',
+                    dataSrc: ''
+                },
                 columns: [{
                     data: ""
                 }, {
@@ -145,42 +130,45 @@ document.addEventListener("DOMContentLoaded", function (e) {
                     targets: 2,
                     searchable: !1,
                     visible: !1
-                }, {
+                },
+                {
                     targets: 3,
                     responsivePriority: 4,
                     render: function (e, t, a, s) {
-                        var n = a.avatar,
-                            l = a.full_name,
-                            r = a.post;
-                        return '<div class="d-flex justify-content-start align-items-center user-name"><div class="avatar-wrapper"><div class="avatar me-2">' + (n ? '<img src="' + assetsPath + "img/avatars/" + n + '" alt="Avatar" class="rounded-circle">' : '<span class="avatar-initial rounded-circle bg-label-' + ["success", "danger", "warning", "info", "dark", "primary", "secondary"][Math.floor(6 * Math.random())] + '">' + (n = (((n = (l = a.full_name).match(/\b\w/g) || []).shift() || "") + (n.pop() || "")).toUpperCase()) + "</span>") + '</div></div><div class="d-flex flex-column"><span class="emp_name text-truncate">' + l + '</span><small class="emp_post text-truncate text-muted">' + r + "</small></div></div>"
+                        var n = a.photo_url,
+                            l = a.firstName + " " + a.lastName,
+                            r = a.qualifications;
+                        return '<div class="d-flex justify-content-start align-items-center user-name"><div class="avatar-wrapper"><div class="avatar me-2">' + (n ? '<img src="' + assetsPath + "img/avatars/" + "1.png" + '" alt="Avatar" class="rounded-circle">' : '<span class="avatar-initial rounded-circle bg-label-' + ["success", "danger", "warning", "info", "dark", "primary", "secondary"][Math.floor(6 * Math.random())] + '">' + (n = (((n = (l = a.full_name).match(/\b\w/g) || []).shift() || "") + (n.pop() || "")).toUpperCase()) + "</span>") + '</div></div><div class="d-flex flex-column"><span class="emp_name text-truncate">' + l + '</span><small class="emp_post text-truncate text-muted">' + r + "</small></div></div>"
                     }
-                }, {
+                },
+                {
                     responsivePriority: 1,
-                    targets: 4
-                }, {
+                    targets: 6,
+                    render: function (e, t, a, s) {
+                        var n = a.price
+                        return n
+                    }
+                },
+                {
+                    responsivePriority: 1,
+                    targets: 4,
+                    render: function (e, t, a, s) {
+                        var n = a.email
+                        return n
+                    }
+                },
+                {
                     targets: -2,
                     render: function (e, t, a, s) {
                         var a = a.status,
                             n = {
-                                1: {
-                                    title: "Current",
-                                    class: "bg-label-primary"
+                                true: {
+                                    title: "ACTIVE",
+                                    class: "bg-label-success"
                                 },
-                                2: {
-                                    title: "Professional",
-                                    class: " bg-label-success"
-                                },
-                                3: {
-                                    title: "Rejected",
+                                false: {
+                                    title: "INACTIVE",
                                     class: " bg-label-danger"
-                                },
-                                4: {
-                                    title: "Resigned",
-                                    class: " bg-label-warning"
-                                },
-                                5: {
-                                    title: "Applied",
-                                    class: " bg-label-info"
                                 }
                             };
                         return void 0 === n[a] ? e : '<span class="badge ' + n[a].class + '">' + n[a].title + "</span>"

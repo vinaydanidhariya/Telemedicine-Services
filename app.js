@@ -11,6 +11,7 @@ const usersRouter = require("./routes/users");
 const whatsappRouter = require("./routes/whatsapp-webhook/whatsapp-webhook");
 const razorPayROuter = require("./routes/payment-webhook/payment-webhook");
 const doctorRouter = require("./routes/admin/doctor.js")
+const dashboardRouter = require("./routes/admin/dashboard")
 const auth = require("./middleware/login_module");
 const Config = require('./config/config.js')
 
@@ -59,6 +60,7 @@ auth.login(app);
 // app.use('/onboarding', OnboardingRouter);
 app.use("/", indexRouter)
 app.use("/admin", adminRouter);
+app.use("/admin/dashboard", dashboardRouter);
 app.use("/users", usersRouter);
 app.use("/wa-webhook", whatsappRouter);
 app.use("/whatsapp-payment", razorPayROuter);
