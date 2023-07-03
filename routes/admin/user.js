@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require('uuid');
 
 const authentication = require("../../middleware/login_module").check_auth;
-const Config = require('../../config/config.json')[process.env.NODE_ENV]
+const Config = require('../../config/config.js')
 
 router.get("/", function (req, res, next) {
     if (req.isAuthenticated()) {
