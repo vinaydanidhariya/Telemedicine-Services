@@ -1,49 +1,42 @@
 <!-- Content wrapper -->
 <div class="content-wrapper">
     <!-- Content -->
-
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Doctors/</span> Add Doctor</h4>
-
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Doctors/</span> Add-Doctor</h4>
         <!-- Basic Layout & Basic with Icons -->
         <div class="row ">
             <!-- Basic with Icons -->
             <div class="col-xxl">
                 <div class="card mb-4">
                     <div class="card-header d-flex align-items-center justify-content-between">
-                        <h5 class="mb-0">ADD DOCTORS</h5>
+                        <h5 class="mb-0">ADD-DOCTORS</h5>
                     </div>
                     <div class="card-body ">
                         <form id="formValidationExamples" class="row g-3">
-
                             <!-- Account Details -->
-
                             <div class="col-12">
-                                <h6 class="fw-semibold">1. Account Details</h6>
+                                <h6 class="fw-semibold"></h6>
                                 <hr class="mt-0" />
                             </div>
-
-
                             <div class="col-md-6">
-                                <label class="form-label" for="formValidationName">First Name</label>
-                                <input type="text" id="formValidationName" class="form-control" placeholder="John Doe"
-                                    name="formValidationName" />
+                                <label class="form-label" for="Firstname">First Name</label>
+                                <input type="text" id="Firstname" class="form-control" placeholder="John"
+                                    name="Firstname" />
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label" for="formValidationName">Last Name</label>
-                                <input type="text" id="formValidationName" class="form-control" placeholder="John Doe"
-                                    name="formValidationName" />
+                                <label class="form-label" for="Lastname">Last Name</label>
+                                <input type="text" id="Lastname" class="form-control" placeholder="Doe"
+                                    name="Lastname" />
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label" for="formValidationEmail">Email</label>
-                                <input class="form-control" type="email" id="formValidationEmail"
-                                    name="formValidationEmail" placeholder="john.doe" />
+                                <label class="form-label" for="email">Email</label>
+                                <input class="form-control" type="text" name="email" placeholder="john.doe@dmail.com" />
                             </div>
                             <div class="col-md-6">
                                 <div class="form-password-toggle">
-                                    <label class="form-label" for="formValidationPass">Password</label>
+                                    <label class="form-label" for="password">Password</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" type="password" name="formValidationPass"
+                                        <input class="form-control" type="" name="password"
                                             placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                                             aria-describedby="multicol-password2" />
                                         <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
@@ -55,29 +48,23 @@
                                 <input type="text" id="tel" class="form-control" placeholder="Phone Number"
                                     name="tel" />
                             </div>
-
-
                             <!-- Personal Info -->
-
-                            <div class="col-12">
-                                <h6 class="mt-2 fw-semibold">2. Personal Info</h6>
+                            {{!-- <div class="col-12">
+                                <h6 class="mt-2 fw-semibold"></h6>
                                 <hr class="mt-0" />
-                            </div>
-
+                            </div> --}}
                             <div class="col-md-6">
                                 <label for="formValidationFile" class="form-label">Profile Pic</label>
-                                <input class="form-control" type="file" id="formValidationFile"
-                                    name="formValidationFile">
+                                <input class="form-control" type="file" name="myImage"
+                                    accept="image/png, image/jpg, image/jpeg" id="">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label" for="formValidationDob">DOB</label>
-                                <input type="text" class="form-control flatpickr-validation" name="formValidationDob"
-                                    id="formValidationDob" required />
+                                <label class="form-label" for="DateofBirth">DOB</label>
+                                <input type="date" class="form-control" name="DateofBirth" id="DateofBirth" />
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label" for="formValidationDob">Price</label>
-                                <input type="text" class="form-control flatpickr-validation" name="formValidationDob"
-                                    id="formValidationDob" required />
+                                <label class="form-label" for="Price">Price</label>
+                                <input type="number" class="form-control " name="Price" id="price-to" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="formValidationLang">Qualifications</label>
@@ -85,18 +72,18 @@
                                     id="formValidationLang" />
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label" for="formValidationTech">Specializations</label>
+                                <label class="form-label" for="formValidationTech">Type</label>
                                 <input class="form-control typeahead" type="text" id="formValidationTech"
                                     name="formValidationTech" autocomplete="off" />
                             </div>
-                            <div class="col-md-6">
+                            {{!-- <div class="col-md-6">
                                 <label class="form-label" for="formValidationDob">DOB</label>
                                 <input type="text" class="form-control flatpickr-validation" name="formValidationDob"
                                     id="formValidationDob" required />
-                            </div>
+                            </div> --}}
                             <div class="col-md-6">
                                 <label class="form-label">Gender</label>
-                                <div class="form-check custom mb-2">
+                                <div class="form-check custom">
                                     <input type="radio" id="formValidationGender" name="formValidationGender"
                                         class="form-check-input" />
                                     <label class="form-check-label" for="formValidationGender">Male</label>
@@ -107,19 +94,17 @@
                                     <label class="form-check-label" for="formValidationGender2">Female</label>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row pt-4">
                                 <button type="submit" name="submitButton" class="btn btn-primary">Submit</button>
                             </div>
+                        </form>
                     </div>
-                    </form>
                 </div>
             </div>
         </div>
+
     </div>
-
-</div>
-<!-- / Content -->
-
-<div class="content-backdrop fade"></div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->

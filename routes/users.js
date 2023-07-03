@@ -45,6 +45,7 @@ router.post("/create-doctor", async function (req, res, next) {
     console.log(error);
   }
 });
+
 router.post("/doctor-list", async function (req, res, next) {
   console.log(req.body);
   try {
@@ -74,6 +75,33 @@ router.post("/doctor-list", async function (req, res, next) {
     console.log(error);
   }
 });
+
+router.post("/admin-doctor-list", async function (req, res, next) {
+  console.log(req.body);
+  try {
+    const { code, department } = req.body;
+    // if (code === "778899") {
+    const USER = await db.User.findAll({
+      attributes: [
+        "userId",
+        "firstName",
+        "lastName",
+        "price",
+        "specializations",
+        "qualifications",
+        "photo_url",
+      ],
+    });
+    console.log(USER);
+    res.send(USER);
+    // } else {
+    //   res.send("error");
+    // }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 router.post("/doctor-memeber-list", async function (req, res, next) {
   console.log(req.body);
   try {

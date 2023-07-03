@@ -1,8 +1,8 @@
-import ServerResponse from '../../helpers/server-response';
-import OnboardingService from './onboarding-service';
+const ServerResponse = require('../../helpers/server-response.js');
+const OnboardingService = require('./onboarding-service');
 
 class OnboardingController {
-  async getInstance (req, res, next) {
+  async getInstance(req, res, next) {
     try {
       const response = await OnboardingService.getInstance(req, res, next);
       ServerResponse.sendOk(res, response);
@@ -11,7 +11,7 @@ class OnboardingController {
     }
   }
 
-  async signup (req, res, next) {
+  async signup(req, res, next) {
     OnboardingService.signup(req, res, next).then((response) => {
       ServerResponse.sendOk(res, response);
     }, error => {
@@ -19,7 +19,7 @@ class OnboardingController {
     });
   }
 
-  async signin (req, res, next) {
+  async signin(req, res, next) {
     OnboardingService.signin(req, res, next).then((response) => {
       ServerResponse.sendOk(res, response);
     }, error => {
@@ -27,7 +27,7 @@ class OnboardingController {
     });
   }
 
-  async refreshToken (req, res, next) {
+  async refreshToken(req, res, next) {
     OnboardingService.refreshToken(req, res, next).then((response) => {
       ServerResponse.sendOk(res, response);
     }, error => {
@@ -36,4 +36,4 @@ class OnboardingController {
   }
 }
 
-export default new OnboardingController();
+module.export = new OnboardingController();

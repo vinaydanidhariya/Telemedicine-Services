@@ -49,57 +49,46 @@
                         </g>
                     </g>
                 </svg>
-
             </span>
-            <span class="app-brand-text demo menu-text fw-bolder ms-2">Sneat</span>
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">Clinic </span>
         </a>
-
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
             <i class="bx bx-chevron-left bx-sm align-middle"></i>
         </a>
     </div>
-
     <div class="menu-inner-shadow"></div>
-
-
-
     <ul class="menu-inner py-1">
         <!-- Dashboards -->
-        <li class="menu-item {{#compare title '==' 'Dashboard'}}active{{/compare}}">
+        <li class="menu-item {{#compare title '==' 'dashboard'}}active{{/compare}}">
             <a href="/dashboard" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Dashboards">Dashboards</div>
+                <div data-i18n="Dashboard">Dashboard {{activelink}}</div>
+            </a>
+        </li>
+    <ul class="menu-inner py-1">
+        <!-- Dashboards -->
+        <li class="menu-item">
+            <a href="/doctors" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div data-i18n="doctorss">Doctors</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item ">
-                    <a href="/dashboard" class="menu-link">
-                        <div data-i18n="Analytics">Analytics</div>
+                <li class="menu-item {{#compare title '==' 'ADD-DOCTORS'}}active{{/compare}}">
+                    <a href="/doctors/add-doctor" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-plus-circle"></i>
+                        <div data-i18n="Add Doctor">Add Doctor {{activelink}}</div>
+                    </a>
+                </li>
+                <li class="menu-item {{#compare title '==' 'DOCTORS-LIST'}}active{{/compare}}">
+                    <a href="/doctors/doctors-list" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-list-ol"></i>
+                        <div data-i18n="Doctor List">Doctor List {{activelink}}</div>
                     </a>
                 </li>
             </ul>
-        </li>
-
-
-
-        <!-- Misc -->
-
-        <li class="menu-header small text-uppercase"><span class="menu-header-text">Doctor</span></li>
-        <li class="menu-item {{#compare title '==' 'ADD-DOCTORS'}}active{{/compare}}">
-            <a href="/doctors/add-doctor" target="_blank" class="menu-link" >
-                <i class="menu-icon tf-icons bx bx-plus-circle"></i>
-                <div data-i18n="Add Doctor">Add Doctor {{activelink}}</div>
-            </a>
-        </li>
-
-        <li class="menu-item ">
-            <a href="/doctors/add-doctor" target="_blank" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-list-ol"></i>
-                <div data-i18n="Doctor List">Doctor List</div>
-            </a>
-        </li>
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Misc</span></li>
         <li class="menu-item">
-            <a href="" target="_blank" class="menu-link">
+            <a href="" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-support"></i>
                 <div data-i18n="Support">Support</div>
             </a>

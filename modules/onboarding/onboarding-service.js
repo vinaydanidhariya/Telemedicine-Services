@@ -1,6 +1,6 @@
 /* eslint-disable no-async-promise-executor */
 /* eslint-disable prefer-promise-reject-errors */
-import {
+const {
   SUCCESS,
   FAILURE,
   SOMETHING_WENT_WRONG,
@@ -9,17 +9,17 @@ import {
   USER_SIGN_SUCCESSFUL,
   INVALID_PASSWORD,
   UNAUTHORIZED_USER
-} from '../../helpers/message';
-import Constants from '../../helpers/constants';
-import Logger from '../../helpers/logger';
-import db from '../../models';
-import { hash, compareHash, getJwtToken, verifyToken, deepClone, getCurentTime, getDomain } from '../../helpers/utils';
-import { first } from 'underscore';
+} = require('../../helpers/message.js');
+const Constants = require('../../helpers/constants');
+const Logger = require('../../helpers/logger.js');
+const db = require('../../models');
+const { hash, compareHash, getJwtToken, verifyToken, deepClone, getCurentTime, getDomain } = require('../../helpers/utils');
+const { first } = require('underscore');
 
 const { User, Company, CompanyUserRole } = db;
 
 class OnboardingService {
-  async getInstance (req, res, next) {
+  async getInstance(req, res, next) {
     try {
       return { message: SUCCESS, result: {} };
     } catch (error) {
@@ -28,7 +28,7 @@ class OnboardingService {
     }
   }
 
-  async signup (req, res, next) {
+  async signup(req, res, next) {
     return new Promise(async (resolve, reject) => {
       let { firstName, lastName, businessName, businessType, email, password } = req.body;
       let roleSlug = Constants.SET_ADMIN_ROLE(businessType);
@@ -121,7 +121,7 @@ class OnboardingService {
     });
   }
 
-  async signin (req, res, next) {
+  async signin(req, res, next) {
     return new Promise(async (resolve, reject) => {
       let { email, password } = req.body;
       email = email.toLowerCase();
@@ -176,7 +176,7 @@ class OnboardingService {
     });
   }
 
-  async refreshToken (req, res, next) {
+  async refreshToken(req, res, next) {
     return new Promise(async (resolve, reject) => {
       try {
         let refreshToken = req.headers.authorization;
@@ -213,13 +213,13 @@ class OnboardingService {
     });
   }
 
-  loginUserDto (user) {
+  loginUserDto(user) {
     user = deepClone(user);
     user.role = user.userCompanyRole && user.userCompanyRole.length
       ? {
-          name: first(user.userCompanyRole).userRole ? first(user.userCompanyRole).userRole.name : null,
-          slug: first(user.userCompanyRole).roleSlug
-        }
+        name: first(user.userCompanyRole).userRole ? first(user.userCompanyRole).userRole.name : null,
+        slug: first(user.userCompanyRole).roleSlug
+      }
       : null;
 
     user.company = user.userCompanyRole && user.userCompanyRole.length && user.userCompanyRole[0].roleCompany ? user.userCompanyRole[0].roleCompany : null;
@@ -230,4 +230,4 @@ class OnboardingService {
   }
 }
 
-export default new OnboardingService();
+module.export = new OnboardingService();
