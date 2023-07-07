@@ -988,29 +988,12 @@
                 $('#poiuy').append(
                     `${response.message}`
                 );
-            } else {
-                addAlert(response.message);
-            }
-        }
-    });
-</script>
-<script>
-    let data3 = {
-        code: "778899"
-    };
-    $.ajax({
-        url: '/users/wa-user',
-        type: 'post',
-        contentType: "application/json",
-        data: JSON.stringify(data3),
-        success: function (response) {
-
-            if (response.type == 'success') {
                 $('#totalpatiant').append(
                     `${response.count}`
                 );
+                console.log(response)
             } else {
-                addAlert(response.count);
+                addAlert(response.message);
             }
         }
     });
