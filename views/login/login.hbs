@@ -63,6 +63,9 @@
 </head>
 
 <body>
+    <!--alert -->
+    <div id="alerts"></div>
+
     <!-- Content -->
     <div class="authentication-wrapper authentication-cover">
         <div class="authentication-inner row m-0">
@@ -133,8 +136,9 @@
                             <span class="app-brand-text demo text-body fw-bolder">Sneat</span>
                         </a>
                     </div>
+
                     <!-- /Logo -->
-                    <h4 class="mb-2">Welcome to Sneat! 👋</h4>
+                    <h4 class="mb-2">Welcome to childDr ! 👋</h4>
                     <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
                     <form id="formAuthentication" class="mb-3" method="POST">
@@ -157,46 +161,14 @@
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="remember-me">
-                                <label class="form-check-label" for="remember-me">
-                                    Remember Me
-                                </label>
-                            </div>
-                        </div>
                         <button class="btn btn-primary d-grid w-100" id="submit">
                             Sign in
                         </button>
                     </form>
-
-                    <p class="text-center">
-                        <span>New on our platform?</span>
-                        <a href="/singup">
-                            <span>Create an account</span>
-                        </a>
-                    </p>
-
-                    <div class="divider my-4">
-                        <div class="divider-text">or</div>
-                    </div>
-
-                    <div class="d-flex justify-content-center">
-                        <a href="javascript:;" class="btn btn-icon btn-label-facebook me-3">
-                            <i class="tf-icons bx bxl-facebook"></i>
-                        </a>
-
-                        <a href="javascript:;" class="btn btn-icon btn-label-google-plus me-3">
-                            <i class="tf-icons bx bxl-google-plus"></i>
-                        </a>
-
-                        <a href="javascript:;" class="btn btn-icon btn-label-twitter">
-                            <i class="tf-icons bx bxl-twitter"></i>
-                        </a>
-                    </div>
                 </div>
             </div>
             <!-- /Login -->
+
         </div>
     </div>
 
@@ -231,30 +203,76 @@
 </body>
 
 </html>
-    <script>
-        $(document).ready(function () {
-            $('#submit').on('click', function () {
-                let data = {
-                        email: $('[name=email-username]').val(),
-                        password: $('[name=password]').val(),
-                    };
-                $.ajax({
-                    url: '/admin/',
-                    type: 'post',
-                    contentType: "application/json",
-                    data: JSON.stringify(data),
-                    success: function (response) {
-                        if (response.type == 'success') {
-                            window.location.href = "/admin/dashboard";
-                        } else {
-                            console.log(response.message)
-                            alert("Credentials are wrong !")
-                            window.location.href = "/admin/";
-                        }
+<script>
+    function addAlert(message) {
+        $('#alerts').append(
+            ` <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>`
+        );
+    }
+
+    $(document).ready(function () {
+        $('#submit').on('click', function () {
+            let data = {
+                email: $('[name=email-username]').val(),
+                password: $('[name=password]').val(),
+            };
+            $.ajax({
+                url: '/admin/',
+                type: 'post',
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    if (response.type == 'success') {
+                        $('#alerts').append(
+                            ` <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                ${response.message}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>`
+                        );
+                        window.location.href = "/admin/dashboard";
+                    } else {
+                        addAlert(response.message);
                     }
-                });
+                }
             });
         });
-    </script>
+
+
+        $('#submit').on('click', function () {
+            let data = {
+                code:"778899"
+            };
+            $.ajax({
+                url: '/users/wa-user',
+                type: 'post',
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    
+                    if (response.type == 'success') {
+                        $('#alerts').append(
+                            ` <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                ${response.message}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>`
+                        );
+                        window.location.href = "/admin/dashboard";
+                    } else {
+                        addAlert(response.message);
+                    }
+                }
+            });
+        });
+    });
+</script>
 
 <!-- beautify ignore:end -->

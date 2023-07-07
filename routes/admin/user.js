@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require('uuid');
 
 const authentication = require("../../middleware/login_module").check_auth;
-const Config = require('../../config/config.js')
+const config = require('../../config/config.js')
 
 router.get("/", function (req, res, next) {
     if (req.isAuthenticated()) {
@@ -41,18 +41,18 @@ router.post("/", function (req, res, next) {
                             type: "error",
                         });
                     } else {
-                        const token = jwt.sign(req.user, Config.JWTMaster);
+                        const token = jwt.sign(req.user, config.JWTMaster);
                         console.log(req.user);
                         const sessionId = uuidv4();
 
                         req.user.sessionId = sessionId;
-                        if (req.user.email != 'admin@admin.in') {
-                            return res.send({
-                                status: 400,
-                                message: "Login Failed! Insufficient privilages",
-                                type: "error"
-                            });
-                        }
+                        // if (req.user.email != 'admin@admin.in') {
+                        //     return res.send({
+                        //         status: 400,
+                        //         message: "Login Failed! Insufficient privilages",
+                        //         type: "error"
+                        //     });
+                        // }
                         return res.send({
                             status: 200,
                             message: "Login successful",

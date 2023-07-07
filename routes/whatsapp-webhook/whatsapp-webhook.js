@@ -53,20 +53,11 @@ router.post("/", async (req, res) => {
                         return sendWelcomeMessage(recipientNumber);
                     }
                     if (message.text.body === "Tester") {
-                        const userinfo = await db.WhatsappUser.findOne(
-                            {
-                                where: { phone: recipientNumber }
-                            })
-                        console.log(userinfo);
-                        const data = appointmentMessage(userinfo.fullName, userinfo.appointmentDate, userinfo.appointmentTime)
-                        await sendRegistrationMessage(recipientNumber, data);
-
-                        console.log("123456789000000000000000000");
-                        const orderId = "order_M7b3PKtAPhMjAU", mobile = "1234567890", name = "Vinay", amount = "789.20"
-                        // const data = getPaymentTemplatedMessageInput(recipientNumber, name, amount, orderId)
-                        // return sendMessage(data)
-                        const message1 = await transactionMessage(name, amount, orderId);
-                        await sendRegistrationMessage(recipientNumber, message1);
+                        const RespondUrl = await GetPaymentUrl(wa_id);
+                        console.log(RespondUrl);
+                        sendRegistrationMessage(recipientNumber,
+                            `Plaese Payment at this link and confirm your appointment 
+${RespondUrl}`);
                     }
 
                     switch (user.userStat) {

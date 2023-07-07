@@ -7,8 +7,12 @@ router.get("/", function (req, res, next) {
 
 router.get("/payment", async function (req, res, next) {
   const { id } = req.query
-  if (id) {
-    res.render("payment", { orderId: id });
+if (id) {
+    res.render("payment/payment", {
+      title: "WhatsApp Payment",
+      layout: false,
+      orderId: id
+    });
   } else {
     res.render("payment-error");
   }

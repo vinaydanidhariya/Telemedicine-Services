@@ -2,35 +2,38 @@ var express = require("express");
 var router = express.Router();
 let Razorpay = require("razorpay");
 var crypto = require('crypto');
-const Config = require('../../config/config.json');
+const Config = require('../../config/config.json')[process.env.NODE_ENV];
 const db = require('../../models')
 const { sendRegistrationMessage, getPaymentTemplatedMessageInput, sendMessage, transactionMessage } = require('../../utils/messageHelper');
 const { appointmentMessage } = require('../../utils/messages');
 const { Transaction } = require("sequelize");
 
 router.post("/create-payment", async function (req, res, next) {
+    try {
+        let { userId, fullName, price, email, phone } = req.body
 
-    let { userId, fullName, price, email, phone } = req.body
+        var instance = new Razorpay({
+            key_id: Config.Razorpay.key_id,
+            key_secret: Config.Razorpay.key_secret,
+        });
+        let newPrice = Number(price) * 100
+        const { id } = await instance.orders.create({
+            amount: Math.floor(newPrice),
+            currency: "INR",
+            receipt: "receipt#1",
+            notes: {
+                id: userId,
+                name: fullName,
+                email: email,
+                mobile: phone
+            },
+        });
+        console.log(id)
+        res.send(`https://40018dd7c14a-6958608321302419644.ngrok-free.app/payment?id=${id}`);
+    } catch (error) {
+        console.log(error);
+    }
 
-    var instance = new Razorpay({
-        key_id: Config.Razorpay.key_id,
-        key_secret: Config.Razorpay.key_secret,
-    });
-    let newPrice = Number(price) * 100
-    const { id } = await instance.orders.create({
-        amount: Math.floor(newPrice),
-        currency: "INR",
-        receipt: "receipt#1",
-        notes: {
-            id: userId,
-            name: fullName,
-            email: email,
-            mobile: phone
-        },
-    });
-    console.log(id)
-
-    res.send(`https://40018dd7c14a-6958608321302419644.ngrok-free.app/payment?id=${id}`);
 });
 
 router.post("/payment-callback1", async function (req, res, next) {
@@ -90,7 +93,7 @@ router.post("/payment-callback1", async function (req, res, next) {
                         {
                             where: { phone: mobile }
                         })
-                        
+
                     const data1 = appointmentMessage(user_info.fullName, user_info.appointmentDate, user_info.appointmentTime)
                     await sendRegistrationMessage(mobile, data1);
                     // const messageData = getPaymentTemplatedMessageInput(mobile, name, amount, orderId)

@@ -1,18 +1,12 @@
 "use strict";
 const { Sequelize, DataTypes, Model } = require("sequelize");
-const Config = require("../config/config.json");
+const Config = require("../config/config.json")[process.env.NODE_ENV];
 
 module.exports = (sequelize, DataTypes) => {
   class WhatsappUser extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
 
     static associate(models) {
-      // define association here
-      // models.User.hasMany(models.CompanyUserRole, { foreignKey: 'userId', targetKey: 'userId', sourceKey: 'userId', as: 'userCompanyRole' });
+      
     }
   }
   WhatsappUser.init(

@@ -104,7 +104,7 @@
                 </a>
                 <ul class="menu-sub">
                     <li class="menu-item {{#compare title '==' 'DOCTORS-LIST'}}active{{/compare}}">
-                        <a href="/doctors/doctors-list" class="menu-link">
+                        <a href="/patient/patient-list" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-list-ol"></i>
                             <div data-i18n="Patient List">Patient List</div>
                         </a>
@@ -119,12 +119,19 @@
                 </a>
                 <ul class="menu-sub">
                     <li class="menu-item {{#compare title '==' 'DOCTORS-LIST'}}active{{/compare}}">
-                        <a href="/doctors/doctors-list" class="menu-link">
+                        <a href="/payment/payment-list" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-list-ol"></i>
                             <div data-i18n="Payments List">Payments List</div>
                         </a>
                     </li>
                 </ul>
+            </li>
+            <!-- Reports -->
+            <li class="menu-item {{#compare title '==' 'reports'}}active{{/compare}}">
+                <a href="/admin/dashboard/reports" class="menu-link">
+                    <i class="menu-icon tf-icons fa-solid fa-chart-line fa-xs"></i>
+                    <div data-i18n="Reports"> Reports </div>
+                </a>
             </li>
             <li class="menu-header small text-uppercase"><span class="menu-header-text">Misc</span></li>
             <li class="menu-item">

@@ -11,9 +11,11 @@ const usersRouter = require("./routes/users");
 const whatsappRouter = require("./routes/whatsapp-webhook/whatsapp-webhook");
 const razorPayROuter = require("./routes/payment-webhook/payment-webhook");
 const doctorRouter = require("./routes/admin/doctor.js")
+const patientRouter = require("./routes/admin/patient.js")
+const paymentRouter = require("./routes/admin/payment.js")
 const dashboardRouter = require("./routes/admin/dashboard")
 const auth = require("./middleware/login_module");
-const Config = require('./config/config.js')
+const config = require('./config/config.js')
 
 // const OnboardingRouter = require('./modules/onboarding/onboarding-route');
 
@@ -36,9 +38,9 @@ app.set('view engine', 'hbs');
 const session = require("express-session");
 const cookieSession = require("cookie-session");
 
-app.use(cookieSession(Config.cookie));
+app.use(cookieSession(config.cookie));
 
-app.use(session(Config.session));
+app.use(session(config.session));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -56,6 +58,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/whatsapp-payment", razorPayROuter);
 auth.login(app);
 // app.use('/onboarding', OnboardingRouter);
 app.use("/", indexRouter)
@@ -63,8 +66,9 @@ app.use("/admin", adminRouter);
 app.use("/admin/dashboard", dashboardRouter);
 app.use("/users", usersRouter);
 app.use("/wa-webhook", whatsappRouter);
-app.use("/whatsapp-payment", razorPayROuter);
 app.use("/doctors", doctorRouter);
+app.use("/patient", patientRouter);
+app.use("/payment", paymentRouter);
 
 app.use(function (req, res, next) {
   next(createError(404));

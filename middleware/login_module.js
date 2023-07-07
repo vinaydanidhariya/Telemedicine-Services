@@ -1,6 +1,6 @@
 let CryptoJS = require("crypto-js");
 const db = require('../models/')
-const Config = require('../config/config')
+const config = require('../config/config.js')
 module.exports = {
 	login: async function (app) {
 		try {
@@ -79,7 +79,7 @@ module.exports = {
 				try {
 					cipherText = CryptoJS.AES.encrypt(
 						JSON.stringify(user),
-						Config.cipher_key
+						config.cipher_key
 					).toString();
 				} catch (error) {
 					console.log(error);
@@ -92,7 +92,7 @@ module.exports = {
 				try {
 					let plaintext = CryptoJS.AES.decrypt(
 						user,
-						Config.cipher_key
+						config.cipher_key
 					);
 					data = JSON.parse(plaintext.toString(CryptoJS.enc.Utf8));
 				} catch (error) {
@@ -211,7 +211,7 @@ module.exports = {
 				try {
 					cipherText = CryptoJS.AES.encrypt(
 						JSON.stringify(user),
-						global.config.cipher_key
+						config.cipher_key
 					).toString();
 				} catch (error) {
 					console.log(error);
@@ -224,7 +224,7 @@ module.exports = {
 				try {
 					let plaintext = CryptoJS.AES.decrypt(
 						user,
-						global.config.cipher_key
+						config.cipher_key
 					);
 					data = JSON.parse(plaintext.toString(CryptoJS.enc.Utf8));
 				} catch (error) {
