@@ -1,12 +1,8 @@
 <!-- Content wrapper -->
 <div class="content-wrapper">
-
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-
-
-
         <div class="row">
             <!-- Customer Ratings -->
             <div class="col-md-6 col-lg-4 mb-4">
@@ -60,11 +56,11 @@
                 <div class="row">
                     <div class="col-sm-6 col-md-3 col-lg-6 mb-4">
                         <div class="card">
-                            <div class="card-body pb-0">
-                                <span class="d-block fw-semibold mb-1">Sessions</span>
-                                <h3 class="card-title mb-2">2,845</h3>
+                            <div class="card-body mb-3">
+                                <h5 class="mb-3">Total Doctor</h5>
+                                <h3 class="card-title mb-4" id="totaldr"></h3>
                             </div>
-                            <div id="sessionsChart" class="mb-3"></div>
+                            <div id="sessionsChart" class="mb-2"></div>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-6 mb-4">
@@ -75,21 +71,9 @@
                                         <img src="../../assets/img/icons/unicons/cube-secondary.png" alt="cube"
                                             class="rounded">
                                     </div>
-                                    <div class="dropdown">
-                                        <button class="btn p-0" type="button" id="cardOpt2" data-bs-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            <i class="bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt2">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                        </div>
-                                    </div>
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Order</span>
-                                <h4 class="card-title mb-2">$1,286</h4>
-                                <small class="text-danger fw-semibold"><i class='bx bx-down-arrow-alt'></i>
-                                    -13.24%</small>
+                                <span class="fw-semibold d-block mb-1">Total Income</span>
+                                <h4 class="card-title mb-2" id="poiuy"></h4>
                             </div>
                         </div>
                     </div>
@@ -99,13 +83,13 @@
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex flex-column">
                                         <div class="card-title mb-auto">
-                                            <h5 class="mb-0">Generated Leads</h5>
-                                            <small>Monthly Report</small>
+                                            <h5 class="mb-2">Total Patiant</h5>
+                                            <h4 class="card-title mb-2" id="totalpatiant"></h4>
                                         </div>
+                                        <div class="card-title mb-4"> </div>
                                         <div class="chart-statistics">
-                                            <h3 class="card-title mb-1">4,230</h3>
-                                            <small class="text-success text-nowrap fw-semibold"><i
-                                                    class='bx bx-up-arrow-alt'></i> +12.8%</small>
+                                            <h3 class="card-title mb-4">
+                                            </h3>
                                         </div>
                                     </div>
                                     <div id="leadsReportChart"></div>
@@ -219,7 +203,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </div>
+                        </div>reports
                         <div class="col-md-6">
                             <div class="card-header d-flex align-items-center justify-content-between mb-4">
                                 <h5 class="card-title m-0 me-2">Top Products by <span class="text-primary">Volume</span>
@@ -988,3 +972,67 @@
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
+<script src="/assets/vendor/libs/jquery/jquery.js"></script>
+<script>
+    let data = {
+        code: "778899"
+    };
+    $.ajax({
+        url: '/users/wa-user',
+        type: 'post',
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+
+            if (response.type == 'success') {
+                $('#poiuy').append(
+                    `${response.message}`
+                );
+            } else {
+                addAlert(response.message);
+            }
+        }
+    });
+</script>
+
+<script>
+    let data1 = {
+        code: "778899"
+    };
+    $.ajax({
+        url: '/users/doctor-count',
+        type: 'post',
+        contentType: "application/json",
+        data: JSON.stringify(data1),
+        success: function (response) {
+            if (response.type == 'success') {
+                $('#totaldr').append(
+                    `${response.message}`
+                );
+            } else {
+                addAlert(response.message);
+            }
+        }
+    });
+</script>
+<script>
+    let data3 = {
+        code: "778899"
+    };
+    $.ajax({
+        url: '/users/wa-user',
+        type: 'post',
+        contentType: "application/json",
+        data: JSON.stringify(data3),
+        success: function (response) {
+
+            if (response.type == 'success') {
+                $('#totalpatiant').append(
+                    `${response.count}`
+                );
+            } else {
+                addAlert(response.count);
+            }
+        }
+    });
+</script>
