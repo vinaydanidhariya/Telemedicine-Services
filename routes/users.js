@@ -91,7 +91,7 @@ router.post("/admin-doctor-list", async function (req, res, next) {
         "specializations",
         "qualifications",
         "photo_url",
-        "status"
+        "status",
       ],
     });
     console.log(USER);
@@ -99,6 +99,57 @@ router.post("/admin-doctor-list", async function (req, res, next) {
     // } else {
     //   res.send("error");
     // }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/doctor-count", async function (req, res, next) {
+  console.log(req.body);
+  try {
+    const { code, department } = req.body;
+    if (code === "778899") {
+      const USER = await db.User.findAndCountAll({});
+      console.log(USER.count);
+      const data = USER.count;
+      return res.send({
+        status: 200,
+        message: data,
+        type: "success",
+      });
+    } else {
+      res.send("error");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.post("/wa-user", async function (req, res, next) {
+  console.log(req.body);
+  try {
+    const { code, department } = req.body;
+    if (code === "778899") {
+      const USER = await db.WhatsappUser.findAndCountAll({
+        attributes: ["price"],
+      });
+      const count = USER.count;
+      console.log(count);
+      const data = USER.rows;
+      let totalIncome = 0;
+
+      for (let i = 0; i < data.length; i++) {
+        const price = parseFloat(data[i].price);
+        totalIncome += price;
+      }
+      return res.send({
+        status: 200,
+        message: totalIncome,
+        count: count,
+        type: "success",
+      });
+    } else {
+      res.send("error");
+    }
   } catch (error) {
     console.log(error);
   }
@@ -150,6 +201,14 @@ router.post("/doctor-specializations", async function (req, res, next) {
     }
   } catch (error) {
     console.log(error);
+  }
+});
+router.post("/add-whatsappuser", async (req, res) => {
+  try {
+    const newUser = await db.WhatsappUser.create(req.body);
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create a new user." });
   }
 });
 module.exports = router;
