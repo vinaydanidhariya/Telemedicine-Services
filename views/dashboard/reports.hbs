@@ -994,27 +994,6 @@
         }
     });
 </script>
-
-<script>
-    let data1 = {
-        code: "778899"
-    };
-    $.ajax({
-        url: '/users/doctor-count',
-        type: 'post',
-        contentType: "application/json",
-        data: JSON.stringify(data1),
-        success: function (response) {
-            if (response.type == 'success') {
-                $('#totaldr').append(
-                    `${response.message}`
-                );
-            } else {
-                addAlert(response.message);
-            }
-        }
-    });
-</script>
 <script>
     let data3 = {
         code: "778899"
@@ -1032,6 +1011,26 @@
                 );
             } else {
                 addAlert(response.count);
+            }
+        }
+    });
+</script>
+<script>
+    let data1 = {
+        code: "778899"
+    };
+    $.ajax({
+        url: '/users/doctor-count',
+        type: 'post',
+        contentType: "application/json",
+        data: JSON.stringify(data1),
+        success: function (response) {
+            if (response.type == 'success') {
+                $('#totaldr').append(
+                    `${response.message}`
+                );
+            } else {
+                addAlert(response.message);
             }
         }
     });
