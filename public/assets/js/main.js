@@ -69,7 +69,7 @@ document.getElementById("layout-menu") && (isHorizontalLayout = document.getElem
                         title: "Light mode",
                         fallbackPlacements: ["bottom"]
                     })),
-                    s("dark"))) : t.parentElement.remove(),
+                    s("dark"))) : t,
             "undefined" != typeof i18next && "undefined" != typeof i18NextHttpBackend && i18next.use(i18NextHttpBackend).init({
                 lng: "en",
                 debug: !1,
@@ -157,7 +157,7 @@ document.getElementById("layout-menu") && (isHorizontalLayout = document.getElem
                         window.innerWidth < window.Helpers.LAYOUT_BREAKPOINT ? document.getElementById("layout-menu") && document.getElementById("layout-menu").classList.contains("menu-horizontal") && menu.switchMenu("vertical") : document.getElementById("layout-menu") && document.getElementById("layout-menu").classList.contains("menu-vertical") && menu.switchMenu("horizontal")
                     }, 100)
             }, !0),
-            !isHorizontalLayout && !window.Helpers.isSmallScreen() && ("undefined" != typeof TemplateCustomizer && window.templateCustomizer.settings.defaultMenuCollapsed && window.Helpers.setCollapsed(!0, !1),
+            !window.Helpers.isSmallScreen() && ("undefined" != typeof TemplateCustomizer && window.templateCustomizer.settings.defaultMenuCollapsed && window.Helpers.setCollapsed(!0, !1),
                 "undefined" != typeof config) && config.enableMenuLocalStorage)
             try {
                 null !== localStorage.getItem("templateCustomizer-" + templateName + "--LayoutCollapsed") && "false" !== localStorage.getItem("templateCustomizer-" + templateName + "--LayoutCollapsed") && window.Helpers.setCollapsed("true" === localStorage.getItem("templateCustomizer-" + templateName + "--LayoutCollapsed"), !1)

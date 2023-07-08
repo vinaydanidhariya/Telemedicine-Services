@@ -254,13 +254,6 @@ const welcomeMessage = {
                     title: "No",
                 },
             },
-            {
-                type: "reply",
-                reply: {
-                    id: "welcomeIgnore",
-                    title: "Ignore",
-                },
-            },
         ],
     },
 };
@@ -582,6 +575,7 @@ const findDrList = async () => {
             ],
         ],
         raw: true,
+        limit: 10,
         tableName: "user"
     });
     return listOfDoctor

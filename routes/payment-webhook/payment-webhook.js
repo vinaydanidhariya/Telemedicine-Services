@@ -101,6 +101,10 @@ router.post("/payment-callback1", async function (req, res, next) {
                     res.status(200).send('received')
                 }
             }
+            else if (event === "payment.captured") {
+                console.log(req.body);
+                res.status(200).send('received')
+            }
         } else {
             res.status(501).send('received but unverified resp')
         }
