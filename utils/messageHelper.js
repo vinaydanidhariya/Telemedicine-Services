@@ -188,11 +188,12 @@ const timeSlots = [
         description: '15 minute duration slots'
     }
 ]
+
 const genderMessage = {
     type: "button",
     header: {
         type: "text",
-        text: "SHC 🏥",
+        text: "ChildDR 🏥",
     },
     body: {
         text: "Choose Your Gender",
@@ -215,14 +216,7 @@ const genderMessage = {
                     id: "female",
                     title: "Female",
                 },
-            },
-            {
-                type: "reply",
-                reply: {
-                    id: "other",
-                    title: "Other",
-                },
-            },
+            }
         ],
     },
 };
@@ -230,13 +224,13 @@ const welcomeMessage = {
     type: "button",
     header: {
         type: "text",
-        text: "Welcome to ChildDr",
+        text: "Welcome to ChildDr! 🏥",
     },
     body: {
         text: "Do you want to consult our Pediatrician online?",
     },
     footer: {
-        text: "Please select an option.",
+        text: "We are here to provide the best care for your child",
     },
     action: {
         buttons: [
@@ -244,14 +238,7 @@ const welcomeMessage = {
                 type: "reply",
                 reply: {
                     id: "welcomeYes",
-                    title: "Yes",
-                },
-            },
-            {
-                type: "reply",
-                reply: {
-                    id: "welcomeNo",
-                    title: "No",
+                    title: "Proceed",
                 },
             },
         ],
@@ -376,6 +363,7 @@ const buttonInteractiveObject = {
         ],
     },
 };
+
 const sendReplyButton = (reply, recipient) => {
     try {
         console.log(reply);
@@ -401,11 +389,12 @@ const sendReplyButton = (reply, recipient) => {
         console.log(error);
     }
 }
+
 const appointmentDateButtonInteractiveObject = {
     type: "button",
     header: {
         type: "text",
-        text: "SHC 🏥",
+        text: "ChildDR 🏥",
     },
     body: {
         text: `On Which Day You Want to Book Appointment`,
@@ -432,8 +421,8 @@ const appointmentDateButtonInteractiveObject = {
             {
                 type: "reply",
                 reply: {
-                    id: "dayAfterTomorrowButton",
-                    title: "Day After Tomorrow",
+                    id: "onSpecificDayButton",
+                    title: "ON SPECIFIC DAY 📅",
                 },
             },
         ],
@@ -461,6 +450,29 @@ const sendAppointmentDateReplyButton = (recipient) => {
     }
 }
 
+const sendDoctorDepartmentList = (recipient, listOfDoctorDepartment) => {
+    try {
+        let newMessageObject = messageObject(recipient)
+        console.log("before list", newMessageObject);
+
+        let newDrListInteractiveObject = DoctorDepartmentListInteractiveObject(listOfDoctorDepartment)
+        newMessageObject.interactive = newDrListInteractiveObject;
+
+        console.log("list", JSON.stringify(newMessageObject, null, 2));
+
+        axios.post(
+            `https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+            newMessageObject,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+    } catch (error) {
+        console.log(error);
+    }
+}
 const sendListDoctorMessage = (recipient, listOfDoctor) => {
     try {
         let newMessageObject = messageObject(recipient)
@@ -485,11 +497,11 @@ const sendListDoctorMessage = (recipient, listOfDoctor) => {
     }
 }
 
-const sendListAppointmentMessage = (recipient, listOfAppointment) => {
+const sendTimeListAppointmentMessage = (recipient, listOfAppointment) => {
     try {
         let newMessageObject = messageObject(recipient)
 
-        let newAppointmentListInteractiveObject = appointmentListInteractiveObject(listOfAppointment)
+        let newAppointmentListInteractiveObject = appointmentTimeListInteractiveObject(listOfAppointment)
         newMessageObject.interactive = newAppointmentListInteractiveObject;
 
         console.log("list", JSON.stringify(newMessageObject, null, 2));
@@ -508,18 +520,46 @@ const sendListAppointmentMessage = (recipient, listOfAppointment) => {
     }
 }
 
+const DoctorDepartmentListInteractiveObject = (listOfDepartment) => {
+    return ({
+        type: "list",
+        header: {
+            type: "text",
+            text: "Select the Department 🏥",
+        },
+        body: {
+            text: "Please select the department or category with which you would like to consult.",
+        },
+        footer: {
+            text: "ChildDr",
+        },
+        action: {
+            button: "Choose Department",
+            sections: [
+                {
+                    title: "Departments",
+                    rows:
+                        listOfDepartment
+                    ,
+                }
+            ],
+        },
+    }
+    );
+}
+
 const drListInteractiveObject = (listOfDoctor) => {
     return ({
         type: "list",
         header: {
             type: "text",
-            text: "Select the Doctor you would like for Appointment",
+            text: "Please choose a doctor for your appointment. 🏥",
         },
         body: {
-            text: "You will be presented with a list of options to choose from",
+            text: "Here are the available doctors 👨‍⚕️",
         },
         footer: {
-            text: "All of them are Available for you treatment",
+            text: "ChildDR",
         },
         action: {
             button: "Choose Doctor",
@@ -535,18 +575,18 @@ const drListInteractiveObject = (listOfDoctor) => {
     }
     );
 }
-const appointmentListInteractiveObject = (listOfAppointment) => {
+const appointmentTimeListInteractiveObject = (listOfAppointment) => {
     return ({
         type: "list",
         header: {
             type: "text",
-            text: "Select Appointment Time",
+            text: "Appointment Time",
         },
         body: {
-            text: "You will be presented with a list of options to choose from",
+            text: "Please select the appointment time that suits you best. ⏰",
         },
         footer: {
-            text: "Select time",
+            text: "ChildDR",
         },
         action: {
             button: "Select Time",
@@ -561,24 +601,49 @@ const appointmentListInteractiveObject = (listOfAppointment) => {
     }
     );
 }
-const findDrList = async () => {
-    const listOfDoctor = await db.User.findAll({
+const findDrList = async (department) => {
+    const listOfDoctor = await db.User.findAll(
+        {
+            where: { department },
+            attributes: [
+                ['user_id', 'id'],
+                [
+                    Sequelize.literal("CONCAT(first_name,' ', last_name)"),
+                    'title'
+                ],
+                [
+                    Sequelize.literal("CONCAT(qualifications, ' - ', department, ' - Price ', price)"),
+                    'description'
+                ],
+            ],
+            raw: true,
+            limit: 10,
+            tableName: "user"
+        });
+    return listOfDoctor
+}
+
+const findDoctorDepartmentList = async () => {
+    const listOfDepartment = await db.Department.findAll({
+        // order: [
+        //   ['department_name', 'ASC'],
+        // ],
         attributes: [
-            ['user_id', 'id'],
+            ['department_id', 'id'],
             [
-                Sequelize.literal("CONCAT(first_name,' ', last_name)"),
+                'department_name',
                 'title'
             ],
             [
-                Sequelize.literal("CONCAT(qualifications, ' - ', specializations, ' - Price ', price)"),
+                'description',
                 'description'
             ],
         ],
         raw: true,
         limit: 10,
-        tableName: "user"
+        tableName: "department"
     });
-    return listOfDoctor
+    return listOfDepartment
 }
 
 const GetPaymentUrl = async (wa_id) => {
@@ -600,9 +665,9 @@ const GetPaymentUrl = async (wa_id) => {
 
 const transactionMessage = async (name, amount, orderId) => {
     try {
-        const response = `*PAYMENT CONFIRMATION*
-Hello *${name}*, we have received your payment of Rs *${amount}*.
-We have sent an email to your registered email address with the following details:
+        const response = `*Payment Confirmation ✅*
+Hello *${name}*, we have successfully received your payment of Rs *${amount}*💰.
+An email has been sent to your registered email address with the following details:
 Payment ID: *${orderId}*
 `
         return response;
@@ -616,14 +681,16 @@ module.exports = {
     generateTimeSlots,
     sendMessage,
     getTextMessageInput,
+    findDoctorDepartmentList,
     sendListDoctorMessage,
     sendWelcomeMessage,
+    sendDoctorDepartmentList,
     handleMessage,
     sendRegistrationMessage,
     sendReplyButton,
     sendGenderSelectionMessage,
     sendAppointmentDateReplyButton,
-    sendListAppointmentMessage,
+    sendTimeListAppointmentMessage,
     validateName,
     timeSlots,
     validatePhoneNumber,

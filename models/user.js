@@ -59,9 +59,9 @@ module.exports = (sequelize, DataTypes) => {
         field: "qualifications",
         allowNull: false,
       },
-      specializations: {
+      department: {
         type: DataTypes.TEXT,
-        field: "specializations",
+        field: "department",
         allowNull: false,
       },
       password: {

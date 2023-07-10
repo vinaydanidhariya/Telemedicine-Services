@@ -14,12 +14,12 @@ router.post("/create-doctor", async function (req, res, next) {
       lastName,
       email,
       qualifications,
-      specializations,
       gender,
       price,
       password,
       photo_url,
       phone,
+      department
     } = req.body;
 
     const passwordEncrypt = convertToMd5(password);
@@ -29,7 +29,7 @@ router.post("/create-doctor", async function (req, res, next) {
       type: "DOCTOR",
       email,
       qualifications,
-      specializations,
+      department,
       gender,
       price,
       password: passwordEncrypt,
@@ -88,12 +88,12 @@ router.post("/doctor-list", async function (req, res, next) {
           "firstName",
           "lastName",
           "price",
-          "specializations",
+          "department",
           "qualifications",
           "photo_url",
         ],
         where: {
-          specializations: department,
+          department,
         },
       });
 
@@ -119,7 +119,7 @@ router.post("/admin-doctor-list", async function (req, res, next) {
         "lastName",
         "email",
         "price",
-        "specializations",
+        "department",
         "qualifications",
         "photo_url",
         "status"
@@ -201,7 +201,7 @@ router.post("/doctor-memeber-list", async function (req, res, next) {
           "userId",
           "firstName",
           "lastName",
-          "specializations",
+          "department",
           "qualifications",
           "photo_url",
         ],
@@ -216,22 +216,56 @@ router.post("/doctor-memeber-list", async function (req, res, next) {
   }
 });
 
-router.post("/doctor-specializations", async function (req, res, next) {
+router.post("/doctor-department", async function (req, res, next) {
   try {
     const { code } = req.body;
     console.log(req.body);
     if (code === "778899") {
-      const USER = await db.User.findAll({
+      const listOfDepartment = await db.Department.findAll({
+        // order: [
+        //   ['department_name', 'ASC'],
+        // ],
         attributes: [
+          ['department_id', 'id'],
           [
-            Sequelize.fn("DISTINCT", Sequelize.col("specializations")),
-            "specializations",
+            'department_name',
+            'title'
+          ],
+          [
+            'description',
+            'description'
           ],
         ],
+        raw: true,
+        limit: 10,
+        tableName: "department"
+      });
+      console.log(listOfDepartment);
+      res.send(listOfDepartment);
+    } else {
+      res.send("error");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/add-department", async function (req, res, next) {
+  try {
+    const { code, departmentName, description, status, photo_url } = req.body;
+    console.log(req.body);
+    if (code === "778899") {
+      await db.Department.create({
+        departmentName,
+        description,
+        status,
+        photo_url
+      }).then((doctor) => {
+        res.send(200, "Department created successfully:", doctor);
+      }).catch((error) => {
+        console.error('Error creating doctor:', error);
       });
 
-      console.log(USER);
-      res.send(USER);
     } else {
       res.send("error");
     }

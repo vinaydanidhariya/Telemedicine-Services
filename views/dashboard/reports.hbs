@@ -4,6 +4,65 @@
 
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row">
+            <div class="col-12 col-md-12 col-lg-4">
+                <div class="row">
+
+                    <div class="col-sm-6 col-md-3 col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-body mb-3">
+                                <h5 class="mb-3">Total Doctor</h5>
+                                <h3 class="card-title mb-4" id="totaldr"></h3>
+                            </div>
+                            <div id="sessionsChart" class="mb-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between mb-4">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../../assets/img/icons/unicons/cube-secondary.png" alt="cube"
+                                            class="rounded">
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0" type="button" id="cardOpt2" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Total Income</span>
+                                <h4 class="card-title mb-2" id="poiuy">₹ </h4>
+                                <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i>
+                                    +13.24%</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-12 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex flex-column">
+                                        <div class="card-title mb-auto">
+                                            <h5 class="mb-2">Total Patiant</h5>
+                                            <h4 class="card-title mb-2" id="totalpatiant"></h4>
+                                        </div>
+                                        <div class="card-title mb-4"> </div>
+                                        <div class="chart-statistics">
+                                            <h3 class="card-title mb-4">
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <div id="leadsReportChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
             <!-- Customer Ratings -->
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
@@ -52,53 +111,7 @@
                 </div>
             </div>
             <!--/ Overview & Sales Activity -->
-            <div class="col-12 col-md-12 col-lg-4">
-                <div class="row">
-                    <div class="col-sm-6 col-md-3 col-lg-6 mb-4">
-                        <div class="card">
-                            <div class="card-body mb-3">
-                                <h5 class="mb-3">Total Doctor</h5>
-                                <h3 class="card-title mb-4" id="totaldr"></h3>
-                            </div>
-                            <div id="sessionsChart" class="mb-2"></div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-3 col-lg-6 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title d-flex align-items-start justify-content-between mb-4">
-                                    <div class="avatar flex-shrink-0">
-                                        <img src="../../assets/img/icons/unicons/cube-secondary.png" alt="cube"
-                                            class="rounded">
-                                    </div>
-                                </div>
-                                <span class="fw-semibold d-block mb-1">Total Income</span>
-                                <h4 class="card-title mb-2" id="poiuy"></h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-12 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex flex-column">
-                                        <div class="card-title mb-auto">
-                                            <h5 class="mb-2">Total Patiant</h5>
-                                            <h4 class="card-title mb-2" id="totalpatiant"></h4>
-                                        </div>
-                                        <div class="card-title mb-4"> </div>
-                                        <div class="chart-statistics">
-                                            <h3 class="card-title mb-4">
-                                            </h3>
-                                        </div>
-                                    </div>
-                                    <div id="leadsReportChart"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
         </div>
         <div class="row">
 
@@ -204,7 +217,7 @@
                                 </ul>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <div class="card-header d-flex align-items-center justify-content-between mb-4">
                                 <h5 class="card-title m-0 me-2">Top Products by <span class="text-primary">Volume</span>

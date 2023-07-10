@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 let Razorpay = require("razorpay");
 var crypto = require('crypto');
+const moment = require('moment');
 const Config = require('../../config/config.json')[process.env.NODE_ENV];
 const db = require('../../models')
 const { sendRegistrationMessage, getPaymentTemplatedMessageInput, sendMessage, transactionMessage } = require('../../utils/messageHelper');
@@ -93,8 +94,8 @@ router.post("/payment-callback1", async function (req, res, next) {
                         {
                             where: { phone: mobile }
                         })
-
-                    const data1 = appointmentMessage(user_info.fullName, user_info.appointmentDate, user_info.appointmentTime)
+                    const formattedDate = moment(user_info.appointmentDate).format('DD/MM/YYYY');
+                    const data1 = appointmentMessage(user_info.fullName, formattedDate, user_info.appointmentTime)
                     await sendRegistrationMessage(mobile, data1);
                     // const messageData = getPaymentTemplatedMessageInput(mobile, name, amount, orderId)
                     // sendMessage(messageData);

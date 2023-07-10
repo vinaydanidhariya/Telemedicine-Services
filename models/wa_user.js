@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class WhatsappUser extends Model {
 
     static associate(models) {
-      
+
     }
   }
   WhatsappUser.init(
@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       appointmentDate: {
-        type: DataTypes.TEXT,
+        type: DataTypes.DATE,
         field: "appointment_date",
         allowNull: true,
       },
@@ -63,9 +63,9 @@ module.exports = (sequelize, DataTypes) => {
         field: "email",
         allowNull: true,
       },
-      age: {
-        type: DataTypes.TEXT,
-        field: "age",
+      dateOfBirth: {
+        type: DataTypes.DATE,
+        field: "date_of_birth",
         allowNull: true,
       },
       category: {
@@ -76,6 +76,11 @@ module.exports = (sequelize, DataTypes) => {
       gender: {
         type: DataTypes.TEXT,
         field: "gender",
+        allowNull: true,
+      },
+      department: {
+        type: DataTypes.TEXT,
+        field: "department",
         allowNull: true,
       },
       selectedDoctor: {

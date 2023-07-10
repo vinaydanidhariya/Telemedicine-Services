@@ -20,7 +20,7 @@ $(function () {
             }, {
                 data: "price"
             }, {
-                data: "specializations"
+                data: "department"
             }, {
                 data: "qualifications"
             }, {
