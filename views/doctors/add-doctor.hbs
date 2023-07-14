@@ -5,8 +5,6 @@
 <!-- Popper js -->
 <script src="/assets/vendor/libs/popper/popper.js"></script>
 
-<link rel="stylesheet" href="/assets/vendor/libs/select2/select2.css">
-
 <!-- Bootstrap js -->
 <script src="/assets/vendor/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/assets/vendor/libs/flatpickr/flatpickr.css" />
@@ -16,6 +14,9 @@
 <script type="text/javascript" src="/assets/vendor/libs/jquery/jquery.validate.js"></script>
 <link rel="stylesheet" href="/assets/vendor/libs/sweetalert2/sweetalert2.css" />
 
+<script src="/assets/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
+<script src="/assets/vendor/libs/select2/select2.js"></script>
+<link rel="stylesheet" href="/assets/vendor/libs/select2/select2.css">
 
 <div class="content-wrapper">
     <!-- Content -->
@@ -148,8 +149,6 @@
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
-<script src="/assets/vendor/libs/select2/select2.js"></script>
-<script src="/assets/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
 <script>
@@ -400,7 +399,6 @@
                         }).then(function (response) {
                             if (response.data.type === 'success') { // Check response.data.type instead of response.type
                                 Swal.fire({
-                                    position: "top-start",
                                     icon: "success",
                                     title: response.data.message,
                                     showConfirmButton: !1,
@@ -414,7 +412,6 @@
                                 });
                             } else {
                                 Swal.fire({
-                                    position: "top-start",
                                     icon: "success",
                                     title: response.data.message,
                                     showConfirmButton: !1,
