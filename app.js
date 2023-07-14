@@ -6,6 +6,7 @@ const cors = require('cors');
 require('dotenv').config();
 const cookieParser = require("cookie-parser");
 const indexRouter = require("./routes/index");
+const errorRouter = require("./routes/error.js");
 const adminRouter = require("./routes/admin/user");
 const usersRouter = require("./routes/users");
 const whatsappRouter = require("./routes/whatsapp-webhook/whatsapp-webhook");
@@ -44,7 +45,7 @@ app.use(session(config.session));
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 // app.use(cors());
 // Add headers before the routes are defined
@@ -63,6 +64,7 @@ auth.login(app);
 // app.use('/onboarding', OnboardingRouter);
 app.use("/", indexRouter)
 app.use("/admin", adminRouter);
+app.use("/error", errorRouter);
 app.use("/admin/dashboard", dashboardRouter);
 app.use("/users", usersRouter);
 app.use("/wa-webhook", whatsappRouter);
@@ -77,7 +79,7 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
   res.status(err.status || 500);
-  res.render("error");
+  res.redirect("/error")
 });
 module.exports = app;
 

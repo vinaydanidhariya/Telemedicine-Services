@@ -32,7 +32,6 @@ module.exports = {
 							raw: true
 						})
 							.then(async function (user) {
-								console.log(user, "555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555");
 								// if user not found
 								if (!user) {
 									return done(null, false, {
