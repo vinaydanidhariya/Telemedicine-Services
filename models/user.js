@@ -54,6 +54,11 @@ module.exports = (sequelize, DataTypes) => {
         field: "gender",
         allowNull: false,
       },
+      dateOfBirth: {
+        type: DataTypes.DATE,
+        field: "date_of_birth",
+        allowNull: false,
+      },
       qualifications: {
         type: DataTypes.TEXT,
         field: "qualifications",
@@ -96,7 +101,7 @@ module.exports = (sequelize, DataTypes) => {
         field: "type",
         allowNull: true,
       },
-      photo_url: {
+      photoUrl: {
         type: DataTypes.TEXT,
         field: "photo_url",
         allowNull: true,

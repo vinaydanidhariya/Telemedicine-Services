@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
         field: "phone",
         allowNull: true,
       },
-      USerEnterNumber: {
+      userEnterNumber: {
         type: DataTypes.TEXT,
         field: "user_enter_number",
         allowNull: true,

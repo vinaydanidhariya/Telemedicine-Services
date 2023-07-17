@@ -107,7 +107,7 @@ router.post("/", async (req, res) => {
                                 var NumberFormat = /^(\+\d{1,3}\s?)?(\()?\d{3}(\))?[-\s]?\d{3}[-\s]?\d{4}$/;;
                                 if (NumberFormat.test(textMessage)) {
                                     await db.WhatsappUser.update(
-                                        { userStat: 'PAYMENT-GATEWAY', email: textMessage },
+                                        { userStat: 'PAYMENT-GATEWAY', userEnterNumber: textMessage },
                                         { where: { phone: recipientNumber } }
                                     );
                                     const RespondUrl = await GetPaymentUrl(wa_id);

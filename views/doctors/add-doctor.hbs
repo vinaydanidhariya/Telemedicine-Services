@@ -1,5 +1,6 @@
 <!-- Content wrapper -->
 <!-- Jquery js -->
+<link rel="stylesheet" href="/assets/vendor/libs/select2/select2.css">
 <script type="text/javascript" src="/assets/vendor/libs/jquery/jquery.js"></script>
 
 <!-- Popper js -->
@@ -15,8 +16,7 @@
 <link rel="stylesheet" href="/assets/vendor/libs/sweetalert2/sweetalert2.css" />
 
 <script src="/assets/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
-<script src="/assets/vendor/libs/select2/select2.js"></script>
-<link rel="stylesheet" href="/assets/vendor/libs/select2/select2.css">
+<script src="/assets/vendor/libs/select2/select2.js" defer></script>
 
 <div class="content-wrapper">
     <!-- Content -->
@@ -44,25 +44,25 @@
                             <div class="col-md-6">
                                 <label class="form-label" for="formValidationFirstName">First Name</label>
                                 <input type="text" id="formValidationFirstName" class="form-control" placeholder="John"
-                                    name="formValidationFirstName" value="vinay" />
+                                    name="formValidationFirstName" />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label" for="formValidationLastName">Last Name</label>
-                                <input type="text" id="formValidationLastName" value="Danidhariya" class="form-control"
-                                    placeholder="Doe" name="formValidationLastName" />
+                                <input type="text" id="formValidationLastName" class="form-control" placeholder="Doe"
+                                    name="formValidationLastName" />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label" for="formValidationEmail">Email</label>
-                                <input class="form-control" type="text" value="vinaydanidhariya@gmail.com"
-                                    name="formValidationEmail" placeholder="abc@mail.com" />
+                                <input class="form-control" type="text" name="formValidationEmail"
+                                    placeholder="abc@mail.com" />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label" for="tel">Phone Number</label>
                                 <input type="text" id="tel" class="form-control" placeholder="Phone Number"
-                                    value="1234567890" name="formValidationMobile" />
+                                    name="formValidationMobile" />
                             </div>
 
                             <div class="col-md-6">
@@ -71,7 +71,7 @@
                                     <div class="input-group input-group-merge">
                                         <input class="form-control" type="password" name="formValidationPassword"
                                             placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                            aria-describedby="multicol-password2" value="SHC@778899" />
+                                            aria-describedby="multicol-password2" />
                                         <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                                     </div>
                                 </div>
@@ -83,7 +83,7 @@
                                     <div class="input-group input-group-merge">
                                         <input class="form-control" type="password" name="formValidationConfirmPass"
                                             placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                            aria-describedby="multicol-password2" value="SHC@778899" />
+                                            aria-describedby="multicol-password2" />
                                         <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                                     </div>
                                 </div>
@@ -98,24 +98,23 @@
                             <div class="col-md-6">
                                 <label class="form-label" for="formValidationDob">DOB</label>
                                 <input type="text" class="form-control flatpickr-validation" name="formValidationDob"
-                                    id="formValidationDob" required value="07/07/2023" />
+                                    id="formValidationDob" required />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label" for="formValidationPrice">Price</label>
                                 <input type="number" class="form-control" name="formValidationPrice"
-                                    id="formValidationPrice" value="123456" />
+                                    id="formValidationPrice" />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label" for="formValidationQualifications">Qualifications</label>
-                                <input type="text" value="MBBS" class="form-control"
-                                    name="formValidationQualifications" />
+                                <input type="text" class="form-control" name="formValidationQualifications" />
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label" for="formValidationSelect2">Department</label>
-                                <select id="formValidationSelect2" name="formValidationSelect2"
+                                <label class="form-label" for="formValidationSelectDepartment">Department</label>
+                                <select id="formValidationSelectDepartment" name="formValidationSelectDepartment"
                                     class="form-select select2" data-allow-clear="true">
                                 </select>
                             </div>
@@ -124,12 +123,12 @@
                                 <label class="form-label">Gender</label>
                                 <div class="form-check custom">
                                     <input type="radio" id="formValidationGender" name="formValidationGender"
-                                        class="form-check-input" value="Male" checked />
+                                        class="form-check-input" />
                                     <label class="form-check-label" for="formValidationGender">Male</label>
                                 </div>
                                 <div class="form-check custom">
                                     <input type="radio" id="formValidationGender2" name="formValidationGender"
-                                        class="form-check-input" value="Female" />
+                                        class="form-check-input" />
                                     <label class="form-check-label" for="formValidationGender2">Female</label>
                                 </div>
                             </div>
@@ -187,7 +186,7 @@
                 }
 
                 function populateOptions(data) {
-                    var selectElement = $('#formValidationSelect2');
+                    var selectElement = $('#formValidationSelectDepartment');
 
                     // Clear any existing options
                     selectElement.empty();
@@ -206,7 +205,7 @@
 
                 const t = document.getElementById("adduser"),
                     submitButton = document.getElementById('addDoctorSubmit'),
-                    o = jQuery(t.querySelector('[name="formValidationSelect2"]')),
+                    o = jQuery(t.querySelector('[name="formValidationSelectDepartment"]')),
                     i = jQuery(t.querySelector('[name="formValidationDepartment"]')),
                     r = FormValidation.formValidation(t, {
                         fields: {
@@ -304,10 +303,10 @@
                                     }
                                 }
                             },
-                            formValidationSelect2: {
+                            formValidationSelectDepartment: {
                                 validators: {
                                     notEmpty: {
-                                        message: "Please select your country"
+                                        message: "Please select your Department"
                                     }
                                 }
                             },
@@ -315,13 +314,6 @@
                                 validators: {
                                     notEmpty: {
                                         message: "Please add your Qualifications"
-                                    }
-                                }
-                            },
-                            formValidationDepartment: {
-                                validators: {
-                                    notEmpty: {
-                                        message: "Please select Department"
                                     }
                                 }
                             },
@@ -347,10 +339,9 @@
                                         case "formValidationMobile":
                                         case "formValidationFile":
                                         case "formValidationDob":
-                                        case "formValidationDepartment":
                                         case "formValidationPrice":
                                         case "formValidationQualifications":
-                                        case "formValidationSelect2":
+                                        case "formValidationSelectDepartment":
                                         case "formValidationGender":
                                             return ".col-md-6";
                                         case "formValidationPlan":
@@ -386,7 +377,7 @@
                         doctorFormData.append('dateOfBirth', demoForm.querySelector('[name="formValidationDob"]').value);
                         doctorFormData.append('price', demoForm.querySelector('[name="formValidationPrice"]').value);
                         doctorFormData.append('qualification', demoForm.querySelector('[name="formValidationQualifications"]').value);
-                        doctorFormData.append('department', demoForm.querySelector('[name="formValidationSelect2"]').value);
+                        doctorFormData.append('department', demoForm.querySelector('[name="formValidationSelectDepartment"]').value);
                         doctorFormData.append('gender', demoForm.querySelector('[name="formValidationGender"]').value);
                         const image = demoForm.querySelector('[name="formValidationFile"]');
                         doctorFormData.append('avatar', image.files[0]);
@@ -440,7 +431,7 @@
                         placeholder: "Select Department",
                         dropdownParent: o.parent()
                     }).on("change.select2", function () {
-                        r.revalidateField("formValidationSelect2")
+                        r.revalidateField("formValidationSelectDepartment")
                     }))
             }
         });

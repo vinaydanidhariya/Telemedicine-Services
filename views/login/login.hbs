@@ -1,18 +1,4 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <html lang="en" class="light-style  customizer-hide" dir="ltr" data-theme="theme-default" data-assets-path="/assets/"
     data-template="vertical-menu-template">
 
@@ -64,7 +50,7 @@
 
 <body>
     <!--alert -->
-    <div id="alerts"></div>
+    <div id="loginAlerts"></div>
 
     <!-- Content -->
     <div class="authentication-wrapper authentication-cover">
@@ -204,8 +190,18 @@
 
 </html>
 <script>
-    function addAlert(message) {
-        $('#alerts').append(
+    function successAlert(message) {
+        $('#loginAlerts').append(
+            ` <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>`
+        );
+    }
+    function failedAlert(message) {
+        $('#loginAlerts').append(
             ` <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     ${message}
@@ -228,46 +224,10 @@
                 data: JSON.stringify(data),
                 success: function (response) {
                     if (response.type == 'success') {
-                        $('#alerts').append(
-                            ` <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                ${response.message}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            </div>`
-                        );
+                        successAlert(response.message);
                         window.location.href = "/admin/dashboard";
                     } else {
-                        addAlert(response.message);
-                    }
-                }
-            });
-        });
-
-
-        $('#submit').on('click', function () {
-            let data = {
-                code:"778899"
-            };
-            $.ajax({
-                url: '/users/wa-user',
-                type: 'post',
-                contentType: "application/json",
-                data: JSON.stringify(data),
-                success: function (response) {
-                    
-                    if (response.type == 'success') {
-                        $('#alerts').append(
-                            ` <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                ${response.message}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            </div>`
-                        );
-                        window.location.href = "/admin/dashboard";
-                    } else {
-                        addAlert(response.message);
+                        failedAlert(response.message);
                     }
                 }
             });
