@@ -31,23 +31,25 @@ class db {
     db.PaymentTransaction = require('./payment_transaction')(sequelize, Sequelize.DataTypes);
     db.Department = require('./departments')(sequelize, Sequelize.DataTypes);
     db.Setting = require('./setting')(sequelize, Sequelize.DataTypes);
+    db.Blogs = require('./blogs')(sequelize, Sequelize.DataTypes);
 
     // Associates all tables here
     db.User.associate(db);
     db.WhatsappUser.associate(db);
     db.Department.associate(db);
     db.Setting.associate(db);
+    db.Blogs.associate(db);
 
-    // sequelize.sync({
-    //   logging: console.log,
-    //   force: false
-    // }).then(() => {
-    //   console.log('Database & tables created!');
-    // }, error => {
-    //   console.error('Error while syncing database');
-    //   console.error(error);
-    //   throw new Error('Error while syncing database');
-    // });
+    sequelize.sync({
+      logging: console.log,
+      force: false
+    }).then(() => {
+      console.log('Database & tables created!');
+    }, error => {
+      console.error('Error while syncing database');
+      console.error(error);
+      throw new Error('Error while syncing database');
+    });
 
     db.sequelize = sequelize;
     db.Sequelize = Sequelize;

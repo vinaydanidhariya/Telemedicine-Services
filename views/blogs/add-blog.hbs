@@ -32,7 +32,7 @@
                         <h5 class="mb-0">ADD-BLOGS</h5>
                     </div>
                     <div class="card-body">
-                        <form id="adduser" enctype="multipart/form-data" class="row g-3" method="post">
+                        <form id="add-blog" enctype="multipart/form-data" class="row g-3" method="post">
                             <!-- Account Details -->
                             <div class="col-12">
                                 <h6 class="fw-semibold"></h6>
@@ -45,30 +45,30 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="Title">Title</label>
-                                <input type="text" id="Title" value="" class="form-control"
-                                    placeholder="Title" name="title" />
+                                <input type="text" id="Title" value="" class="form-control" placeholder="Title"
+                                    name="title" />
                             </div>
                             <div class="col-md-6">
-                                <label for="formValidationFile" class="form-label">Profile Pic</label>
-                                <input class="form-control" type="file" name="formValidationFile"
-                                    accept="image/png, image/jpg, image/jpeg" id="formValidationFile">
+                                <label for="photo" class="form-label">Profile Pic</label>
+                                <input class="form-control" type="file" name="photo"
+                                    accept="image/png, image/jpg, image/jpeg" id="photo">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label" for="formValidationDob">Date</label>
-                                <input type="text" class="form-control flatpickr-validation" name="formValidationDob"
-                                    id="formValidationDob" required value="07/07/2023" />
+                                <label class="form-label" for="date">DOB</label>
+                                <input type="Date" class="form-control flatpickr-validation" name="date" id="date"
+                                    required />
                             </div>
                             <div class="col-mb-6">
                                 <label class="col-sm-2 col-form-label" for="basic-default-message">Message</label>
                                 <div class="col-sm-12 ">
-                                    <textarea id="basic-default-message" rows="6" name="text" class="form-control"
-                                        placeholder="Hi, Do you have a moment to talk Joe?"
+                                    <textarea id="basic-default-message" rows="6" name="description"
+                                        class="form-control" placeholder="Hi, Do you have a moment to talk Joe?"
                                         aria-label="Hi, Do you have a moment to talk Joe?"
                                         aria-describedby="basic-icon-default-message2"></textarea>
                                 </div>
                             </div>
                             <div class="row pt-4">
-                                <button type="submit" id="addblogsubmit" class="btn btn-primary" name="submitButton"
+                                <button type="submit" id="submit" class="btn btn-primary" name="submitButton"
                                     style="width: 30rem; margin: 0 auto;">Submit</button>
                             </div>
                         </form>
@@ -83,165 +83,87 @@
 <!-- Content wrapper -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
+
+<script src="/assets/vendor/libs/jquery/jquery.js"></script>
+<script src="/assets/vendor/libs/jquery/jquery.validate.js"></script>
+<script src="/assets/vendor/libs/jquery/additional-methods.min.js"></script>
 <script>
-    ! function () {
-        window.Helpers.initCustomOptionCheck();
-        var e = [].slice.call(document.querySelectorAll(".flatpickr-validation")),
-            e = (e && e.forEach(e => {
-                e.flatpickr({
-                    allowInput: !0,
-                    monthSelectorType: "static"
-                })
-            }), document.querySelectorAll(".needs-validation"));
-        Array.prototype.slice.call(e).forEach(function (a) {
-            a.addEventListener("submit", function (e) {
-                a.checkValidity() ? alert("Submitted!!!") : (e.preventDefault(), e.stopPropagation()), a.classList.add("was-validated")
-            }, !1)
-        })
-    }(),
+    $(document).ready(function () {
+        jQuery.validator.addMethod("domain", function (value, element) {
+            return this.optional(element) || /^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,}$/.test(value);
+        }, "Please specify the correct domain for your documents");
 
-        document.addEventListener("DOMContentLoaded", async function (e) {
-            {
-                function fetchData() {
+        $('#add-blog').validate({
+            rules: {
+                authorname: {
+                    required: true,
+                },
+                title: {
+                    required: true,
+                },
+                description: {
+                    required: true,
+                },
+                date: {
+                    required: true,
+                },
+                photo: {
+                    required: true,
+                },
+            },
+            messages: {
+                authorname: {
+                    required: '*Please enter author Name',
+                },
+                title: {
+                    required: '*Please enter title ',
+                },
+                description: {
+                    required: '*Please enter description',
+                },
+                date: {
+                    required: '*Please enter Date',
+                },
+                photo: {
+                    required: '*Please enter chose photo',
+                },
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).closest('.form-group').addClass(errorClass).removeClass(validClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).closest('.form-group').removeClass(errorClass).addClass(validClass);
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element);
+            },
+            submitHandler: function (form) {
+                if ($("#submit").valid()) {
+                    var blogformdata = new FormData();
+                    alert()
+
+                    blogformdata.append('authorName', $('[name=authorname]').val())
+                    blogformdata.append("title", $('[name=title]').val())
+                    blogformdata.append("description", $('[name=description]').val())
+                    blogformdata.append("date", $('[name=date]').val())
+                    const image = document.querySelector('[name="photo"]');
+                    blogformdata.append('avatar', image.files[0]);
+
+                    new Response(blogformdata).text().then(console.log)
+                    alert()
+                    alert("last")
+
                     $.ajax({
-                        url: '/doctors/doctor-department',
-                        method: 'POST',
-                        data: {
-                            code: 778899
-                        },
-                        success: function (responseData) {
-                            populateOptions(responseData);
-                        },
-                        error: function (xhr, status, error) {
-                            console.log('Request failed. Status:', status);
-                        }
-                    });
-                }
-
-                function populateOptions(data) {
-                    var selectElement = $('#formValidationSelect2');
-
-                    // Clear any existing options
-                    selectElement.empty();
-
-                    // Add a default option
-                    selectElement.append($('<option>').val("").text("Select Department"));
-
-                    // Iterate over the data and create options
-                    $.each(data, function (index, item) {
-                        var option = $('<option>').val(item.title).text(item.title);
-                        selectElement.append(option);
-                    });
-                }
-
-                fetchData()
-
-                const t = document.getElementById("adduser"),
-                    submitButton = document.getElementById('addblogsubmit'),
-                    o = jQuery(t.querySelector('[name="formValidationSelect2"]')),
-                    i = jQuery(t.querySelector('[name="formValidationDepartment"]')),
-                    r = FormValidation.formValidation(t, {
-                        fields: {
-                            authorname: {
-                                validators: {
-                                    notEmpty: {
-                                        message: "Please enter Author Name"
-                                    },
-                                    stringLength: {
-                                        min: 3,
-                                        max: 15,
-                                        message: "The name must be more than 6 and less than 30 characters long"
-                                    },
-                                    regexp: {
-                                        regexp: /^[a-zA-Z]+$/,
-                                        message: "The name can only consist of alphabetical, not number"
-                                    }
-                                }
-                            },
-                            title: {
-                                validators: {
-                                    notEmpty: {
-                                        message: "Please enter your Title"
-                                    },
-                                    stringLength: {
-                                        min: 3,
-                                        max: 15,
-                                        message: "The name must be more than 6 and less than 30 characters long"
-                                    },
-                                    regexp: {
-                                        regexp: /^[a-zA-Z]+$/,
-                                        message: "The name can only consist of alphabetical,not number"
-                                    }
-                                }
-                            },
-
-                            formValidationFile: {
-                                validators: {
-                                    notEmpty: {
-                                        message: "Please select the file"
-                                    }
-                                }
-                            },
-                            formValidationDob: {
-                                validators: {
-                                    notEmpty: {
-                                        message: "Please Enter  Date"
-                                    },
-                                    date: {
-                                        format: "DD/MM/YYYY",
-                                        message: "The value is not a valid date"
-                                    }
-                                }
-                            },
-
-                        },
-                        plugins: {
-                            trigger: new FormValidation.plugins.Trigger,
-                            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                                eleValidClass: "",
-                                rowSelector: function (e, a) {
-                                    switch (e) {
-                                        case "authorname":
-                                        case "Title":
-                                        case "formValidationFile":
-                                        case "formValidationDob":
-                                        default:
-                                            return ".row"
-                                    }
-                                }
-                            }),
-                            submitButton: new FormValidation.plugins.SubmitButton,
-                            autoFocus: new FormValidation.plugins.AutoFocus
-                        },
-                        init: e => {
-                            e.on("plugins.message.placed", function (e) {
-                                e.element.parentElement.classList.contains("input-group") && e.element.parentElement.insertAdjacentElement("afterend", e.messageElement), e.element.parentElement.parentElement.classList.contains("custom-option") && e.element.closest(".row").insertAdjacentElement("afterend", e.messageElement)
-                            })
-                        }
-                    });
-
-                r.on('core.form.valid', function (e) {
-                    try {
-                        let demoForm = document.getElementById('adduser')
-                        var doctorFormData = new FormData();
-                        // Append the text fields
-                        doctorFormData.append("f", "t")
-                        doctorFormData.append('authorName', demoForm.querySelector('[name="authorName"]').value);
-                        doctorFormData.append('title', demoForm.querySelector('[name="title"]').value);
-                        doctorFormData.append('dateOfBirth', demoForm.querySelector('[name="formValidationDob"]').value);
-                        const image = demoForm.querySelector('[name="formValidationFile"]');
-                        doctorFormData.append('avatar', image.files[0]);
-
-
-                        axios.post('/doctors/add-doctor', doctorFormData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        }).then(function (response) {
-                            if (response.data.type === 'success') { // Check response.data.type instead of response.type
+                        url: '/blogs/add-blog',
+                        type: 'POST',
+                        data: blogformdata,
+                        contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+                        processData: false, // NEEDED, DON'T OMIT THIS
+                        success: function (response) {
+                            if (response.type === 'success') { // Check response.data.type instead of response.type
                                 Swal.fire({
                                     icon: "success",
-                                    title: response.data.message,
+                                    title: response.message,
                                     showConfirmButton: !1,
                                     timer: 1500,
                                     customClass: {
@@ -251,38 +173,14 @@
                                 }).then(function () {
                                     window.location.href = window.location.href;
                                 });
-                            } else {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: response.data.message,
-                                    showConfirmButton: !1,
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: "btn btn-primary"
-                                    },
-                                    buttonsStyling: !1,
-                                });
                             }
-                        })
-                    } catch (error) {
-                        console.error(error);
-                    }
-                })
-
-                var a, n;
-                flatpickr(t.querySelector('[name="formValidationDob"]'), {
-                    enableTime: !1,
-                    dateFormat: "d/m/Y",
-                    onChange: function () {
-                        r.revalidateField("formValidationDob")
-                    }
-                }),
-                    o.length && (o.wrap('<div class="position-relative"></div>'), o.select2({
-                        placeholder: "Select Department",
-                        dropdownParent: o.parent()
-                    }).on("change.select2", function () {
-                        r.revalidateField("formValidationSelect2")
-                    }))
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle the error response
+                        }
+                    });
+                }
             }
         });
+    });
 </script>
