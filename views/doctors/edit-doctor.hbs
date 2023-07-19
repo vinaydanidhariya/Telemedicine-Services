@@ -44,50 +44,26 @@
 
                             <div class="col-md-6">
                                 <label class="form-label" for="formValidationFirstName">First Name</label>
-                                <input type="text" id="formValidationFirstName" class="form-control" placeholder="John"
+                                <input type="text" id="formValidationFirstName" class="form-control"
                                     name="formValidationFirstName" value="{{data.firstName}}" />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label" for="formValidationLastName">Last Name</label>
                                 <input type="text" id="formValidationLastName" value="{{data.lastName}}"
-                                    class="form-control" placeholder="Doe" name="formValidationLastName" />
+                                    class="form-control" name="formValidationLastName" />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label" for="formValidationEmail">Email</label>
-                                <input class="form-control" type="text" value="{{data.email}}"
-                                    name="formValidationEmail" placeholder="abc@mail.com" />
+                                <input class="form-control" type="text" value="{{data.email}}" disabled
+                                    name="formValidationEmail" />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label" for="tel">Phone Number</label>
-                                <input type="text" id="tel" class="form-control" placeholder="Phone Number"
-                                    value="{{data.phone}}" name="formValidationMobile" />
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-password-toggle">
-                                    <label class="form-label" for="formValidationPassword">Password</label>
-                                    <div class="input-group input-group-merge">
-                                        <input class="form-control" type="password" name="formValidationPassword"
-                                            placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                            aria-describedby="multicol-password2" value="{{data.password}}" />
-                                        <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-password-toggle">
-                                    <label class="form-label" for="formValidationConfirmPass">Confirm Password</label>
-                                    <div class="input-group input-group-merge">
-                                        <input class="form-control" type="password" name="formValidationConfirmPass"
-                                            placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                            aria-describedby="multicol-password2" value="{{data.password}}" />
-                                        <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                                    </div>
-                                </div>
+                                <input type="text" id="tel" class="form-control" value="{{data.phone}}"
+                                    name="formValidationMobile" />
                             </div>
 
                             <div class="col-md-6">
@@ -98,10 +74,10 @@
                                 <label>{{data.photoUrl}}</label>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6 flatpickr">
                                 <label class="form-label" for="formValidationDob">DOB</label>
                                 <input type="text" class="form-control flatpickr-validation" name="formValidationDob"
-                                    id="formValidationDob" required value="{{data.dateOfBirth}}" />
+                                    id="formValidationDob" value="{{formattedDate}}" />
                             </div>
 
                             <div class="col-md-6">
@@ -112,21 +88,18 @@
 
                             <div class="col-md-6">
                                 <label class="form-label" for="formValidationQualifications">Qualifications</label>
-                                <input type="text" value="{{data.department}}" class="form-control"
+                                <input type="text" value="{{data.qualifications}}" class="form-control"
                                     name="formValidationQualifications" />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label" for="formValidationSelectDepartment">Department</label>
-                                <select id="formValidationSelectDepartment" name="{{#if data}}
-                                {{else}}
-                                formValidationSelectDepartment {{/if}}" class="form-select select2"
-                                    data-allow-clear="true">
+                                <select id="formValidationSelectDepartment" name="formValidationSelectDepartment"
+                                    class="form-select select2" data-allow-clear="true">
                                 </select>
-                                {{#if data}}
                                 <label class="form-label" for="formValidationDob">Previous Department:</label>
                                 <label>{{data.department}}</label>
-                                {{else}}{{/if}}
+
                             </div>
 
                             <div class="col-md-6">
@@ -144,7 +117,7 @@
                                     <label class="form-check-label" for="formValidationGender2">Female</label>
                                 </div>
                             </div>
-
+                            <input type="hidden" name="doctorUpdate" value="{{data.userId}}" />
                             <div class="row pt-4">
                                 <button type="submit" id="addDoctorSubmit" class="btn btn-primary" name="submitButton"
                                     style="width: 30rem; margin: 0 auto;">Submit</button>
@@ -254,37 +227,10 @@
                                 }
                             }
                         },
-                        formValidationPassword: {
-                            validators: {
-                                notEmpty: {
-                                    message: "Please enter your password"
-                                }
-                            }
-                        },
-                        formValidationConfirmPass: {
-                            validators: {
-                                notEmpty: {
-                                    message: "Please confirm password"
-                                },
-                                identical: {
-                                    compare: function () {
-                                        return t.querySelector('[name="formValidationPassword"]').value
-                                    },
-                                    message: "The password and its confirm are not the same"
-                                }
-                            }
-                        },
                         formValidationMobile: {
                             validators: {
                                 notEmpty: {
                                     message: "Please Enter Mobile"
-                                }
-                            }
-                        },
-                        formValidationFile: {
-                            validators: {
-                                notEmpty: {
-                                    message: "Please select the file"
                                 }
                             }
                         },
@@ -337,8 +283,6 @@
                                     case "formValidationFirstName":
                                     case "formValidationLastName":
                                     case "formValidationEmail":
-                                    case "formValidationPassword":
-                                    case "formValidationConfirmPass":
                                     case "formValidationMobile":
                                     case "formValidationFile":
                                     case "formValidationDob":
@@ -373,26 +317,26 @@
                     // Append the text fields
                     doctorFormData.append("f", "t")
                     doctorFormData.append('firstName', demoForm.querySelector('[name="formValidationFirstName"]').value);
+                    doctorFormData.append('doctorId', demoForm.querySelector('[name="doctorUpdate"]').value);
                     doctorFormData.append('lastName', demoForm.querySelector('[name="formValidationLastName"]').value);
                     doctorFormData.append('email', demoForm.querySelector('[name="formValidationEmail"]').value);
-                    doctorFormData.append('password', demoForm.querySelector('[name="formValidationPassword"]').value);
                     doctorFormData.append('phone', demoForm.querySelector('[name="formValidationMobile"]').value);
                     doctorFormData.append('dateOfBirth', demoForm.querySelector('[name="formValidationDob"]').value);
                     doctorFormData.append('price', demoForm.querySelector('[name="formValidationPrice"]').value);
                     doctorFormData.append('qualification', demoForm.querySelector('[name="formValidationQualifications"]').value);
-                    doctorFormData.append('department',  demoForm.querySelector('input[name="formValidationSelectDepartment"]:selected"]').value);
+                    doctorFormData.append('department', demoForm.querySelector('select[name="formValidationSelectDepartment"]').value);
                     doctorFormData.append('gender', demoForm.querySelector('input[name="formValidationGender"]:checked').value);
                     const image = demoForm.querySelector('[name="formValidationFile"]');
-                    doctorFormData.append('avatar', image.files[0]);
+                    if (image.files.length > 0) {
+                        doctorFormData.append('avatar', image.files[0]);
+                    }
 
                     new Response(doctorFormData).text().then(console.log)
-                    alert()
                     axios.post('/doctors/edit-doctor', doctorFormData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
                     }).then(function (response) {
-                        alert()
                         if (response.data.type === 'success') { // Check response.data.type instead of response.type
                             Swal.fire({
                                 icon: "success",

@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require("../../models");
 const { v4: uuidv4 } = require('uuid');
 const Path = require('path');
+const moment = require('moment');
 const { convertToMd5 } = require("../../utils/helper.js");
 const authentication = require("../../middleware/login_module").check_auth;
 
@@ -127,9 +128,11 @@ router.get("/edit-doctor", authentication, async function (req, res, next) {
       })
       const newData = data.toJSON()
       console.log(data.toJSON());
+      const formattedDate = moment(data.dateOfBirth).format("DD/MM/YYYY");
       res.render("doctors/edit-doctor", {
         title: "DOCTORS",
-        data: newData
+        data: newData,
+        formattedDate
       });
     }
     else {
@@ -142,6 +145,7 @@ router.get("/edit-doctor", authentication, async function (req, res, next) {
 
 router.post("/edit-doctor", async function (req, res, next) {
   try {
+
     uploadSourceLeadFile(req, res, async function (err) {
       // Check err while upload
       if (err) {
@@ -155,8 +159,7 @@ router.post("/edit-doctor", async function (req, res, next) {
         const {
           firstName,
           lastName,
-          email,
-          password,
+          doctorId,
           phone,
           dateOfBirth,
           price,
@@ -166,119 +169,68 @@ router.post("/edit-doctor", async function (req, res, next) {
         } = req.body;
 
         try {
-          const passwordEncrypt = convertToMd5(password);
-          db.User.update({
-            firstName,
-            lastName,
-            type: "DOCTOR",
-            email,
-            qualifications: qualification,
-            department,
-            gender,
-            price,
-            dateOfBirth,
-            password: passwordEncrypt,
-            status: true,
-            photoUrl: req.file.filename,
-            phone,
-            createdDate: new Date(),
-            updatedDate: new Date(),
-          },
-            { where: { userId: 2 } }
-          )
-            .then(createdUser => {
-              console.log(createdUser.firstName);
-              let message = `${createdUser.firstName + " " + createdUser.lastName} \nUpdate Doctor successfully`
-              res.send({
-                status: 200,
-                message,
-                type: "success",
+          if (req.file) {
+            db.User.update({
+              firstName,
+              lastName,
+              qualifications: qualification,
+              department,
+              gender,
+              price,
+              dateOfBirth: moment(dateOfBirth, "DD/MM/YYYY").toDate(),
+              photoUrl: req.file.filename,
+              phone,
+              updatedDate: new Date(),
+            },
+              { where: { userId: doctorId } }
+            )
+              .then(createdUser => {
+                let message = `${firstName + " " + lastName} \nUpdate Doctor successfully`
+                res.send({
+                  status: 200,
+                  message,
+                  type: "success",
+                });
+              })
+              .catch(error => {
+                console.log(error);
+                res.send({
+                  status: 400,
+                  message: `Something Went Wrong while updating Doctor`,
+                  type: "fails",
+                });
               });
-            })
-            .catch(error => {
-              console.log(error);
-              res.send({
-                status: 400,
-                message: `Something Went Wrong while updating Doctor`,
-                type: "fails",
+          } else {
+            db.User.update({
+              firstName,
+              lastName,
+              qualifications: qualification,
+              department,
+              gender,
+              price,
+              dateOfBirth: moment(dateOfBirth, "DD/MM/YYYY").toDate(),
+              phone,
+              updatedDate: new Date(),
+            },
+              { where: { userId: doctorId } }
+            )
+              .then(updatedUser => {
+                let message = `${firstName + " " + lastName} \n Update Doctor successfully`
+                res.send({
+                  status: 200,
+                  message,
+                  type: "success",
+                });
+              })
+              .catch(error => {
+                console.log(error);
+                res.send({
+                  status: 400,
+                  message: `Something Went Wrong while updating Doctor`,
+                  type: "fails",
+                });
               });
-            });
-        } catch (error) {
-          console.log(error);
-          res.send({
-            status: 500,
-            message: error.message,
-            type: "error",
-          });
-        }
-      }
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-router.post("/edit-doctor", async function (req, res, next) {
-  try {
-    uploadSourceLeadFile(req, res, async function (err) {
-      // Check err while upload
-      if (err) {
-        console.log('Error while uploading image');
-        console.log(err);
-        return res.send({
-          type: 'error',
-          message: err.message
-        });
-      } else {
-        const {
-          firstName,
-          lastName,
-          email,
-          password,
-          phone,
-          dateOfBirth,
-          price,
-          qualification,
-          department,
-          gender
-        } = req.body;
-
-        try {
-          const passwordEncrypt = convertToMd5(password);
-          db.User.create({
-            firstName,
-            lastName,
-            type: "DOCTOR",
-            email,
-            qualifications: qualification,
-            department,
-            gender,
-            price,
-            dateOfBirth,
-            password: passwordEncrypt,
-            status: true,
-            photo_url: req.file.filename,
-            phone,
-            createdDate: new Date(),
-            updatedDate: new Date(),
-          })
-            .then(createdUser => {
-              console.log(createdUser.firstName);
-              let message = `${createdUser.firstName + " " + createdUser.lastName} Added Doctor successfully`
-              res.send({
-                status: 200,
-                message,
-                type: "success",
-              });
-            })
-            .catch(error => {
-              console.log(error);
-              res.send({
-                status: 400,
-                message: `Something Went Wrong while adding Doctor`,
-                type: "fails",
-              });
-            });
+          }
         } catch (error) {
           console.log(error);
           res.send({
