@@ -214,9 +214,57 @@ $(function () {
         }), $("div.head-label").html('<h5 class="card-title mb-0">LIST OF DOCTORS</h5>')), 101);
 
     $(".datatables-basic tbody").on("click", ".delete-record", function () {
+        var $row = $(this).closest("tr");
+        var rowData = l.row($row).data();
+        l.row($row).remove().draw();
 
-        l.row($(this).parents("tr")).remove().draw()
-    }),
+        $.ajax({
+            url: `/doctors/delete-doctor`,
+            type: 'post',
+            data: {
+                code: "778899",
+                userId: rowData.userId
+            }
+        }).then(function (response) {
+            if (response.type === 'success') { // Check response.type instead of response.data.type
+                Swal.fire({
+                    icon: "success",
+                    title: response.message,
+                    showConfirmButton: false,
+                    timer: 1500,
+                    customClass: {
+                        confirmButton: "btn btn-primary"
+                    },
+                    buttonsStyling: false,
+                });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: response.message,
+                    showConfirmButton: false,
+                    timer: 1500,
+                    customClass: {
+                        confirmButton: "btn btn-primary"
+                    },
+                    buttonsStyling: false,
+                });
+            }
+        }).catch(function (error) {
+            // Handle AJAX request error
+            console.error("AJAX Error:", error);
+            Swal.fire({
+                icon: "error",
+                title: "Error occurred while deleting the doctor.",
+                showConfirmButton: false,
+                timer: 1500,
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                },
+                buttonsStyling: false,
+            });
+        });
+    })
+        ,
         $('.datatables-basic tbody').on('click', '.item-edit', function () {
             console.log("hello");
             var rowData = l.row($(this).parents("tr")).data();

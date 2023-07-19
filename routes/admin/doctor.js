@@ -285,4 +285,37 @@ router.post("/doctor-department", authentication, async function (req, res, next
   }
 });
 
+
+router.post("/delete-doctor", authentication, async function (req, res, next) {
+  try {
+    const { code, userId } = req.body;
+    console.log(req.body);
+    if (code === "778899") {
+      await db.User.destroy({
+        where: {
+          userId
+        }
+      })
+      res.send({
+        status: 200,
+        message: "Doctor Deleted successfully",
+        type: "success",
+      });
+
+    } else {
+      res.send({
+        status: 400,
+        message: `unauthorized request`,
+        type: "fails",
+      });
+    }
+  } catch (error) {
+    res.send({
+      status: 400,
+      message: `Error While Deleting Doctor`,
+      type: "fails",
+    });
+  }
+});
+
 module.exports = router;
