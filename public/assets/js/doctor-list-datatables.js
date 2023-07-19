@@ -61,7 +61,7 @@ $(function () {
                     var n = a.photo_url,
                         l = a.firstName + " " + a.lastName,
                         r = a.qualifications;
-                    return '<div class="d-flex justify-content-start align-items-center user-name"><div class="avatar-wrapper"><div class="avatar me-2">' + (n ? '<img src="' + assetsPath + "img/avatars/" + "1.png" + '" alt="Avatar" class="rounded-circle">' : '<span class="avatar-initial rounded-circle bg-label-' + ["success", "danger", "warning", "info", "dark", "primary", "secondary"][Math.floor(6 * Math.random())] + '">' + (n = (((n = (l = a.full_name).match(/\b\w/g) || []).shift() || "") + (n.pop() || "")).toUpperCase()) + "</span>") + '</div></div><div class="d-flex flex-column"><span class="emp_name text-truncate">' + l + '</span><small class="emp_post text-truncate text-muted">' + r + "</small></div></div>"
+                    return '<div class="d-flex justify-content-start align-items-center user-name"><div class="avatar-wrapper"><div class="avatar me-2">' + (n ? '<img src="' + assetsPath + "img/avatars/" + "1.png" + '" alt="Avatar" class="rounded-circle">' : '<span class="avatar-initial rounded-circle bg-label-' + ["success", "danger", "warning", "info", "dark", "primary", "secondary"][Math.floor(6 * Math.random())] + '">' + (n = (((n = (l).match(/\b\w/g) || []).shift() || "") + (n.pop() || "")).toUpperCase()) + "</span>") + '</div></div><div class="d-flex flex-column"><span class="emp_name text-truncate">' + l + '</span><small class="emp_post text-truncate text-muted">' + r + "</small></div></div>"
                 }
             },
             {
@@ -110,7 +110,7 @@ $(function () {
             ],
             dom: '<"card-header flex-column flex-md-row"<"head-label text-center"><"dt-action-buttons text-end pt-3 pt-md-0"B>><"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
             displayLength: 7,
-            lengthMenu: [7, 10, 25, 50, 75, 100],
+            lengthMenu: [7, 25, 50, 75, 100],
             buttons: [{
                 extend: "collection",
                 className: "btn btn-label-primary dropdown-toggle me-2",
@@ -214,6 +214,13 @@ $(function () {
         }), $("div.head-label").html('<h5 class="card-title mb-0">LIST OF DOCTORS</h5>')), 101);
 
     $(".datatables-basic tbody").on("click", ".delete-record", function () {
+
         l.row($(this).parents("tr")).remove().draw()
-    })
+    }),
+        $('.datatables-basic tbody').on('click', '.item-edit', function () {
+            console.log("hello");
+            var rowData = l.row($(this).parents("tr")).data();
+            const json = JSON.stringify(rowData);
+            window.location.href = `/doctors/edit-doctor?edit=${rowData.userId}`;
+        });
 });

@@ -36,7 +36,7 @@ router.post("/create-doctor", async function (req, res, next) {
       price,
       password: passwordEncrypt,
       status: true,
-      photo_url,
+      photoUrl: photo_url,
       phone,
       createdDate: new Date(),
       updatedDate: new Date(),

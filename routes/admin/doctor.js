@@ -54,7 +54,7 @@ router.post("/add-doctor", async function (req, res, next) {
           message: err.message
         });
       } else {
-        const { f,
+        const {
           firstName,
           lastName,
           email,
@@ -64,12 +64,10 @@ router.post("/add-doctor", async function (req, res, next) {
           price,
           qualification,
           department,
-          gender,
-          avatar
+          gender
         } = req.body;
 
         try {
-
           const passwordEncrypt = convertToMd5(password);
           db.User.create({
             firstName,
@@ -80,6 +78,183 @@ router.post("/add-doctor", async function (req, res, next) {
             department,
             gender,
             price,
+            dateOfBirth,
+            password: passwordEncrypt,
+            status: true,
+            photo_url: req.file.filename,
+            phone,
+            createdDate: new Date(),
+            updatedDate: new Date(),
+          })
+            .then(createdUser => {
+              console.log(createdUser.firstName);
+              let message = `${createdUser.firstName + " " + createdUser.lastName} Added Doctor successfully`
+              res.send({
+                status: 200,
+                message,
+                type: "success",
+              });
+            })
+            .catch(error => {
+              console.log(error);
+              res.send({
+                status: 400,
+                message: `Something Went Wrong while adding Doctor`,
+                type: "fails",
+              });
+            });
+        } catch (error) {
+          console.log(error);
+          res.send({
+            status: 500,
+            message: error.message,
+            type: "error",
+          });
+        }
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get("/edit-doctor", authentication, async function (req, res, next) {
+  try {
+    const { edit } = req.query;
+    if (edit) {
+      const data = await db.User.findOne({
+        where: { userId: edit }
+      })
+      const newData = data.toJSON()
+      console.log(data.toJSON());
+      res.render("doctors/edit-doctor", {
+        title: "DOCTORS",
+        data: newData
+      });
+    }
+    else {
+      res.render("error");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/edit-doctor", async function (req, res, next) {
+  try {
+    uploadSourceLeadFile(req, res, async function (err) {
+      // Check err while upload
+      if (err) {
+        console.log('Error while uploading image');
+        console.log(err);
+        return res.send({
+          type: 'error',
+          message: err.message
+        });
+      } else {
+        const {
+          firstName,
+          lastName,
+          email,
+          password,
+          phone,
+          dateOfBirth,
+          price,
+          qualification,
+          department,
+          gender
+        } = req.body;
+
+        try {
+          const passwordEncrypt = convertToMd5(password);
+          db.User.update({
+            firstName,
+            lastName,
+            type: "DOCTOR",
+            email,
+            qualifications: qualification,
+            department,
+            gender,
+            price,
+            dateOfBirth,
+            password: passwordEncrypt,
+            status: true,
+            photoUrl: req.file.filename,
+            phone,
+            createdDate: new Date(),
+            updatedDate: new Date(),
+          },
+            { where: { userId: 2 } }
+          )
+            .then(createdUser => {
+              console.log(createdUser.firstName);
+              let message = `${createdUser.firstName + " " + createdUser.lastName} \nUpdate Doctor successfully`
+              res.send({
+                status: 200,
+                message,
+                type: "success",
+              });
+            })
+            .catch(error => {
+              console.log(error);
+              res.send({
+                status: 400,
+                message: `Something Went Wrong while updating Doctor`,
+                type: "fails",
+              });
+            });
+        } catch (error) {
+          console.log(error);
+          res.send({
+            status: 500,
+            message: error.message,
+            type: "error",
+          });
+        }
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/edit-doctor", async function (req, res, next) {
+  try {
+    uploadSourceLeadFile(req, res, async function (err) {
+      // Check err while upload
+      if (err) {
+        console.log('Error while uploading image');
+        console.log(err);
+        return res.send({
+          type: 'error',
+          message: err.message
+        });
+      } else {
+        const {
+          firstName,
+          lastName,
+          email,
+          password,
+          phone,
+          dateOfBirth,
+          price,
+          qualification,
+          department,
+          gender
+        } = req.body;
+
+        try {
+          const passwordEncrypt = convertToMd5(password);
+          db.User.create({
+            firstName,
+            lastName,
+            type: "DOCTOR",
+            email,
+            qualifications: qualification,
+            department,
+            gender,
+            price,
+            dateOfBirth,
             password: passwordEncrypt,
             status: true,
             photo_url: req.file.filename,
