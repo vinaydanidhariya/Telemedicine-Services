@@ -1,4 +1,7 @@
 <!-- Content wrapper -->
+<script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
+<link rel="stylesheet" href="/assets/vendor/libs/sweetalert2/sweetalert2.css" />
+
 <div class="content-wrapper">
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -12,18 +15,18 @@
                         <h5 class="mb-0"><span class="text-muted fw-light">SMTP/</span> SETTINGS</h5>
                     </div>
                     <div class="card-body ">
-                        <form id="settings-page" class="row g-3 ">
+                        <form id="settings-page" method="post" class="row g-3 ">
                             <!-- Account Details -->
                             <div class="col-12">
                                 <h6 class="fw-semibold"></h6>
                                 <hr class="mt-0">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label" for="MailServer">Mail Server <label style="color: red;">
+                                <label class="form-label" for="mailServer">Mail Server <label style="color: red;">
                                         *
                                     </label></label>
-                                <input type="text" class="form-control" placeholder="smtp.domain.com" name="mail_Server"
-                                    id="mail_Server" />
+                                <input type="text" class="form-control" placeholder="smtp.domain.com" name="mailServer"
+                                    id="mailServer" value="{{data.mailServer}}"/>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="from">From
@@ -31,7 +34,7 @@
                                         *
                                     </label></label>
                                 <input type="email" class="form-control" placeholder="email@domain.com" id="from"
-                                    name="from" value="{{setting.from}}" />
+                                    name="from" value="{{data.from}}" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="User Name">User Name
@@ -39,7 +42,7 @@
                                         *
                                     </label></label>
                                 <input type="email" class="form-control" placeholder="email@domain.com" name="username"
-                                    id="UserName" value="{{setting.username}}" />
+                                    id="UserName" value="{{data.username}}"/>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="Password">Password
@@ -47,7 +50,7 @@
                                         *
                                     </label></label>
                                 <input type="text" class="form-control" placeholder="Password"
-                                    value="{{setting.password}}" name="password" id="password" />
+                                    value="{{data.password}}" name="password" id="password" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="Port"> Port
@@ -55,7 +58,7 @@
                                         *
                                     </label></label>
                                 <input type="text" class="form-control" placeholder="587" name="port" id="port"
-                                    value="{{setting.port}}" />
+                                    value="{{data.port}}" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="TLS/SSL"> TLS/SSL
@@ -64,13 +67,46 @@
                                     </label></label>
                                 <select class="form-select form-control" aria-label="Default select example"
                                     name="protocols" id="protocols">
-                                    <option value="tls" {{#compare setting.protocol "==" "tls" }}selected{{/compare}}>
+                                    <option value="tls" {{#compare data.protocol "==" "tls" }}selected{{/compare}}>
                                         TLS
                                     </option>
-                                    <option value="ssl" {{#compare setting.protocol "==" "ssl" }}selected{{/compare}}>
+                                    <option value="ssl" {{#compare data.protocol "==" "ssl" }}selected{{/compare}}>
                                         SSL
                                     </option>
                                 </select>
+                            </div>
+                            <div class="card-header d-flex align-items-center justify-content-between">
+                                <h5 class="mb-0"><span class="text-muted fw-light">GOOGLE/</span> SETTINGS</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="API keys">API keys <label style="color: red;">
+                                        *
+                                    </label></label>
+                                <input class="form-control" type="text" name="GoogleAPIkeys"  value="{{data.GoogleAPIkeys}}" placeholder="API keys" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="OAuth client ID">OAuth client ID <label
+                                        style="color: red;">
+                                        *
+                                    </label></label>
+                                <input type="text" id="OAuth client ID" class="form-control"
+                                    placeholder="OAuth client ID" value="{{data.OAuthclientID}}" name="OAuthclientID" />
+                            </div>
+                            <div class="card-header d-flex align-items-center justify-content-between">
+                                <h5 class="mb-0"><span class="text-muted fw-light">ROZARPAY/</span> SETTINGS </h5>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="API Key ID">API Key ID <label style="color: red;">
+                                        *
+                                    </label></label>
+                                <input class="form-control" type="text" name="razorpayAPIKeyID" value="{{data.razorpayAPIKeyID}}"placeholder="API Key ID" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="Key Secret">Key Secret <label style="color: red;">
+                                        *
+                                    </label></label>
+                                <input type="text" id="Key Secret" class="form-control" placeholder="Key Secret"
+                                    name="KeySecret" value="{{data.KeySecret}}" />
                             </div>
                             <div class="row pt-4">
                                 <input type="submit" id="submit" style="width: 300px; margin: 0 auto;"
@@ -81,79 +117,8 @@
                 </div>
             </div>
         </div>
-        </p>
-        <div class="col-xxl">
-            <div class="card mb-4">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="mb-0"><span class="text-muted fw-light">GOOGLE/</span> SETTINGS</h5>
-                </div>
-                <div class="card-body ">
-                    <form id="googleform" class="row g-3">
-                        <!-- Account Details -->
-                        <div class="col-12">
-                            <h6 class="fw-semibold"></h6>
-                            <hr class="mt-0" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label" for="API keys">API keys <label style="color: red;">
-                                    *
-                                </label></label>
-                            <input class="form-control" type="text" name="APIkeys" placeholder="API keys" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label" for="OAuth client ID">OAuth client ID <label style="color: red;">
-                                    *
-                                </label></label>
-                            <input type="text" id="OAuth client ID" class="form-control" placeholder="OAuth client ID"
-                                name="OAuthclientID" />
-                        </div>
-                        <div class="row pt-4">
-                            <input type="submit" id="googlesubmit" style="width: 300px; margin: 0 auto;"
-                                class="btn btn-primary">
-
-                            {{!-- </button> --}}
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        </p>
-        <div class="col-xxl">
-            <div class="card mb-4">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="mb-0"><span class="text-muted fw-light">ROZARPAY/</span> SETTINGS </h5>
-                </div>
-                <div class="card-body ">
-                    <form id="rozarpayform" class="row g-3">
-                        <!-- Account Details -->
-                        <div class="col-12">
-                            <h6 class="fw-semibold"></h6>
-                            <hr class="mt-0" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label" for="API Key ID">API Key ID <label style="color: red;">
-                                    *
-                                </label></label>
-                            <input class="form-control" type="text" name="APIKeyID" placeholder="API Key ID" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label" for="Key Secret">Key Secret <label style="color: red;">
-                                    *
-                                </label></label>
-                            <input type="text" id="Key Secret" class="form-control" placeholder="Key Secret"
-                                name="KeySecret" />
-                        </div>
-                        <div class="row pt-4">
-                            <input type="submit" id="rozerpaySubmit" style="width: 300px; margin: 0 auto;"
-                                class="btn btn-primary">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
     <!-- / Content -->
-    <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
 
@@ -162,135 +127,133 @@
 <script src="/assets/vendor/libs/jquery/additional-methods.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#submit').on('click', function () {
-            jQuery.validator.addMethod("domain", function (value, element) {
-                return this.optional(element) || /^http:\/\/mycorporatedomain.com/.test(value);
-            }, "Please specify the correct domain for your documents");
-            $('#settings-page').validate({
-                /**errorClass: "state-error",
-                validClass: "state-success",*/
-                rules: {
-                    mail_Server: {
-                        domain: true,
-                        required: true,
-                    },
-                    from: {
-                        required: true,
-                    },
-                    username: {
-                        required: true,
-                    },
-                    password: {
-                        required: true,
-                        minlength: 6,
-                    },
-                    port: {
-                        required: true,
-                        minlength: 3,
-                        number: true
-                    },
-                    protocols: {
-                        required: true,
-                    },
-                },
-                messages: {
-                    mail_Server: {
-                        required: '*Please enter mail server',
-                    },
-                    from: {
-                        required: '*Please enter from address',
-                    },
-                    username: {
-                        required: '*Please enter username',
-                    },
-                    password: {
-                        required: '*Please enter your password',
-                        minlength: '*Password must be 6 charecter long',
-                    },
-                    port: {
-                        required: '*Please enter Port',
-                        minlength: '*Port must be 3 number long',
-                        number: '*please enter only numbers'
-                    },
-                    protocols: {
-                        required: '*Please choose Protocol',
-                    },
+        jQuery.validator.addMethod("domain", function (value, element) {
+            return this.optional(element) || /^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,}$/.test(value);
+        }, "Please specify the correct domain for your documents");
 
+        $('#settings-page').validate({
+            rules: {
+                mailServer: {
+                    domain: true,
+                    required: true,
                 },
-                highlight: function (element, errorClass, validClass) {
-                    $(element).closest('.form-group').addClass(errorClass).removeClass(validClass);
+                from: {
+                    required: true,
                 },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).closest('.form-group').removeClass(errorClass).addClass(validClass);
+                username: {
+                    required: true,
                 },
-                errorPlacement: function (error, element) {
-                    error.insertAfter(element);
+                password: {
+                    required: true,
+                    minlength: 6,
+                },
+                port: {
+                    required: true,
+                    minlength: 3,
+                    number: true,
+                },
+                protocols: {
+                    required: true,
+                },
+                GoogleAPIkeys: {
+                    required: true,
+                },
+                OAuthclientID: {
+                    required: true,
+                },
+                razorpayAPIKeyID: {
+                    required: true,
+                },
+                KeySecret: {
+                    required: true,
+                },
+            },
+            messages: {
+                mailServer: {
+                    required: '*Please enter mail server',
+                },
+                from: {
+                    required: '*Please enter from address',
+                },
+                username: {
+                    required: '*Please enter username',
+                },
+                password: {
+                    required: '*Please enter your password',
+                    minlength: '*Password must be 6 characters long',
+                },
+                port: {
+                    required: '*Please enter Port',
+                    minlength: '*Port must be 3 numbers long',
+                    number: '*Please enter only numbers',
+                },
+                protocols: {
+                    required: '*Please choose Protocol',
+                },
+                GoogleAPIkeys: {
+                    required: '*Please enter API Keys',
+                },
+                OAuthclientID: {
+                    required: '*Please enter OAuth client ID',
+                },
+                razorpayAPIKeyID: {
+                    required: '*Please enter API Key ID',
+                },
+                KeySecret: {
+                    required: '*Please enter Key Secret',
+                },
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).closest('.form-group').addClass(errorClass).removeClass(validClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).closest('.form-group').removeClass(errorClass).addClass(validClass);
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element);
+            },
+            submitHandler: function (form) {
+                if ($("#submit").valid()) {
+                    var formData = {
+                        mailServer: $('[name=mailServer]').val(),
+                        from: $('[name=from]').val(),
+                        username: $('[name=username]').val(),
+                        password: $('[name=password]').val(),
+                        port: $('[name=port]').val(),
+                        GoogleAPIkeys: $('[name=port]').val(),
+                        OAuthclientID: $('[name=OAuthclientID]').val(),
+                        razorpayAPIKeyID: $('[name=razorpayAPIKeyID]').val(),
+                        KeySecret: $('[name=KeySecret]').val(),
+                        protocol: $('#protocols').find(":selected").val()
+                    };
+                    console.log(formData)
+                    $.ajax({
+                        url: '/setting',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: formData,
+                        success: function (response) {
+                            if (response.type === 'success') { // Check response.data.type instead of response.type
+                                Swal.fire({
+                                    icon: "success",
+                                    title: response.message,
+                                    showConfirmButton: !1,
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: "btn btn-primary"
+                                    },
+                                    buttonsStyling: !1,
+                                }).then(function () {
+                                    window.location.href = window.location.href;
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle the error response
+                        }
+                    });
                 }
-            });
-        });
-
-    });
-
-    $(document).ready(function () {
-        $('#googlesubmit').on('click', function () {
-            $('#googleform').validate({
-                rules: {
-                    APIkeys: {
-                        required: true,
-                    },
-                    OAuthclientID: {
-                        required: true,
-                    },
-                },
-                messages: {
-                    APIkeys: {
-                        required: '*Please enter API Keys',
-                    },
-                    OAuthclientID: {
-                        required: '*Please enter OAuth client ID',
-                    },
-                },
-                highlight: function (element, errorClass, validClass) {
-                    $(element).closest('.form-group').addClass(errorClass).removeClass(validClass);
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).closest('.form-group').removeClass(errorClass).addClass(validClass);
-                },
-                errorPlacement: function (error, element) {
-                    error.insertAfter(element);
-                }
-            });
-        });
-    });
-    $(document).ready(function () {
-        $('#rozerpaySubmit').on('click', function () {
-            $('#rozarpayform').validate({
-                rules: {
-                    APIKeyID: {
-                        required: true,
-                    },
-                    KeySecret: {
-                        required: true,
-                    },
-                },
-                messages: {
-                    APIKeyID: {
-                        required: '*Please enter API Key ID',
-                    },
-                    KeySecret: {
-                        required: '*Please enter Key Secret',
-                    },
-                },
-                highlight: function (element, errorClass, validClass) {
-                    $(element).closest('.form-group').addClass(errorClass).removeClass(validClass);
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).closest('.form-group').removeClass(errorClass).addClass(validClass);
-                },
-                errorPlacement: function (error, element) {
-                    error.insertAfter(element);
-                }
-            });
+            }
         });
     });
 </script>
