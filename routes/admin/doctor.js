@@ -20,7 +20,7 @@ var storage = multer.diskStorage({
 const uploadSourceLeadFile = multer({
   storage: storage, // global posting data upload file storage assign
   limits: { // Define limits for the file
-    fileSize: 20 * 1024 * 1024 * 1024
+    fileSize: 5 * 1024 * 1024 // 5 mb image only allowed
   },
   fileFilter: function (req, file, cb) { // Filter the file based on the type.
     if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
