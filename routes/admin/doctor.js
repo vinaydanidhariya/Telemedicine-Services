@@ -285,7 +285,6 @@ router.post("/doctor-department", authentication, async function (req, res, next
   }
 });
 
-
 router.post("/delete-doctor", authentication, async function (req, res, next) {
   try {
     const { code, userId } = req.body;

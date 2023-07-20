@@ -120,7 +120,7 @@ router.post("/", async (req, res) => {
                                     return res.sendStatus(200)
                                 }
 
-                            case 'DATE-SELECTION':
+                            case 'ON-SPECIFIC-DAY':
                                 function validateDateWithinNext7Days(dateString) {
                                     const inputDate = moment(dateString, 'DD/MM/YYYY');
                                     const currentDate = moment();
@@ -182,7 +182,11 @@ router.post("/", async (req, res) => {
                             }
                         );
                         const listOfDepartment = await findDoctorDepartmentList()
-                        sendDoctorDepartmentList(recipientNumber, listOfDepartment);
+                        if (listOfDepartment.length > 0) {
+                            sendDoctorDepartmentList(recipientNumber, listOfDepartment);
+                        } else {
+                            sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DEPARTMENT AVAILABLE");
+                        }
                         return res.sendStatus(200);
                     }
 
@@ -194,7 +198,23 @@ router.post("/", async (req, res) => {
                         );
                         //find doctor categories wise user selected
                         const listOfDoctor = await findDrList(listReply.title)
-                        sendListDoctorMessage(recipientNumber, listOfDoctor);
+                        console.log(listOfDoctor);
+                        if (listOfDoctor.length > 0) {
+                            sendListDoctorMessage(recipientNumber, listOfDoctor);
+                        }
+                        else {
+                            await db.WhatsappUser.update(
+                                { userStat: 'DEPARTMENT-SELECTION' },
+                                { where: { phone: recipientNumber } }
+                            );
+                            sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DOCTOR AVAILABLE FOR THIS DEPARTMENT");
+                            const listOfDepartment = await findDoctorDepartmentList()
+                            if (listOfDepartment.length > 0) {
+                                sendDoctorDepartmentList(recipientNumber, listOfDepartment);
+                            } else {
+                                sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DEPARTMENT AVAILABLE");
+                            }
+                        }
                     }
 
                     if (interactiveType === "list_reply" && user.userStat === "DOCTOR-SELECTION") {
@@ -207,9 +227,8 @@ router.post("/", async (req, res) => {
 
                     else if (interactiveType === "button_reply" && user.userStat === "DATE-SELECTION" && reply.id === "todayButton") {
                         const today = new Date();
-                        const date = today.toLocaleDateString('en-GB');
                         await db.WhatsappUser.update(
-                            { userStat: 'TIME-SELECTION', appointmentDate: date },
+                            { userStat: 'TIME-SELECTION', appointmentDate: today },
                             { where: { phone: recipientNumber } }
                         );
                         sendTimeListAppointmentMessage(recipientNumber, timeSlots)
@@ -219,15 +238,18 @@ router.post("/", async (req, res) => {
                         const today = new Date();
                         const tomorrow = new Date(today);
                         tomorrow.setDate(today.getDate() + 1);
-                        const date = tomorrow.toLocaleDateString('en-GB');
                         await db.WhatsappUser.update(
-                            { userStat: 'TIME-SELECTION', appointmentDate: date },
+                            { userStat: 'TIME-SELECTION', appointmentDate: tomorrow },
                             { where: { phone: recipientNumber } }
                         );
                         sendTimeListAppointmentMessage(recipientNumber, timeSlots)
                     }
 
                     else if (interactiveType === "button_reply" && user.userStat === "DATE-SELECTION" && reply.id === "onSpecificDayButton") {
+                        await db.WhatsappUser.update(
+                            { userStat: 'ON-SPECIFIC-DAY', },
+                            { where: { phone: recipientNumber } }
+                        );
                         sendRegistrationMessage(recipientNumber, "TYPE DATE 📅 \n Formate (DD/MM/YYYY) \nAppointment Available only for next 7 Day's Only")
                     }
 
