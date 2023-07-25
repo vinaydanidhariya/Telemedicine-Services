@@ -10,7 +10,7 @@ const authentication = require("../../middleware/login_module").check_auth;
 const config = require('../../config/config.js');
 const { checkAccess } = require("../../middleware/authorization");
 
-router.get("/", checkAccess("admin"), function (req, res, next) {
+router.get("/", function (req, res, next) {
 	if (req.isAuthenticated()) {
 		return res.redirect('/admin/dashboard');
 	} else {
@@ -21,7 +21,7 @@ router.get("/", checkAccess("admin"), function (req, res, next) {
 	}
 });
 
-router.post("/", checkAccess("post/admin"), function (req, res, next) {
+router.post("/", function (req, res, next) {
 	try {
 		passport.authenticate("local", async function (err, user, info) {
 			if (err || !user) {
