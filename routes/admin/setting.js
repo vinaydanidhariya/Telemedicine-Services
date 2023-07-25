@@ -6,7 +6,9 @@ const db = require("../../models/");
 
 router.get("/", authentication, async function (req, res, next) {
   try {
-    const setting = await db.Setting.findOne();
+    const setting = await db.Setting.findAll({
+      
+    });
     console.log(setting);
     res.render("settings/setting", {
       title: "ChildDR | Setting",

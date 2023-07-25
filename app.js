@@ -16,7 +16,9 @@ const patientRouter = require("./routes/admin/patient.js")
 const settingsRouter = require("./routes/admin/setting.js")
 const paymentRouter = require("./routes/admin/payment.js")
 const blogsRouter = require("./routes/admin/Blog.js")
+const eventsRouter = require("./routes/admin/event")
 const dashboardRouter = require("./routes/admin/dashboard")
+const uploadRouter = require("./routes/admin/upload")
 const auth = require("./middleware/login_module");
 const config = require('./config/config.js')
 
@@ -75,6 +77,8 @@ app.use("/patient", patientRouter);
 app.use("/payment", paymentRouter);
 app.use("/setting", settingsRouter);
 app.use("/blogs", blogsRouter);
+app.use("/events", eventsRouter);
+app.use('/upload', uploadRouter);
 
 app.use(function (req, res, next) {
   next(createError(404));

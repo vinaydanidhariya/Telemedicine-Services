@@ -24,8 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       authorName: {
         type: DataTypes.TEXT,
-        field: "authorname",
-        allowNull: false,
+        field: "author_name",
+        allowNull: true,
       },
       title: {
         type: DataTypes.TEXT,
@@ -40,24 +40,28 @@ module.exports = (sequelize, DataTypes) => {
       date: {
         type: DataTypes.DATE,
         field: "date",
-        allowNull: false,
+        allowNull: true,
       },
       description: {
         type: DataTypes.TEXT,
         field: "description",
-        allowNull: false,
+        allowNull: true,
       },
-
+      sortDescription: {
+        type: DataTypes.TEXT,
+        field: "sort_description",
+        allowNull: true,
+      },
       active: {
         type: DataTypes.BOOLEAN,
         field: "active",
-        allowNull: false,
+        allowNull: true,
         defaultValue: true,
       },
       delete: {
         type: DataTypes.TEXT,
         field: "delete",
-        allowNull: false,
+        allowNull: true,
         defaultValue: false,
       },
     },

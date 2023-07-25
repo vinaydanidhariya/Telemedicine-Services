@@ -24,7 +24,7 @@
 <div class="content-wrapper">
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Blogs/</span> Add-Blogs</h4>
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Event/</span> Add-Event</h4>
         <!-- Basic Layout & Basic with Icons -->
         <div class="row">
             <!-- Basic with Icons -->
@@ -32,38 +32,31 @@
                 <div class="card mb-4">
 
                     <div class="card-header d-flex align-items-center justify-content-between">
-                        <h5 class="mb-0">ADD-BLOGS</h5>
+                        <h5 class="mb-0">Add-Event</h5>
                     </div>
                     <div class="card-body">
-                        <form id="add-blog" class="row g-3" method="post" enctype="multipart/form-data">
+                        <form id="add-event" class="row g-3" method="post" enctype="multipart/form-data">
 
                             <div class="col-md-6">
-                                <label class="form-label" for="Title">Title</label>
+                                <label class="form-label" for="Title">Event Title</label>
                                 <input type="text" id="Title" value="" class="form-control" placeholder="Title"
                                     name="title" />
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label" for="basic-default-upload-file">Cover Photo</label>
-                                <input type="file" class="form-control" name="blog_photo" />
+                                <label class="form-label" for="basic-default-upload-file">Event Cover Photo</label>
+                                <input type="file" class="form-control" name="event_photo" />
                             </div>
 
-                            <label class="col-sm-2 col-form-label" for="basic-default-message">Content</label>
+                            <label class="col-sm-2 col-form-label" for="basic-default-message">Event Content</label>
                             <div id="editor-container"></div>
                             <input type="hidden" name="quill-html" id="quill-html">
-
-                            <div class="col-md-6">
-                                <label class="form-label" for="AuthorName">Author Name</label>
-                                <input type="text" id="author_name" class="form-control" placeholder="Author Name"
-                                    name="author_name" value="" />
-                            </div>
 
                             <div class="row pt-4">
                                 <button type="submit" id="submit" class="btn btn-primary" name="submitButton"
                                     style="width: 30rem; margin: 0 auto;">Submit</button>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -109,7 +102,7 @@
     function selectLocalImage() {
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
-        input.setAttribute('value', 'blog_file');
+        input.setAttribute('value', 'event_file');
         input.click();
 
         // Listen upload local image and save to server
@@ -162,6 +155,8 @@
         selectLocalImage();
     });
 
+
+    // Function to get the first paragraph
     function getFirstParagraph() {
         const quillContent = editor.root.innerHTML;
         const parser = new DOMParser();
@@ -171,7 +166,7 @@
         if (firstParagraph) {
             return firstParagraph.textContent;
         } else {
-            return;
+            return "No paragraphs found.";
         }
     }
 </script>
@@ -194,11 +189,8 @@
             return this.optional(element) || /^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,}$/.test(value);
         }, "Please specify the correct domain for your documents");
 
-        $('#add-blog').validate({
+        $('#add-event').validate({
             rules: {
-                author_name: {
-                    required: true,
-                },
                 title: {
                     required: true,
                 },
@@ -208,14 +200,11 @@
                 date: {
                     required: true,
                 },
-                blog_photo: {
+                event_photo: {
                     required: true,
                 },
             },
             messages: {
-                author_name: {
-                    required: '*Please enter author Name',
-                },
                 title: {
                     required: '*Please enter title ',
                 },
@@ -246,20 +235,19 @@
                     // Copy HTML content in hidden form
                     $('#quill-html').val(html)
 
-                    var blogForm = $('#add-blog');
-                    var blogFormData = new FormData();
-                    blogFormData.append('author_name', blogForm.find('[name="author_name"]').val());
-                    blogFormData.append('title', blogForm.find('[name="title"]').val());
-                    blogFormData.append('description', blogForm.find('[name="quill-html"]').val());
+                    var eventForm = $('#add-event');
+                    var eventFormData = new FormData();
+                    eventFormData.append('title', eventForm.find('[name="title"]').val());
+                    eventFormData.append('description', eventForm.find('[name="quill-html"]').val());
                     const firstParagraph = getFirstParagraph();
-                    blogFormData.append('sort_description', firstParagraph);
-                    const image = blogForm.find('[name="blog_photo"]').prop('files')[0];
-                    blogFormData.append('blog_photo', image);
+                    eventFormData.append('sort_description', firstParagraph);
+                    const image = eventForm.find('[name="event_photo"]').prop('files')[0];
+                    eventFormData.append('event_photo', image);
 
                     $.ajax({
-                        url: '/blogs/add-blog',
+                        url: '/events/add-event',
                         type: 'POST',
-                        data: blogFormData,
+                        data: eventFormData,
                         cache: false,
                         contentType: false,
                         processData: false,
@@ -281,7 +269,7 @@
                         },
                         error: function (error) {
                             // Handle the error if the AJAX request fails
-                            console.error('Error saving blog post:', error);
+                            console.error('Error saving event post:', error);
                         }
                     });
                 }

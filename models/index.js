@@ -32,6 +32,7 @@ class db {
     db.Department = require('./departments')(sequelize, Sequelize.DataTypes);
     db.Setting = require('./setting')(sequelize, Sequelize.DataTypes);
     db.Blogs = require('./blogs')(sequelize, Sequelize.DataTypes);
+    db.Event = require('./event')(sequelize, Sequelize.DataTypes);
 
     // Associates all tables here
     db.User.associate(db);
@@ -39,6 +40,7 @@ class db {
     db.Department.associate(db);
     db.Setting.associate(db);
     db.Blogs.associate(db);
+    db.Event.associate(db);
 
     sequelize.sync({
       logging: console.log,

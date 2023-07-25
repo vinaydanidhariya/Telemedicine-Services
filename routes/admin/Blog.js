@@ -33,7 +33,7 @@ const uploadSourceLeadFile = multer({
       return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
     }
   },
-}).single("avatar");
+}).single("blog_photo");
 
 router.get("/add-blog", authentication, function (req, res, next) {
   try {
@@ -47,41 +47,33 @@ router.get("/add-blog", authentication, function (req, res, next) {
   }
 });
 
-router.get("/blog-list", authentication, async function (req, res, next) {
-  try {
-    res.render("blogs/list-blog", {
-      title: "DOCTORS",
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
 
 router.post("/add-blog", async function (req, res, next) {
   try {
     uploadSourceLeadFile(req, res, async function (err) {
       // Check err while upload
       if (err) {
-        console.log("Error while uploading image");
+        console.log('Error while uploading image');
         console.log(err);
         return res.send({
-          type: "error",
-          message: err.message,
+          type: 'error',
+          message: err.message
         });
       } else {
-        const { authorName, description, date, title } = req.body;
+        const { author_name, sort_description, description, title } = req.body;
         console.log(req.body);
         try {
           db.Blogs.create({
-            authorName,
-            description,
-            date,
             title,
             photo: req.file.filename,
+            description,
+            sortDescription: sort_description,
+            authorName: author_name,
+            date: new Date(),
             updatedDate: new Date(),
           })
             .then(() => {
-              let message = `Added Doctor successfully`;
+              let message = `Blog Created successfully`;
               res.send({
                 status: 200,
                 message,
@@ -92,7 +84,7 @@ router.post("/add-blog", async function (req, res, next) {
               console.log(error);
               res.send({
                 status: 400,
-                message: `Something Went Wrong while adding Doctor`,
+                message: `Something Went Wrong while creating Blog`,
                 type: "fails",
               });
             });
@@ -104,11 +96,64 @@ router.post("/add-blog", async function (req, res, next) {
             type: "error",
           });
         }
+
       }
     });
   } catch (error) {
     console.log(error);
   }
 });
+
+router.get('/', async (req, res) => {
+  try {
+    // Retrieve all blog posts from the database using the Blog model
+    const blogPosts = await db.Blogs.findAll({
+      attributes: ['blog_id', 'title', 'date', 'author_name', 'photo', 'sort_description', 'description'], // You can directly specify the attribute without an alias
+      raw: true,// Get raw JSON data instead of Sequelize instances
+    });
+
+    console.log('Blog posts retrieved:', blogPosts);
+
+    res.render("blogs/blogs", {
+      title: "ChildDR | Setting",
+      blogPosts: blogPosts,
+      layout: "blank",
+      sessionUser: req.user,
+    });
+  } catch (error) {
+    console.error('Error retrieving blog posts:', error);
+    // Handle errors appropriately
+    res.status(500).send('Error retrieving blog posts'); // Return an error response to the client
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const blog = await db.Blogs.findByPk(id);
+    const blogPost = blog.toJSON();
+
+    if (!blogPost) {
+      // Blog post not found, handle error or redirect to an error page
+      res.status(404).send('Blog not found');
+      return;
+    }
+
+    res.render('blogs/blog-detail', {
+      title: blogPost.title,
+      description: blogPost.description,
+      date: blogPost.date,
+      authorName: blogPost.authorName,
+      photo: blogPost.photo,
+      layout: 'blank',
+      sessionUser: req.user,
+    });
+  } catch (error) {
+    console.error('Error retrieving blog post:', error);
+    // Handle errors appropriately
+    res.status(500).send('Error retrieving blog post');
+  }
+});
+
 
 module.exports = router;
