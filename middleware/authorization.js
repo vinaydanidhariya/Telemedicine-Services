@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const permissions = require('../config/config.json').permissions;
+const permissions = require('../config/permissions.json');
 module.exports = {
 	/**
 	 * Following is a middleware which executes and check the access token and it should be passed

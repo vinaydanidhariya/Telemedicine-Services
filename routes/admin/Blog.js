@@ -4,7 +4,6 @@ const db = require("../../models");
 const authentication = require("../../middleware/login_module").check_auth;
 
 var multer = require("multer");
-
 var storage = multer.diskStorage({
 	destination: (req, file, cb) => {
 		cb(null, "public/images");
@@ -48,7 +47,7 @@ router.get("/add-blog", authentication, checkAccess('add-blog'), function (req, 
 });
 
 
-router.post("/add-blog", async function (req, res, next) {
+router.post("/add-blog", authentication,checkAccess('post/blogs/add-blog'),async function (req, res, next) {
 	try {
 		uploadSourceLeadFile(req, res, async function (err) {
 			// Check err while upload
@@ -104,7 +103,7 @@ router.post("/add-blog", async function (req, res, next) {
 	}
 });
 
-router.get('/', async (req, res) => {
+router.get('/', authentication,checkAccess('/blogs/list'),async (req, res) => {
 	try {
 		// Retrieve all blog posts from the database using the Blog model
 		const blogPosts = await db.Blogs.findAll({
@@ -127,7 +126,7 @@ router.get('/', async (req, res) => {
 	}
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', authentication,checkAccess('/blogs/detail'),async (req, res) => {
 	try {
 		const { id } = req.params;
 		const blog = await db.Blogs.findByPk(id);

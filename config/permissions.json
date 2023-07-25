@@ -1,0 +1,116 @@
+{
+	"admin/dashboard": {
+		"ADMIN": true,
+		"DOCTOR": true
+	},
+	"admin/report": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"admin/doctor/add-doctor": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/admin/doctor/add-doctor": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"admin/doctor/edit-doctor": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/admin/doctor/edit-doctor": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"admin/doctor/doctors-list": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/admin/doctor/department-list": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/admin/doctor/delete-doctor": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"add-blog": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/blogs/add-blog": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"/blogs/list": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"/blogs/detail": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"event/add-event": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/event/add-event": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"event/event-list": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"event/event-detail": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"patient/patient-list": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"payment/payment-list": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"setting": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/setting": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"upload": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"admin": {
+		"ADMIN": true,
+		"DOCTOR": true
+	},
+	"post/admin": {
+		"ADMIN": true,
+		"DOCTOR": true
+	},
+	"logout": {
+		"ADMIN": true,
+		"DOCTOR": true
+	},
+
+
+	"doctor/patient-list": {
+		"ADMIN": false,
+		"DOCTOR": true
+	},
+	"doctor/schedule": {
+		"ADMIN": false,
+		"DOCTOR": true
+	},
+	"doctor/appointments-list": {
+		"ADMIN": false,
+		"DOCTOR": true
+	}
+}

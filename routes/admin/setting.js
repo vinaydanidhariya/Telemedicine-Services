@@ -3,7 +3,7 @@ const router = express.Router();
 const authentication = require("../../middleware/login_module").check_auth;
 const db = require("../../models/");
 
-router.get("/", authentication, async function (req, res, next) {
+router.get("/", authentication, checkAccess("setting"), async function (req, res, next) {
 	try {
 		const setting = await db.Setting.findOne();
 		let configurations = {};
@@ -19,7 +19,7 @@ router.get("/", authentication, async function (req, res, next) {
 	}
 });
 
-router.post("/", authentication, async function (req, res, next) {
+router.post("/", authentication, checkAccess("post/setting"), async function (req, res, next) {
 	try {
 
 		const { mailServer, from, username, password, port, GoogleAPIkeys, OAuthclientID, razorpayAPIKeyID, KeySecret, protocol } = req.body;

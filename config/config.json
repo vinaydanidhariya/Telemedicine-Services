@@ -25,13 +25,13 @@
 				{
 					"host": "localhost",
 					"username": "postgres",
-					"password": "2565"
+					"password": "launchl00k#"
 				}
 			],
 			"write": {
 				"host": "localhost",
 				"username": "postgres",
-				"password": "2565"
+				"password": "launchl00k#"
 			}
 		},
 		"pool": {
@@ -89,12 +89,6 @@
 			"key_id": "rzp_test_eIM2tN4jZB7id4",
 			"key_secret": "ZrWjvHIA2dvJmxNJ0jvMIgnT",
 			"paymentCreateUrl": "https://40018dd7c14a-6958608321302419644.ngrok-free.app/whatsapp-payment/create-payment"
-		}
-	},
-	"permissions": {
-		"add-blog": {
-			"ADMIN": true,
-			"DOCTOR": false
 		}
 	}
 }
