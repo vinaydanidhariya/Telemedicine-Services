@@ -6,13 +6,14 @@ const db = require("../../models/");
 
 router.get("/", authentication, async function (req, res, next) {
   try {
-    const setting = await db.Setting.findAll({
-      
-    });
-    console.log(setting);
+    const setting = await db.Setting.findOne();
+    let stringSetting = {};
+    if (setting) {
+      stringSetting = setting.toJSON()
+    }
     res.render("settings/setting", {
       title: "ChildDR | Setting",
-      data: setting.toJSON(),
+      data: stringSetting,
       // layout: 'default',
       sessionUser: req.user,
     });
@@ -20,6 +21,7 @@ router.get("/", authentication, async function (req, res, next) {
     console.log(error);
   }
 });
+
 router.post("/", authentication, async function (req, res, next) {
   try {
     console.log(req.body);
