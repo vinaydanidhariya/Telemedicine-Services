@@ -112,7 +112,7 @@ router.post("/", async (req, res) => {
                                     );
                                     const RespondUrl = await GetPaymentUrl(wa_id);
                                     sendRegistrationMessage(recipientNumber,
-                                        `Plaese Payment at this link and confirm your appointment 💳🔗\n${RespondUrl} \nOnce the payment is completed, your appointment will be confirmed.`);
+                                        `Please Payment at this link and confirm your appointment 💳🔗\n${RespondUrl} \nOnce the payment is completed, your appointment will be confirmed.`);
                                     return res.sendStatus(200)
                                 } else {
                                     console.log(JSON.stringify(body, null, 4));

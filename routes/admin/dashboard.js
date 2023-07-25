@@ -7,8 +7,6 @@ router.get("/", authentication, function (req, res, next) {
     try {
         res.render("dashboard/dashboard", {
             title: "ChildDR | Dashboard",
-            // layout: 'default'
-            sessionUser: req.user
         });
     } catch (error) {
         console.log(error)

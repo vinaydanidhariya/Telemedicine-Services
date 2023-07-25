@@ -666,7 +666,7 @@ const GetPaymentUrl = async (wa_id) => {
 const transactionMessage = async (name, amount, orderId) => {
     try {
         const response = `*Payment Confirmation ✅*
-Hello *${name}*, we have successfully received your payment of Rs *${amount}*💰.
+Hello *${name}*, we have successfully received your payment of Rs ₹ *${amount}*.
 An email has been sent to your registered email address with the following details:
 Payment ID: *${orderId}*
 `

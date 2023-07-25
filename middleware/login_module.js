@@ -118,6 +118,7 @@ module.exports = {
 				//redirect to requested page
 				res.redirect("/?u=" + req.originalUrl);
 			}
+			res.locals.userSession = req.user;
 			return next(); //return next
 		} else {
 			console.log(req.originalUrl.includes('/admin'));
