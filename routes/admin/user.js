@@ -15,10 +15,16 @@ router.get("/", function (req, res, next) {
 		return res.redirect('/admin/dashboard');
 	} else {
 		res.render("login/login", {
-			title: "Dashboard",
+			title: "Login",
 			layout: false
 		});
 	}
+});
+router.get("/profile", authentication, function (req, res, next) {
+	res.render("profile/profile", {
+		title: "Dashboard",
+		layout: "default"
+	});
 });
 
 router.post("/", function (req, res, next) {

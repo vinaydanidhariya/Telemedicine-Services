@@ -362,7 +362,7 @@
 									</div>
 								</div>
 								<div class="flex-grow-1">
-									<span class="fw-semibold d-block">{{userSession.firstName}}</span>
+									<span class="fw-semibold d-block">{{userSession.firstName}} {{userSession.lastName}}</span>
 									<small class="text-muted">{{userSession.type}}</small>
 								</div>
 							</div>
@@ -372,15 +372,9 @@
 						<div class="dropdown-divider"></div>
 					</li>
 					<li>
-						<a class="dropdown-item" href="/admin">
+						<a class="dropdown-item" href="/admin/profile">
 							<i class="bx bx-user me-2"></i>
 							<span class="align-middle">My Profile</span>
-						</a>
-					</li>
-					<li>
-						<a class="dropdown-item" href="/admin">
-							<i class="bx bx-cog me-2"></i>
-							<span class="align-middle">Settings</span>
 						</a>
 					</li>
 					<li>
