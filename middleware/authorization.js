@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const permissions = require('../config/config.json').permissions;
 module.exports = {
 	/**
 	 * Following is a middleware which executes and check the access token and it should be passed
@@ -53,6 +54,27 @@ module.exports = {
 		} else {
 			Logger.error({ message: Message.INVALID_KEY });
 			ServerResponse.sendInvalidRequest(res, { message: Message.INVALID_KEY });
+		}
+	},
+	checkAccess: function (access) {
+		return function (req, res, next) {
+			if (req.user.type == 'ADMIN' || req.user.type == 'DOCTOR') {
+				console.log(permissions[access][req.user.type]);
+				if (permissions[access][req.user.type]) {
+					next();
+				} else {
+					console.log('here');
+					return res.render("401", {
+						title: "UNAUTHORIZED",
+						layout: false
+					});
+				}
+			} else {
+				return res.render("401", {
+					title: "UNAUTHORIZED",
+					layout: false
+				});
+			}
 		}
 	}
 };

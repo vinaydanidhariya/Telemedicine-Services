@@ -1,94 +1,100 @@
 {
-  "local": {
-    "port_no": 5000,
-    "x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
-    "project": "Shree Hari Clinic",
-    "secret": "SHC#100&ShreeHariClinic@333",
-    "url": "http://localhost:5000",
-    "database": "SHC_DEV",
-    "username": "postgres",
-    "schema": "SHC_DEV",
-    "dialect": "postgres",
-    "logging": true,
-    "dialectOptions": {},
-    "nodemailer": {
-      "host": "smtp.gmail.com",
-      "port": 587,
-      "secure": false,
-      "auth": {
-        "user": "test@test.com",
-        "pass": "test"
-      }
-    },
-    "replication": {
-      "read": [
-        {
-          "host": "localhost",
-          "username": "postgres",
-          "password": "launchl00k#"
-        }
-      ],
-      "write": {
-        "host": "localhost",
-        "username": "postgres",
-        "password": "launchl00k#"
-      }
-    },
-    "pool": {
-      "max": 15,
-      "min": 0,
-      "idle": 10000
-    },
-    "Razorpay": {
-      "key_id": "rzp_test_eIM2tN4jZB7id4",
-      "key_secret": "ZrWjvHIA2dvJmxNJ0jvMIgnT",
-      "paymentCreateUrl": "https://40018dd7c14a-6958608321302419644.ngrok-free.app/whatsapp-payment/create-payment"
-    }
-  },
-  "development": {
-    "port_no": 5000,
-    "x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
-    "project": "Shree Hari Clinic",
-    "secret": "SHC#100&ShreeHariClinic@333",
-    "url": "http://localhost:5000",
-    "database": "SHC_DEV",
-    "username": "postgres",
-    "schema": "SHC_DEV",
-    "dialect": "postgres",
-    "logging": true,
-    "dialectOptions": {},
-    "nodemailer": {
-      "host": "smtp.gmail.com",
-      "port": 587,
-      "secure": false,
-      "auth": {
-        "user": "test@test.com",
-        "pass": "test"
-      }
-    },
-    "replication": {
-      "read": [
-        {
-          "host": "localhost",
-          "username": "postgres",
-          "password": "launchl00k#"
-        }
-      ],
-      "write": {
-        "host": "localhost",
-        "username": "postgres",
-        "password": "launchl00k#"
-      }
-    },
-    "pool": {
-      "max": 15,
-      "min": 0,
-      "idle": 10000
-    },
-    "Razorpay": {
-      "key_id": "rzp_test_eIM2tN4jZB7id4",
-      "key_secret": "ZrWjvHIA2dvJmxNJ0jvMIgnT",
-      "paymentCreateUrl": "https://40018dd7c14a-6958608321302419644.ngrok-free.app/whatsapp-payment/create-payment"
-    }
-  }
+	"local": {
+		"port_no": 5000,
+		"x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
+		"project": "Shree Hari Clinic",
+		"secret": "SHC#100&ShreeHariClinic@333",
+		"url": "http://localhost:5000",
+		"database": "SHC_DEV",
+		"username": "postgres",
+		"schema": "SHC_DEV",
+		"dialect": "postgres",
+		"logging": true,
+		"dialectOptions": {},
+		"nodemailer": {
+			"host": "smtp.gmail.com",
+			"port": 587,
+			"secure": false,
+			"auth": {
+				"user": "test@test.com",
+				"pass": "test"
+			}
+		},
+		"replication": {
+			"read": [
+				{
+					"host": "localhost",
+					"username": "postgres",
+					"password": "2565"
+				}
+			],
+			"write": {
+				"host": "localhost",
+				"username": "postgres",
+				"password": "2565"
+			}
+		},
+		"pool": {
+			"max": 15,
+			"min": 0,
+			"idle": 10000
+		},
+		"Razorpay": {
+			"key_id": "rzp_test_eIM2tN4jZB7id4",
+			"key_secret": "ZrWjvHIA2dvJmxNJ0jvMIgnT",
+			"paymentCreateUrl": "https://40018dd7c14a-6958608321302419644.ngrok-free.app/whatsapp-payment/create-payment"
+		}
+	},
+	"development": {
+		"port_no": 5000,
+		"x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
+		"project": "Shree Hari Clinic",
+		"secret": "SHC#100&ShreeHariClinic@333",
+		"url": "http://localhost:5000",
+		"database": "SHC_DEV",
+		"username": "postgres",
+		"schema": "SHC_DEV",
+		"dialect": "postgres",
+		"logging": true,
+		"dialectOptions": {},
+		"nodemailer": {
+			"host": "smtp.gmail.com",
+			"port": 587,
+			"secure": false,
+			"auth": {
+				"user": "test@test.com",
+				"pass": "test"
+			}
+		},
+		"replication": {
+			"read": [
+				{
+					"host": "localhost",
+					"username": "postgres",
+					"password": "launchl00k#"
+				}
+			],
+			"write": {
+				"host": "localhost",
+				"username": "postgres",
+				"password": "launchl00k#"
+			}
+		},
+		"pool": {
+			"max": 15,
+			"min": 0,
+			"idle": 10000
+		},
+		"Razorpay": {
+			"key_id": "rzp_test_eIM2tN4jZB7id4",
+			"key_secret": "ZrWjvHIA2dvJmxNJ0jvMIgnT",
+			"paymentCreateUrl": "https://40018dd7c14a-6958608321302419644.ngrok-free.app/whatsapp-payment/create-payment"
+		}
+	},
+	"permissions": {
+		"add-blog": {
+			"ADMIN": true,
+			"DOCTOR": false
+		}
+	}
 }
