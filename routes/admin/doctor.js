@@ -82,7 +82,7 @@ router.post("/add-doctor", async function (req, res, next) {
             dateOfBirth,
             password: passwordEncrypt,
             status: true,
-            photo_url: req.file.filename,
+            photoUrl: req.file.filename,
             phone,
             createdDate: new Date(),
             updatedDate: new Date(),
