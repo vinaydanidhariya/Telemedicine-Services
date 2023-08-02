@@ -1,0 +1,75 @@
+{{!--
+<link rel="stylesheet" href="https://cdn.dhtmlx.com/scheduler/edge/dhtmlxscheduler.css"> --}}
+<link rel="stylesheet" href="/assets/vendor/libs/dhtmlx/dhtmlxscheduler_material.css">
+<script src="/assets/vendor/libs/dhtmlx/dhtmlxscheduler.js"></script>
+<script src="/assets/vendor/libs/jquery/jquery.js"></script>
+<style>
+    html,
+    body {
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+        overflow: hidden;
+    }
+</style>
+<script>
+    function init() {
+        // Set the date format for XML data
+        scheduler.config.xml_date = "%Y-%m-%d %H:%i";
+
+        // Set the time format to display in AM/PM format
+        scheduler.config.time_format = "12"; // AM/PM format
+
+        // Set the start and end time of the day
+        scheduler.config.first_hour = 8; // 8:00 AM
+        scheduler.config.last_hour = 18; // 6:00 PM
+        scheduler.config.start_date = new Date(); // 6:00 PM
+
+        // Initialize the scheduler with the date for the upcoming 1 week
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 7); // Add 7 days to get the end date for 1 week from today
+        scheduler.config.end_date = endDate; // 6:00 PM
+
+        scheduler.init("scheduler_here", startDate, "week");
+
+        // Set the scheduler to start on the next Monday
+        scheduler.config.start_on_monday = true;
+
+        // Enables dynamic loading for the scheduler
+        scheduler.setLoadMode("day");
+
+        // Load data from the backend
+        scheduler.load("/doctor/events", "json");
+
+        scheduler.plugins({
+            recurring: true
+        });
+
+        const dp = scheduler.createDataProcessor({
+            url: '/doctor/events/',
+            mode: "REST",
+        });
+
+        // Set data exchange mode
+        console.log(scheduler);
+        dp.setTransactionMode("REST");
+        dp.init(scheduler);
+        dp.setTransactionMode("POST", false);
+    }
+</script>
+
+<body onload="init();">
+    <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
+        <div class="dhx_cal_navline">
+            <div class="dhx_cal_prev_button">&nbsp;</div>
+            <div class="dhx_cal_next_button">&nbsp;</div>
+            <div class="dhx_cal_today_button"></div>
+            <div class="dhx_cal_date"></div>
+        </div>
+        <div class="dhx_cal_header">
+        </div>
+        <div class="dhx_cal_data">
+        </div>
+    </div>
+</body>

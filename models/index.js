@@ -33,6 +33,8 @@ class db {
     db.Setting = require('./setting')(sequelize, Sequelize.DataTypes);
     db.Blogs = require('./blogs')(sequelize, Sequelize.DataTypes);
     db.Event = require('./event')(sequelize, Sequelize.DataTypes);
+    db.Schedule = require('./schedule')(sequelize, Sequelize.DataTypes);
+    db.Appointment = require('./appointment')(sequelize, Sequelize.DataTypes);
 
     // Associates all tables here
     db.User.associate(db);
@@ -41,10 +43,10 @@ class db {
     db.Setting.associate(db);
     db.Blogs.associate(db);
     db.Event.associate(db);
+    db.Schedule.associate(db);
+    db.Appointment.associate(db);
 
     sequelize.sync({
-      logging: console.log,
-      force: false
     }).then(() => {
       console.log('Database & tables created!');
     }, error => {

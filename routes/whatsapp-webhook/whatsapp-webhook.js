@@ -20,13 +20,27 @@ router.post("/", async (req, res) => {
             const ExitsUser = await db.WhatsappUser.findOne({ where: { wa_id: wa_id } });
             if (!ExitsUser) {
                 const name = body['entry'][0]['changes'][0]['value']['contacts'][0].profile.name;
+                // await db.WhatsappUser.create({
+                //     profileName: name,
+                //     wa_id: wa_id,
+                //     phone: recipientNumber,
+                //     userStat: 'START'
+                // });
+                // sendWelcomeMessage(recipientNumber);
                 await db.WhatsappUser.create({
                     profileName: name,
                     wa_id: wa_id,
                     phone: recipientNumber,
-                    userStat: 'START'
+                    userStat: 'DEPARTMENT-SELECTION'
                 });
-                sendWelcomeMessage(recipientNumber);
+                const listOfDepartment = await findDoctorDepartmentList()
+                if (listOfDepartment.length > 0) {
+                    sendDoctorDepartmentList(recipientNumber, listOfDepartment);
+                } else {
+                    sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DEPARTMENT AVAILABLE");
+                }
+                return res.sendStatus(200);
+
             }
 
             const user = await db.WhatsappUser.findOne({ where: { wa_id: wa_id } });
@@ -38,14 +52,20 @@ router.post("/", async (req, res) => {
                     if (message.text.body === "Removed") {
                         const deleteResult = await db.WhatsappUser.update(
                             {
-                                userStat: "START"
+                                userStat: "DEPARTMENT-SELECTION"
                             }, {
                             where: {
                                 wa_id: wa_id,
                             },
                         });
                         await sendRegistrationMessage(recipientNumber, "USER SESSION DESTROYED");
-                        sendWelcomeMessage(recipientNumber);
+                        // sendWelcomeMessage(recipientNumber);
+                        const listOfDepartment = await findDoctorDepartmentList()
+                        if (listOfDepartment.length > 0) {
+                            sendDoctorDepartmentList(recipientNumber, listOfDepartment);
+                        } else {
+                            sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DEPARTMENT AVAILABLE");
+                        }
                         return res.sendStatus(200)
                     }
                     else if (message.text.body === "Tester") {
@@ -170,25 +190,25 @@ router.post("/", async (req, res) => {
                     const reply = message.interactive.button_reply;
                     const listReply = message.interactive.list_reply;
 
-                    if (interactiveType === "button_reply" && user.userStat === "START" && reply.id === "welcomeYes") {
-                        const updateResult = await db.WhatsappUser.update(
-                            {
-                                userStat: 'DEPARTMENT-SELECTION',
-                            },
-                            {
-                                where: {
-                                    phone: recipientNumber,
-                                },
-                            }
-                        );
-                        const listOfDepartment = await findDoctorDepartmentList()
-                        if (listOfDepartment.length > 0) {
-                            sendDoctorDepartmentList(recipientNumber, listOfDepartment);
-                        } else {
-                            sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DEPARTMENT AVAILABLE");
-                        }
-                        return res.sendStatus(200);
-                    }
+                    // if (interactiveType === "button_reply" && user.userStat === "START" && reply.id === "welcomeYes") {
+                    //     const updateResult = await db.WhatsappUser.update(
+                    //         {
+                    //             userStat: 'DEPARTMENT-SELECTION',
+                    //         },
+                    //         {
+                    //             where: {
+                    //                 phone: recipientNumber,
+                    //             },
+                    //         }
+                    //     );
+                    //     const listOfDepartment = await findDoctorDepartmentList()
+                    //     if (listOfDepartment.length > 0) {
+                    //         sendDoctorDepartmentList(recipientNumber, listOfDepartment);
+                    //     } else {
+                    //         sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DEPARTMENT AVAILABLE");
+                    //     }
+                    //     return res.sendStatus(200);
+                    // }
 
 
                     if (interactiveType === "list_reply" && user.userStat === "DEPARTMENT-SELECTION") {

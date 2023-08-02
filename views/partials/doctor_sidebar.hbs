@@ -83,13 +83,25 @@
         </li>
         {{!-- --}}
         <li class="menu-item {{#compare title '==' 'Appointments'}}active{{/compare}}">
-            <a href="/doctor/appointments" class="menu-link">
+            <a href="#" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-notepad"></i>
                 <div data-i18n="Appointments">Appointments</div>
             </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{#compare title '==' 'DOCTORS'}}active{{/compare}}">
+                    <a href="/doctor/appointment/upcoming-appointment" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-calendar-edit "></i>
+                        <div data-i18n="Upcoming Appoint.">Upcoming Appointments</div>
+                    </a>
+                </li>
+                <li class="menu-item {{#compare title '==' 'DOCTORS'}}active{{/compare}}">
+                    <a href="/doctor/appointment/past-appointment" class="menu-link">
+                        <i class="menu-icon tf-icons bx bxs-calendar-check"></i>
+                        <div data-i18n="Past Appointment">Past Appointment</div>
+                    </a>
+                </li>
+            </ul>
         </li>
-
-
         {{!-- --}}
     </ul>
 

@@ -4,11 +4,14 @@ const Config = require("../config/config.json")[process.env.NODE_ENV];
 
 module.exports = (sequelize, DataTypes) => {
   class WhatsappUser extends Model {
-
     static associate(models) {
-
+        // One-to-Many: WhatsappUser has many Appointments
+        WhatsappUser.hasMany(models.Appointment, {
+            foreignKey: 'patientId', // The foreign key in the Appointments table that references Users
+            as: 'appointments', // Alias for the association
+        });
     }
-  }
+}
   WhatsappUser.init(
     {
       userId: {

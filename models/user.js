@@ -4,15 +4,12 @@ const Config = require("../config/config.json");
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-
     static associate(models) {
-      // define association here
-      // models.User.hasMany(models.CompanyUserRole, { foreignKey: 'userId', targetKey: 'userId', sourceKey: 'userId', as: 'userCompanyRole' });
+      // One-to-Many: User has many Appointments
+      User.hasMany(models.Appointment, {
+        foreignKey: 'doctor_id', // The foreign key in the Appointments table that references Doctors
+        as: 'appointments', // Alias for the association
+      });
     }
   }
   User.init(
