@@ -146,22 +146,22 @@ module.exports = (sequelize, DataTypes) => {
       },
       degreeUrl: {
         type: DataTypes.TEXT,
-        field: "photo_url",
+        field: "degree_url",
         allowNull: true,
       },
       aadharCardUrl: {
         type: DataTypes.TEXT,
-        field: "photo_url",
+        field: "aadhar_card_url",
         allowNull: true,
       },
       panCardUrl: {
         type: DataTypes.TEXT,
-        field: "photo_url",
+        field: "pan_card_url",
         allowNull: true,
       },
       digitalSignatureUrl: {
         type: DataTypes.TEXT,
-        field: "photo_url",
+        field: "digital_signature_url",
         allowNull: true,
       },
       type: {

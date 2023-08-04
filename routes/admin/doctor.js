@@ -306,112 +306,89 @@ router.post("/edit-doctor", authentication, checkAccess("admin/doctor/edit-docto
 				const [day, month, year] = dateOfBirth.split('/');
 				const newDateOfBirth = new Date(year, month - 1, day);
 
-				try {
-					if (req.file) {
-						console.log(req.body, req.files, req.files.profile[0].filename);
-						db.User.update(
-							{
-								firstName,
-								lastName,
-								type: "DOCTOR",
-								email,
-								qualifications: qualification,
-								department,
-								gender,
-								price,
-								dateOfBirth: newDateOfBirth,
-								status: true,
-								photoUrl: req.files.profile[0].filename,
+				let updateData = {
+					firstName,
+					lastName,
+					type: "DOCTOR",
+					email,
+					qualifications: qualification,
+					department,
+					gender,
+					price,
+					dateOfBirth: newDateOfBirth,
+					status: true,
 
-								degreeText,
-								university,
-								graduationYear,
+					degreeText,
+					university,
+					graduationYear,
 
-								physicalPractice,
-								experience,
-								doctorRegistrationNumber,
-								onlineConsultationTimeFrom,
-								onlineConsultationTimeTo,
-								clinicTimeFrom,
-								clinicTimeTo,
+					physicalPractice,
+					experience,
+					doctorRegistrationNumber,
+					onlineConsultationTimeFrom,
+					onlineConsultationTimeTo,
+					clinicTimeFrom,
+					clinicTimeTo,
 
-								degreeUrl: `/uploads/degree_certificates/${req.files.degreeCertificate[0].filename}`,
-								aadharCardUrl: `/uploads/aadhar_cards/${req.files.aadharCard[0].filename}`,
-								panCardUrl: `/uploads/pan_cards/${req.files.panCard[0].filename}`,
-								digitalSignatureUrl: `/uploads/digital_signatures/${req.files.digitalSignature[0].filename}`,
+					phone: `${phone}`,
+					createdDate: new Date(),
+					updatedDate: new Date(),
+				};
 
-								phone: `${phone}`,
-								createdDate: new Date(),
-								updatedDate: new Date(),
-							},
-							{ where: { userId: doctor } },
-						)
-							.then(createdUser => {
-								console.log(createdUser.firstName);
-								let message = `${createdUser.firstName + " " + createdUser.lastName} Added Doctor successfully`
-								res.send({
-									status: 200,
-									message,
-									type: "success",
-								});
-							})
-							.catch(error => {
-								console.log(error);
-								res.send({
-									status: 400,
-									message: `Something Went Wrong while adding Doctor`,
-									type: "fails",
-								});
-							});
-					} else {
-						db.User.update(
-							{
-								firstName,
-								lastName,
-								type: "DOCTOR",
-								email,
-								qualifications: qualification,
-								department,
-								gender,
-								price,
-								dateOfBirth: newDateOfBirth,
-								status: true,
+				// Check if the image fields are sent in the request
+				if (req.files) {
+					const uploadedFiles = req.files;
 
-								degreeText,
-								university,
-								graduationYear,
-
-								physicalPractice,
-								experience,
-								doctorRegistrationNumber,
-								onlineConsultationTimeFrom,
-								onlineConsultationTimeTo,
-								clinicTimeFrom,
-								clinicTimeTo,
-
-								// phone: `${countryCode} ${phone}`,
-								createdDate: new Date(),
-								updatedDate: new Date(),
-							},
-							{ where: { userId: doctor } },
-						)
-							.then(updatedUser => {
-								let message = `${firstName + " " + lastName} \n Update Doctor successfully`
-								res.send({
-									status: 200,
-									message,
-									type: "success",
-								});
-							})
-							.catch(error => {
-								console.log(error);
-								res.send({
-									status: 400,
-									message: `Something Went Wrong while updating Doctor`,
-									type: "fails",
-								});
-							});
+					// Update profile image if present
+					if (uploadedFiles.profile) {
+						updateData.photoUrl = `/uploads/profile_images/${uploadedFiles.profile[0].filename}`;
 					}
+
+					// Update degree certificate if present
+					if (uploadedFiles.degreeCertificate) {
+						updateData.degreeUrl = `/uploads/degree_certificates/${uploadedFiles.degreeCertificate[0].filename}`;
+					}
+
+					// Update aadhar card if present
+					if (uploadedFiles.aadharCard) {
+						updateData.aadharCardUrl = `/uploads/aadhar_cards/${uploadedFiles.aadharCard[0].filename}`;
+					}
+
+					// Update pan card if present
+					if (uploadedFiles.panCard) {
+						updateData.panCardUrl = `/uploads/pan_cards/${uploadedFiles.panCard[0].filename}`;
+					}
+
+					// Update digital signature if present
+					if (uploadedFiles.digitalSignature) {
+						updateData.digitalSignatureUrl = `/uploads/digital_signatures/${uploadedFiles.digitalSignature[0].filename}`;
+						console.log(updateData);
+					}
+				}
+
+				try {
+					db.User.update(
+						updateData
+						,
+						{ where: { userId: doctor } },
+					)
+						.then(createdUser => {
+							updateData = {}; // Assigning an empty object to clear the data
+							let message = `${firstName + " " + lastName} Added Doctor successfully`
+							res.send({
+								status: 200,
+								message,
+								type: "success",
+							});
+						})
+						.catch(error => {
+							console.log(error);
+							res.send({
+								status: 400,
+								message: `Something Went Wrong while adding Doctor`,
+								type: "fails",
+							});
+						});
 				} catch (error) {
 					console.log(error);
 					res.send({
