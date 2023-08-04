@@ -44,6 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.TEXT,
         field: "email",
+        unique: true,
         allowNull: false,
       },
       gender: {
@@ -75,12 +76,98 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         field: "email_verfication_status",
         allowNull: true,
-        defaultValue: true,
+        defaultValue: false,
+      },
+      delete: {
+        type: DataTypes.BOOLEAN,
+        field: "delete",
+        allowNull: true,
+        defaultValue: false,
       },
       status: {
         type: DataTypes.TEXT,
         field: "status",
         allowNull: false,
+      },
+      doctorRegistrationNumber: {
+        type: DataTypes.TEXT,
+        field: "doctor_registration_number",
+        allowNull: false,
+      },
+      experience: {
+        type: DataTypes.TEXT,
+        field: "experience",
+        allowNull: false,
+      },
+      physicalPractice: {
+        type: DataTypes.TEXT,
+        field: "physical_practice",
+        allowNull: false,
+      },
+      university: {
+        type: DataTypes.TEXT,
+        field: "university",
+        allowNull: false,
+      },
+      degreeText: {
+        type: DataTypes.TEXT,
+        field: "degree_text",
+        allowNull: false,
+      },
+      graduationYear: {
+        type: DataTypes.TEXT,
+        field: "graduation_year",
+        allowNull: false,
+      },
+      onlineConsultationTimeFrom: {
+        type: DataTypes.TEXT,
+        field: "online_consultation_time_from",
+        allowNull: false,
+      },
+      onlineConsultationTimeTo: {
+        type: DataTypes.TEXT,
+        field: "online_consultation_time_to",
+        allowNull: false,
+      },
+      clinicTimeFrom: {
+        type: DataTypes.TEXT,
+        field: "clinic_time_from",
+        allowNull: false,
+      },
+      clinicTimeTo: {
+        type: DataTypes.TEXT,
+        field: "clinic_time_to",
+        allowNull: false,
+      },
+      photoUrl: {
+        type: DataTypes.TEXT,
+        field: "photo_url",
+        allowNull: true,
+      },
+      degreeUrl: {
+        type: DataTypes.TEXT,
+        field: "photo_url",
+        allowNull: true,
+      },
+      aadharCardUrl: {
+        type: DataTypes.TEXT,
+        field: "photo_url",
+        allowNull: true,
+      },
+      panCardUrl: {
+        type: DataTypes.TEXT,
+        field: "photo_url",
+        allowNull: true,
+      },
+      digitalSignatureUrl: {
+        type: DataTypes.TEXT,
+        field: "photo_url",
+        allowNull: true,
+      },
+      type: {
+        type: DataTypes.TEXT,
+        field: "type",
+        allowNull: true,
       },
       createdDate: {
         type: DataTypes.DATE,
@@ -92,16 +179,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         field: "updated_date",
         allowNull: false,
-      },
-      type: {
-        type: DataTypes.TEXT,
-        field: "type",
-        allowNull: true,
-      },
-      photoUrl: {
-        type: DataTypes.TEXT,
-        field: "photo_url",
-        allowNull: true,
       },
     },
     {

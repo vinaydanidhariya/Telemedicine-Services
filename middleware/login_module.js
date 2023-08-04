@@ -110,7 +110,8 @@ module.exports = {
 			if (req.user.logout != undefined && req.user.logout == true) {
 				req.logout(); //passport logout method
 				//set flash message
-				res.send({
+				res.render(
+					'403',{
 					status: 403,
 					message: "You are not authorized Please login first",
 					type: "error",
@@ -125,11 +126,7 @@ module.exports = {
 			if (req.originalUrl.includes('/admin')) {
 				res.redirect('/admin/error')
 			} else {
-				res.send({
-					status: 403,
-					message: "You are not authorized Please login first",
-					type: "error",
-				});
+				return res.redirect('/error')
 			}
 		}
 

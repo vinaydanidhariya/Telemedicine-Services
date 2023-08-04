@@ -5,7 +5,7 @@ $(function () {
         s = $(".dt-row-grouping"),
         r = (e.length && (l = e.DataTable({
             ajax: {
-                url: '/users/admin-doctor-list',
+                url: '/doctors/doctor-list',
                 type: 'POST',
                 dataSrc: ''
             },
@@ -266,9 +266,7 @@ $(function () {
     })
         ,
         $('.datatables-basic tbody').on('click', '.item-edit', function () {
-            console.log("hello");
             var rowData = l.row($(this).parents("tr")).data();
-            const json = JSON.stringify(rowData);
             window.location.href = `/doctors/edit-doctor?edit=${rowData.userId}`;
         });
 });

@@ -5,7 +5,7 @@ $(function () {
         s = $(".dt-row-grouping"),
         r = (e.length && (l = e.DataTable({
             ajax: {
-                url: '/users/admin-payment-list',
+                url: '/payment/payment-list',
                 type: 'POST',
                 dataSrc: ''
             },
