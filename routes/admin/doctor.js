@@ -184,7 +184,7 @@ router.post("/add-doctor", checkAccess('post/admin/doctor/add-doctor'), async fu
 						dateOfBirth: newDateOfBirth,
 						password: passwordEncrypt,
 						status: true,
-						photoUrl: req.files.profile[0].filename,
+						photoUrl: `/images/profile/${req.files.profile[0].filename}`,
 
 						degreeText,
 						university,
@@ -218,11 +218,30 @@ router.post("/add-doctor", checkAccess('post/admin/doctor/add-doctor'), async fu
 						})
 						.catch(error => {
 							console.log(error);
-							res.send({
-								status: 400,
-								message: `Something Went Wrong while adding Doctor`,
-								type: "fails",
-							});
+							if (error.name === 'SequelizeUniqueConstraintError' && error.fields.email) {
+								// Email already exists, return an appropriate error message to the client
+								res.send({
+									status: 400,
+									message: "Email already exists.",
+									type: "fails",
+								});
+							}
+							else if (error.name === 'SequelizeUniqueConstraintError' && error.fields.phone) {
+								// Email already exists, return an appropriate error message to the client
+								res.send({
+									status: 400,
+									message: "Phone Number already exists.",
+									type: "fails",
+								});
+							}
+							else {
+								// Other errors (e.g., database connection issues, validation errors)
+								res.send({
+									status: 400,
+									message: error.message,
+									type: "fails",
+								});
+							}
 						});
 				} catch (error) {
 					console.log(error);

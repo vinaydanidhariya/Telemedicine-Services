@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       phone: {
         type: DataTypes.TEXT,
         field: "phone",
+        unique: true,
         allowNull: true,
       },
       price: {
