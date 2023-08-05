@@ -116,7 +116,6 @@ router.get('/', authentication,checkAccess('/blogs/list'),async (req, res) => {
 		res.render("blogs/blogs", {
 			title: "ChildDR | Setting",
 			blogPosts: blogPosts,
-			layout: "blank",
 			sessionUser: req.user,
 		});
 	} catch (error) {

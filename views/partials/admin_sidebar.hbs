@@ -179,6 +179,26 @@
 					<div data-i18n="Setting"> Setting </div>
 				</a>
 			</li>
+			<li class="menu-item {{#compare title '==' 'Web Setting'}}active{{/compare}}">
+				<a href="/web-setting" class="menu-link menu-toggle">
+					<i class="menu-icon tf-icons bx bx-desktop"></i>
+					<div data-i18n="Web Setting">Web Setting</div>
+				</a>
+				<ul class="menu-sub">
+					<li class="menu-item">
+						<a href="/web-setting/add-slider-photo" class="menu-link">
+							<i class="menu-icon tf-icons bx bx-plus-circle"></i>
+							<div data-i18n="Add-slider-photo">Add-Slider-Photo</div>
+						</a>
+					</li>
+					<li class="menu-item {{#compare title '==' 'SLIDER-LIST'}}active{{/compare}}">
+						<a href="/web-setting/slider-photo-list" class="menu-link">
+							<i class="menu-icon tf-icons bx bx-list-ol"></i>
+							<div data-i18n="Web Photo List">Web-Photo-List</div>
+						</a>
+					</li>
+				</ul>
+			</li>
 		</ul>
 	</ul>
 </aside>

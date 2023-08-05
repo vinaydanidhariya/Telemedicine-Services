@@ -112,5 +112,29 @@
 	"doctor/appointments-list": {
 		"ADMIN": false,
 		"DOCTOR": true
+	},
+	"web-settings/slider-photo":{
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/web-settings/slider-photo": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"web-setting/slider-photo-list":{
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/delete-slider-photo":{
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/edit-slider-photo":{
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/web-setting/edit-slider-photo":{
+		"ADMIN": true,
+		"DOCTOR": false
 	}
 }
