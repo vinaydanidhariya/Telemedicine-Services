@@ -52,7 +52,6 @@ module.exports = {
 									// user = user.toObject();
 
 									if (md5(password) != user.password) {
-										console.log(password);
 										return done(null, false, {
 											message:
 												"Please enter valid login details",

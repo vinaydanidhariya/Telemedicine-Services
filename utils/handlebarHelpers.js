@@ -45,7 +45,6 @@ module.exports = {
         },
 
         calculation: function (x, y, operation) {
-            console.log(x, y);
             switch (operation) {
                 case "-":
                     return x - y;

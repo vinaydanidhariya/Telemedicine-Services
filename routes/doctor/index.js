@@ -16,7 +16,6 @@ router.get("/list", authentication, checkAccess("doctor/patient-list"), function
 });
 
 router.post("/doctor-patient-list", authentication, checkAccess("doctor/patient-list"), async function (req, res, next) {
-	console.log(req.body);
 	try {
 		const { code, department } = req.body;
 		// if (code === "778899") {
@@ -34,7 +33,6 @@ router.post("/doctor-patient-list", authentication, checkAccess("doctor/patient-
 				"email"
 			]
 		})
-		console.log(patients);
 		res.send(patients);
 		// } else {
 		//   res.send("error");
@@ -58,7 +56,6 @@ router.post("/scheduler", authentication, checkAccess("doctor/schedule"), functi
 // Route to handle GET request for fetching all events
 router.get('/events', async (req, res) => {
 	try {
-		console.log(req.user.userId);
 		const { timeshift, from, to } = req.query;
 
 		// Parse the dates and apply the timeshift (if available)
@@ -99,8 +96,6 @@ router.post('/events/', async (req, res) => {
 			eventId = eventData.id,
 			startDate = eventData.start_date,
 			endDate = eventData.end_date
-		console.log(eventData);
-
 		var data = req.body;
 		var mode = data["!nativeeditor_status"];
 		var sid = data.id;
@@ -117,7 +112,6 @@ router.post('/events/', async (req, res) => {
 		}
 		if (mode == "updated") {
 			try {
-				console.log("event id", tid);
 				const [updatedRowsCount, updatedRows] = await db.Schedule.update(
 					{
 						title,

@@ -161,8 +161,6 @@ router.post("/add-doctor", checkAccess('post/admin/doctor/add-doctor'), async fu
 
 				} = req.body;
 
-				console.log(dateOfBirth);
-
 				const [day, month, year] = dateOfBirth.split('/');
 
 				// JavaScript Date object uses month values starting from 0 (January is 0, February is 1, and so on),
@@ -170,7 +168,6 @@ router.post("/add-doctor", checkAccess('post/admin/doctor/add-doctor'), async fu
 				const newDateOfBirth = new Date(year, month - 1, day);
 
 				try {
-					console.log(req.body, req.files, req.files.profile[0].filename);
 					const passwordEncrypt = convertToMd5(password);
 					db.User.create({
 						firstName,
@@ -208,7 +205,6 @@ router.post("/add-doctor", checkAccess('post/admin/doctor/add-doctor'), async fu
 						updatedDate: new Date(),
 					})
 						.then(createdUser => {
-							console.log(createdUser.firstName);
 							let message = `${createdUser.firstName + " " + createdUser.lastName} Added Doctor successfully`
 							res.send({
 								status: 200,
@@ -266,7 +262,6 @@ router.get("/edit-doctor", authentication, checkAccess("admin/doctor/edit-doctor
 				where: { userId: edit }
 			})
 			const newData = data.toJSON()
-			console.log(data.toJSON());
 			const formattedDate = moment(data.dateOfBirth).format("DD/MM/YYYY");
 			res.render("doctors/edit-doctor", {
 				title: "DOCTORS",
@@ -294,7 +289,6 @@ router.post("/edit-doctor", authentication, checkAccess("admin/doctor/edit-docto
 					message: err.message
 				});
 			} else {
-				console.log("here");
 				const {
 					firstName,
 					lastName,
@@ -320,8 +314,6 @@ router.post("/edit-doctor", authentication, checkAccess("admin/doctor/edit-docto
 					clinicTimeTo,
 
 				} = req.body;
-				console.log(department);
-
 				const [day, month, year] = dateOfBirth.split('/');
 				const newDateOfBirth = new Date(year, month - 1, day);
 
@@ -381,7 +373,6 @@ router.post("/edit-doctor", authentication, checkAccess("admin/doctor/edit-docto
 					// Update digital signature if present
 					if (uploadedFiles.digitalSignature) {
 						updateData.digitalSignatureUrl = `/uploads/digital_signatures/${uploadedFiles.digitalSignature[0].filename}`;
-						console.log(updateData);
 					}
 				}
 
@@ -434,7 +425,6 @@ router.get("/doctors-list", authentication, checkAccess("admin/doctor/doctors-li
 });
 
 router.post("/doctor-list", async function (req, res, next) {
-	console.log(req.body);
 	try {
 		const { code, department } = req.body;
 		// if (code === "778899") {
@@ -455,7 +445,6 @@ router.post("/doctor-list", async function (req, res, next) {
 				delete: false
 			}
 		});
-		console.log(USER);
 		res.send(USER);
 		// } else {
 		//   res.send("error");
@@ -468,7 +457,6 @@ router.post("/doctor-list", async function (req, res, next) {
 router.post("/doctor-department", authentication, checkAccess("post/admin/doctor/department-list"), async function (req, res, next) {
 	try {
 		const { code } = req.body;
-		console.log(req.body);
 		if (code === "778899") {
 			const listOfDepartment = await db.Department.findAll({
 				order: [
@@ -484,7 +472,6 @@ router.post("/doctor-department", authentication, checkAccess("post/admin/doctor
 				raw: true,
 				tableName: "department"
 			});
-			console.log(listOfDepartment);
 			res.send(listOfDepartment);
 		} else {
 			res.send("error");
@@ -497,7 +484,6 @@ router.post("/doctor-department", authentication, checkAccess("post/admin/doctor
 router.post("/delete-doctor", authentication, checkAccess("post/admin/doctor/delete-doctor"), async function (req, res, next) {
 	try {
 		const { code, userId } = req.body;
-		console.log(req.body);
 		if (code === "778899") {
 			await db.User.update({
 				delete: true

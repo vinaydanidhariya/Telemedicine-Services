@@ -226,7 +226,6 @@
                         KeySecret: $('[name=KeySecret]').val(),
                         protocol: $('#protocols').find(":selected").val()
                     };
-                    console.log(formData)
                     $.ajax({
                         url: '/setting',
                         type: 'POST',

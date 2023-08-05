@@ -109,8 +109,6 @@ router.get('/', authentication, checkAccess("event/event-list"), async (req, res
 			raw: true,// Get raw JSON data instead of Sequelize instances
 		});
 
-		console.log('event posts retrieved:', eventPosts);
-
 		res.render("events/events", {
 			title: "ChildDR | Setting",
 			eventPosts: eventPosts,

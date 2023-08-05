@@ -14,7 +14,6 @@ router.get("/payment-list", authentication, checkAccess("payment/payment-list"),
 });
 
 router.post("/payment-list", async function (req, res, next) {
-	console.log(req.body);
 	try {
 		const { code, department } = req.body;
 		// if (code === "778899") {
@@ -32,7 +31,6 @@ router.post("/payment-list", async function (req, res, next) {
 				"payment_status"
 			],
 		});
-		console.log(USER);
 		res.send(USER);
 		// } else {
 		//   res.send("error");

@@ -267,8 +267,6 @@ $(function () {
     $(".datatable-doctor-upcoming-appointment-list tbody").on("click", ".item-edit", function () {
         // Retrieve the data associated with the row
         var rowData = l.row($(this).parents("tr")).data();
-        console.log(rowData);
-
         // Assuming your modal content has an element with the ID "modalContent"
         var modalContent = $(".modal-body");
 
@@ -290,7 +288,6 @@ $(function () {
 
             // Iterate through the desired properties
             desiredProperties.forEach(function (key) {
-                console.log(data[key]);
                 // Check if the property exists in the data object
                 if (data.hasOwnProperty(key)) {
                     // Create a table row for the current property-value pair

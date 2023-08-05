@@ -49,7 +49,6 @@ router.post("/", function (req, res, next) {
 						});
 					} else {
 						const token = jwt.sign(req.user, config.JWTMaster);
-						console.log(req.user);
 						const sessionId = uuidv4();
 
 						req.user.sessionId = sessionId;

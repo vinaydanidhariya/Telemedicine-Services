@@ -59,11 +59,9 @@ module.exports = {
 	checkAccess: function (access) {
 		return function (req, res, next) {
 			if (req.user.type == 'ADMIN' || req.user.type == 'DOCTOR') {
-				console.log(permissions[access][req.user.type]);
 				if (permissions[access][req.user.type]) {
 					next();
 				} else {
-					console.log('here');
 					return res.render("401", {
 						title: "UNAUTHORIZED",
 						layout: false

@@ -14,7 +14,6 @@ router.get("/patient-list", authentication, checkAccess("patient/patient-list"),
 });
 
 router.post("/admin-patient-list", async function (req, res, next) {
-	console.log(req.body);
 	try {
 		const { code, department } = req.body;
 		// if (code === "778899") {
@@ -31,7 +30,6 @@ router.post("/admin-patient-list", async function (req, res, next) {
 				"email"
 			],
 		});
-		console.log(USER);
 		res.send(USER);
 		// } else {
 		//   res.send("error");
