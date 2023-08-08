@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		// Set the destination path for different file types (you may adjust this as needed)
 		if (file.fieldname === 'profile') {
-			const uploadDirectory = Path.join(__dirname, '../../uploads/profiles/');
+			const uploadDirectory = Path.join(__dirname, '../../public/images/profile/');
 			cb(null, uploadDirectory);
 		} else if (file.fieldname === 'degreeCertificate') {
 			const uploadDirectory = Path.join(__dirname, '../../uploads/degree-certificates/');
@@ -67,6 +67,7 @@ const upload = multer({
 
 function checkFileType(file, cb) {
 	if (file.fieldname === 'profile') {
+		// Check file size for the 'profile' image (max size: 400 KB)
 		if (
 			file.mimetype === 'image/png' ||
 			file.mimetype === 'image/jpg' ||
@@ -75,13 +76,15 @@ function checkFileType(file, cb) {
 		) {
 			cb(null, true);
 		} else {
-			cb(new Error('Invalid file type. Only PNG, JPG, JPEG, and GIF images are allowed.'));
+			return cb(new Error('Invalid file type. Only PNG, JPG, JPEG, and GIF images are allowed.'));
 		}
-	} else if (file.fieldname === 'degreeCertificate') {
+	}
+	else if (file.fieldname === 'degreeCertificate') {
 		if (
-			file.mimetype === 'application/pdf' ||
-			file.mimetype === 'application/msword' ||
-			file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+			file.mimetype === 'application/pdf'
+			// ||
+			//file.mimetype === 'application/msword' ||
+			//file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 		) {
 			cb(null, true);
 		} else {
@@ -89,10 +92,11 @@ function checkFileType(file, cb) {
 		}
 	} else if (file.fieldname === 'aadharCard') {
 		if (
-			file.mimetype === 'application/pdf' ||
-			file.mimetype === 'image/png' ||
-			file.mimetype === 'image/jpg' ||
-			file.mimetype === 'image/jpeg'
+			file.mimetype === 'application/pdf'
+			//||
+			//file.mimetype === 'image/png' ||
+			//file.mimetype === 'image/jpg' ||
+			//file.mimetype === 'image/jpeg'
 		) {
 			cb(null, true);
 		} else {
@@ -100,10 +104,11 @@ function checkFileType(file, cb) {
 		}
 	} else if (file.fieldname === 'panCard') {
 		if (
-			file.mimetype === 'application/pdf' ||
-			file.mimetype === 'image/png' ||
-			file.mimetype === 'image/jpg' ||
-			file.mimetype === 'image/jpeg'
+			file.mimetype === 'application/pdf'
+			//||
+			//file.mimetype === 'image/png' ||
+			//file.mimetype === 'image/jpg' ||
+			//file.mimetype === 'image/jpeg'
 		) {
 			cb(null, true);
 		} else {
@@ -124,7 +129,6 @@ function checkFileType(file, cb) {
 
 router.post("/add-doctor", checkAccess('post/admin/doctor/add-doctor'), async function (req, res, next) {
 	try {
-
 		upload(req, res, (err) => {
 			if (err) {
 				console.log('Error while uploading image');
@@ -134,7 +138,16 @@ router.post("/add-doctor", checkAccess('post/admin/doctor/add-doctor'), async fu
 					message: err.message
 				});
 			} else {
-				console.log("here");
+				const profileImage = req.files.profile[0];
+
+				// Check if the file size is less than or equal to 400 KB
+				if (profileImage && profileImage.size >= 400 * 1024) {
+					return res.send({
+						status: 400,
+						message: "Profile image size should be less than or equal to 400KB",
+						type: "fails",
+					});
+				}
 				const {
 					firstName,
 					lastName,
@@ -146,8 +159,6 @@ router.post("/add-doctor", checkAccess('post/admin/doctor/add-doctor'), async fu
 					qualification,
 					department,
 					gender,
-
-					countryCode,
 					degreeText,
 					university,
 					graduationYear,
@@ -162,97 +173,87 @@ router.post("/add-doctor", checkAccess('post/admin/doctor/add-doctor'), async fu
 				} = req.body;
 
 				const [day, month, year] = dateOfBirth.split('/');
-
-				// JavaScript Date object uses month values starting from 0 (January is 0, February is 1, and so on),
-				// so we need to subtract 1 from the month value before creating the Date object.	
 				const newDateOfBirth = new Date(year, month - 1, day);
 
-				try {
-					const passwordEncrypt = convertToMd5(password);
-					db.User.create({
-						firstName,
-						lastName,
-						type: "DOCTOR",
-						email,
-						qualifications: qualification,
-						department,
-						gender,
-						price,
-						dateOfBirth: newDateOfBirth,
-						password: passwordEncrypt,
-						status: true,
-						photoUrl: `/images/profile/${req.files.profile[0].filename}`,
+				const passwordEncrypt = convertToMd5(password);
+				const userObj = {
+					firstName,
+					lastName,
+					type: "DOCTOR",
+					email,
+					qualifications: qualification,
+					department,
+					gender,
+					price,
+					dateOfBirth: newDateOfBirth,
+					password: passwordEncrypt,
+					status: true,
+					photoUrl: `/images/profile/${req.files.profile[0].filename}`,
+					degreeText,
+					university,
+					graduationYear,
+					physicalPractice,
+					experience,
+					doctorRegistrationNumber,
+					onlineConsultationTimeFrom,
+					onlineConsultationTimeTo,
+					clinicTimeFrom,
+					clinicTimeTo,
+					degreeUrl: `/uploads/degree_certificates/${req.files.degreeCertificate[0].filename}`,
+					aadharCardUrl: `/uploads/aadhar_cards/${req.files.aadharCard[0].filename}`,
+					panCardUrl: `/uploads/pan_cards/${req.files.panCard[0].filename}`,
+					digitalSignatureUrl: `/uploads/digital_signatures/${req.files.digitalSignature[0].filename}`,
+					phone: `${phone}`,
+					createdDate: new Date(),
+					updatedDate: new Date(),
+				};
 
-						degreeText,
-						university,
-						graduationYear,
-
-						physicalPractice,
-						experience,
-						doctorRegistrationNumber,
-						onlineConsultationTimeFrom,
-						onlineConsultationTimeTo,
-						clinicTimeFrom,
-						clinicTimeTo,
-
-						degreeUrl: `/uploads/degree_certificates/${req.files.degreeCertificate[0].filename}`,
-						aadharCardUrl: `/uploads/aadhar_cards/${req.files.aadharCard[0].filename}`,
-						panCardUrl: `/uploads/pan_cards/${req.files.panCard[0].filename}`,
-						digitalSignatureUrl: `/uploads/digital_signatures/${req.files.digitalSignature[0].filename}`,
-
-						phone: `${phone}`,
-						createdDate: new Date(),
-						updatedDate: new Date(),
-					})
-						.then(createdUser => {
-							let message = `${createdUser.firstName + " " + createdUser.lastName} Added Doctor successfully`
-							res.send({
-								status: 200,
-								message,
-								type: "success",
-							});
-						})
-						.catch(error => {
-							console.log(error);
-							if (error.name === 'SequelizeUniqueConstraintError' && error.fields.email) {
-								// Email already exists, return an appropriate error message to the client
-								res.send({
-									status: 400,
-									message: "Email already exists.",
-									type: "fails",
-								});
-							}
-							else if (error.name === 'SequelizeUniqueConstraintError' && error.fields.phone) {
-								// Email already exists, return an appropriate error message to the client
-								res.send({
-									status: 400,
-									message: "Phone Number already exists.",
-									type: "fails",
-								});
-							}
-							else {
-								// Other errors (e.g., database connection issues, validation errors)
-								res.send({
-									status: 400,
-									message: error.message,
-									type: "fails",
-								});
-							}
+				db.User.create(userObj)
+					.then(createdUser => {
+						let message = `${createdUser.firstName + " " + createdUser.lastName} Added Doctor successfully`
+						res.send({
+							status: 200,
+							message,
+							type: "success",
 						});
-				} catch (error) {
-					console.log(error);
-					res.send({
-						status: 500,
-						message: error.message,
-						type: "error",
+					})
+					.catch(error => {
+						console.log(error);
+						if (error.name === 'SequelizeUniqueConstraintError' && error.fields.email) {
+							// Handle unique email constraint error
+							return res.send({
+								status: 400,
+								message: "Email already exists.",
+								type: "fails",
+							});
+						} else if (error.name === 'SequelizeUniqueConstraintError' && error.fields.phone) {
+							// Handle unique phone constraint error
+							return res.send({
+								status: 400,
+								message: "Phone Number already exists.",
+								type: "fails",
+							});
+						} else {
+							// Handle other errors
+							return res.send({
+								status: 400,
+								message: error.message,
+								type: "fails",
+							});
+						}
 					});
-				}
 			}
-		})
+		});
 	} catch (error) {
 		console.log(error);
+		res.send({
+			status: 500,
+			message: error.message,
+			type: "error",
+		});
 	}
 });
+
 
 router.get("/edit-doctor", authentication, checkAccess("admin/doctor/edit-doctor"), async function (req, res, next) {
 	try {
@@ -437,9 +438,9 @@ router.post("/doctor-list", async function (req, res, next) {
 				"price",
 				"department",
 				"qualifications",
-				"photo_url",
+				"photoUrl",
 				"status",
-				"delete" // 'delete' is a reserved keyword in JavaScript, use it with caution
+				"delete"
 			],
 			where: {
 				delete: false

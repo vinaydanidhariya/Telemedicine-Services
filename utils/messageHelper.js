@@ -7,6 +7,8 @@ const recipientNumber = process.env.RECIPIENT_PHONE_NUMBER;
 const myNumberId = process.env.PHONE_NUMBER_ID;
 const Config = require('../config/config.json')[process.env.NODE_ENV];
 const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
+
 
 function validatePhoneNumber(phoneNumber) {
     var phoneRegex = /^\d{10}$/;
@@ -30,46 +32,105 @@ const getTextMessageInput = (recipient, text) => {
     });
 }
 
-const generateTimeSlots = (endTime, timeSlotDuration) => {
-    const slots = [];
+async function findAvailableTimeSlots(from, to, doctorId) {
+    function generateTimeSlots(from, to) {
+        const currentDate = new Date();
+        if (
+            from.getDate() === currentDate.getDate() &&
+            from.getMonth() === currentDate.getMonth() &&
+            from.getFullYear() === currentDate.getFullYear()
+        ) {
+            console.log("today");
+            const scheduleStart = new Date();
+            const currentHour = scheduleStart.getHours();
+            const currentMinutes = scheduleStart.getMinutes();
 
-    // Convert start and end times to Date objects for easier manipulation
-    const startDate = new Date();
-    const formattedDate = startDate.toISOString().split("T")[0];
-    const endDate = new Date(`${formattedDate}T${endTime}`);
+            // Round up the current minutes to the nearest multiple of 15
+            const roundedMinutes = Math.ceil(currentMinutes / 15) * 15;
 
-    let slotIndex = 0;
-    // Loop through the time range and generate time slots
-    let currentTime = startDate;
-    while (currentTime < endDate) {
-        const startTime = currentTime.toLocaleTimeString("en-US", {
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-        });
-        // Calculate end time by adding the duration to the current time
-        const endTime = new Date(currentTime.getTime() + timeSlotDuration * 60000)
-            .toLocaleTimeString("en-US", {
-                hour: "numeric",
-                minute: "numeric",
-                hour12: false,
-            });
+            scheduleStart.setHours(currentHour, roundedMinutes, 0, 0); // Set schedule start time to 8 am
 
-        // Create the time slot object and push it to the slots array
-        const timeSlot = {
-            id: `${slotIndex}`,
-            title: `StartTime: ${startTime}`,
-            description: `${timeSlotDuration} MINUTE DURATION SLOTS`,
-        };
-        slots.push(timeSlot);
+            const scheduleEnd = new Date(to);
+            scheduleEnd.setHours(20, 0, 0, 0); // Set schedule end time to 8 pm
 
-        // Increment the current time by the duration for the next slot
-        currentTime = new Date(currentTime.getTime() + timeSlotDuration * 60000);
-        slotIndex++;
+            const timeSlots = [];
+            let currentTime = new Date(scheduleStart);
+
+            while (currentTime <= scheduleEnd) {
+                // Format the time in AM/PM format (e.g., "8:00 AM")
+                const timeString = currentTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+                timeSlots.push(timeString);
+                currentTime.setMinutes(currentTime.getMinutes() + 15); // Increment by 15 minutes
+            }
+            return timeSlots;
+        } else {
+            console.log("not today");
+            const scheduleStart = new Date(from);
+            const currentHour = scheduleStart.getHours();
+            const currentMinutes = scheduleStart.getMinutes();
+
+            // Round up the current minutes to the nearest multiple of 15
+            const roundedMinutes = Math.ceil(currentMinutes / 15) * 15;
+
+            scheduleStart.setHours(currentHour, roundedMinutes, 0, 0); // Set schedule start time to 8 am
+
+            const scheduleEnd = new Date(to);
+            scheduleEnd.setHours(20, 0, 0, 0); // Set schedule end time to 8 pm
+
+            const timeSlots = [];
+            let currentTime = new Date(scheduleStart);
+
+            while (currentTime <= scheduleEnd) {
+                // Format the time in AM/PM format (e.g., "8:00 AM")
+                const timeString = currentTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+                timeSlots.push(timeString);
+                currentTime.setMinutes(currentTime.getMinutes() + 15); // Increment by 15 minutes
+            }
+            console.log(timeSlots);
+            return timeSlots;
+        }
     }
 
-    return slots;
-};
+    // Function to exclude time slots falling between 1 pm and 3 pm
+    function excludeTimeRange(timeSlots, startTime, endTime) {
+        let date = startTime.toISOString().substring(0, 10)
+        return timeSlots.filter(slot => {
+            const slotTime = new Date(`${date} ${slot}`);
+            return !(slotTime >= startTime && slotTime < endTime);
+        });
+    }
+
+    const startDate = new Date(from);
+    const endDate = new Date(to);
+
+    // Find available 15-minute time slots
+    const allTimeSlots = generateTimeSlots(startDate, endDate);
+
+    // Get events from the database for the specified date range
+    const removeTime = await db.Schedule.findAll({
+        where: {
+            doctorId,
+            // Apply filtering based on start_date and end_date
+            start_date: {
+                [Op.between]: [startDate, endDate],
+            },
+            end_date: {
+                [Op.between]: [startDate, endDate],
+            },
+        },
+        attributes: [['event_id', 'id'], ['title', 'text'], 'start_date', 'end_date'],
+        raw: true,
+    });
+
+    let excludedTimeSlots = [...allTimeSlots]; // Make a copy of allTimeSlots
+    for (const event of removeTime) {
+        const eventStart = new Date(event.start_date);
+        const eventEnd = new Date(event.end_date);
+        excludedTimeSlots = await excludeTimeRange(excludedTimeSlots, eventStart, eventEnd);
+    }
+    console.log(excludedTimeSlots);
+    return excludedTimeSlots;
+}
 
 
 
@@ -678,7 +739,7 @@ Payment ID: *${orderId}*
 module.exports = {
     findDrList,
     GetPaymentUrl,
-    generateTimeSlots,
+    findAvailableTimeSlots,
     sendMessage,
     getTextMessageInput,
     findDoctorDepartmentList,

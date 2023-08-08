@@ -3,7 +3,7 @@ var express = require("express");
 var router = express.Router();
 const moment = require('moment');
 const db = require('../../models/');
-const { GetPaymentUrl, findDrList, timeSlots, findDoctorDepartmentList, sendDoctorDepartmentList, sendTimeListAppointmentMessage, sendWelcomeMessage, sendListDoctorMessage, sendRegistrationMessage, sendGenderSelectionMessage, sendAppointmentDateReplyButton } = require("../../utils/messageHelper");
+const { GetPaymentUrl, findDrList, findDoctorDepartmentList, sendDoctorDepartmentList, timeSlots, sendTimeListAppointmentMessage, findAvailableTimeSlots, sendWelcomeMessage, sendListDoctorMessage, sendRegistrationMessage, sendGenderSelectionMessage, sendAppointmentDateReplyButton } = require("../../utils/messageHelper");
 const { onSpecificDayMessage, appointmentMessage } = require('../../utils/messages')
 
 router.post("/", async (req, res) => {
@@ -69,8 +69,55 @@ router.post("/", async (req, res) => {
                         return res.sendStatus(200)
                     }
                     else if (message.text.body === "Tester") {
-                        const listOfDepartment = await findDoctorDepartmentList()
-                        sendDoctorDepartmentList(recipientNumber, listOfDepartment);
+                        const user = await db.WhatsappUser.findOne({
+                            where: { phone: recipientNumber }
+                        })
+                        console.log(user.selectedDoctor);
+                        const doctor = await db.User.findOne({
+                            where: { userId: user.selectedDoctor }
+                        })
+                        console.log(doctor);
+                        const userAppointmentDate = new Date(user.appointmentDate); // Convert the appointment date to a Date object
+
+                        // Split the time string into hours and minutes
+                        const [fromHours, fromMinutes] = doctor.onlineConsultationTimeFrom.split(':');
+                        const [toHours, toMinutes] = doctor.onlineConsultationTimeTo.split(':');
+
+                        // Create the 'from' and 'to' date objects
+                        const from = new Date(
+                            userAppointmentDate.getFullYear(),
+                            userAppointmentDate.getMonth(),
+                            userAppointmentDate.getDate(),
+                            parseInt(fromHours),
+                            parseInt(fromMinutes)
+                        );
+
+                        const to = new Date(
+                            userAppointmentDate.getFullYear(),
+                            userAppointmentDate.getMonth(),
+                            userAppointmentDate.getDate(),
+                            parseInt(toHours),
+                            parseInt(toMinutes)
+                        );
+
+                        console.log("From:", from);
+                        console.log("To:", to);
+
+
+                        const timeSlots = await findAvailableTimeSlots(from, to, doctor.userId)
+                        console.log(timeSlots);
+                        const limitedTimeSlots = timeSlots.slice(0, 10);
+                        const convertedTimeSlots = limitedTimeSlots.map((time, index) => {
+                            const id = (index + 1).toString();
+                            const startTime = time;
+                            const description = '15 Minute Duration';
+                            return {
+                                id,
+                                title: `START TIME: ${startTime}`,
+                                description
+                            };
+                        });
+                        sendTimeListAppointmentMessage(recipientNumber, convertedTimeSlots)
                         return res.sendStatus(200)
 
                     } else {
@@ -156,6 +203,14 @@ router.post("/", async (req, res) => {
                                         { userStat: 'TIME-SELECTION', appointmentDate: inputDate },
                                         { where: { phone: recipientNumber } }
                                     );
+                                    const user = await db.WhatsappUser.findOne({
+                                        where: { phone: recipientNumber }
+                                    })
+                                    console.log(user.selectedDoctor);
+                                    const doctor = await db.User.findOne({
+                                        where: { UserId: user.selectedDoctor }
+                                    })
+                                    const timeSlots = await findAvailableTimeSlots(doctor.onlineConsultationTimeFrom, doctor.onlineConsultationTimeTo, doctor.UserId)
                                     sendTimeListAppointmentMessage(recipientNumber, timeSlots)
                                     return res.sendStatus(200);
                                 } else {
@@ -251,6 +306,7 @@ router.post("/", async (req, res) => {
                             { userStat: 'TIME-SELECTION', appointmentDate: today },
                             { where: { phone: recipientNumber } }
                         );
+
                         sendTimeListAppointmentMessage(recipientNumber, timeSlots)
 
                     }
