@@ -1,0 +1,111 @@
+<!-- blogs/blogs.hbs -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>slider</title>
+    <!-- Content wrapper -->
+    <script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
+    <link rel="stylesheet" href="/assets/vendor/libs/sweetalert2/sweetalert2.css" />
+</head>
+
+<body>
+    <div class="slide-list container pt-4">
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            {{#each sliderPosts}}
+            <div class="col-md-6 col-lg-3">
+                <div class="card">
+                    <img class="card-img-top" src="{{this.photo}}" height="250rem" s alt="Card image cap" />
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.slider_title}}</h5>
+                        <p class="card-text">
+                            {{this.short_description}}
+                        </p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                    </ul>
+                    <div class="card-body">
+                        <!-- Link to the full blog post -->
+                        <a href="/web-setting/edit-slider-photo/{{this.web_slider_id}}" class="card-link">Edit</a>
+                        <a href="#" id="delete" class="delete-record card-link"
+                            data-slider_id="{{this.web_slider_id}}">Delete</a>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="/assets/vendor/libs/jquery/jquery.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".slide-list").on("click", ".delete-record", function () {
+            let userId = $(this).data('slider_id')
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure you want to delete this record?',
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary',
+                },
+                buttonsStyling: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/web-setting/delete-slider-photo`,
+                        type: 'post',
+                        data: {
+                            code: "778899",
+                            slider_id: userId
+                        }
+                    }).then(function (response) {
+                        if (response.type === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: response.message,
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                                buttonsStyling: !1,
+                            }).then(function () {
+                                location.reload(true)
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: response.message,
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                                buttonsStyling: false,
+                            });
+                        }
+                    }).catch(function (error) {
+                        // Handle AJAX request error
+                        console.error('AJAX Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error occurred while deleting the record.',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                            buttonsStyling: false,
+                        });
+                    });
+                }
+            });
+        });
+    });
+</script>

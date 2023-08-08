@@ -112,7 +112,6 @@ router.get('/', authentication, checkAccess("event/event-list"), async (req, res
 		res.render("events/events", {
 			title: "ChildDR | Setting",
 			eventPosts: eventPosts,
-			layout: "blank",
 			sessionUser: req.user,
 		});
 	} catch (error) {
