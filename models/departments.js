@@ -4,9 +4,7 @@ const Config = require("../config/config.json");
 
 module.exports = (sequelize, DataTypes) => {
   class Department extends Model {
-
-    static associate(models) {
-    }
+    static associate(models) {}
   }
   Department.init(
     {
@@ -30,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       status: {
         type: DataTypes.TEXT,
         field: "status",
+        defaultValue: true,
         allowNull: false,
       },
       photo_url: {
