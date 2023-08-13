@@ -116,24 +116,24 @@
         "url": "app-access-permission.html"
       },
       {
-        "name": "Invoice List",
+        "name": "prescription List",
         "icon": "bx-list-ol",
-        "url": "app-invoice-list.html"
+        "url": "app-prescription-list.html"
       },
       {
-        "name": "Invoice Preview",
+        "name": "prescription Preview",
         "icon": "bx-file",
-        "url": "app-invoice-preview.html"
+        "url": "app-prescription-preview.html"
       },
       {
-        "name": "Invoice Edit",
+        "name": "prescription Edit",
         "icon": "bx-pencil",
-        "url": "app-invoice-edit.html"
+        "url": "app-prescription-edit.html"
       },
       {
-        "name": "Invoice Add",
+        "name": "prescription Add",
         "icon": "bx-user-plus",
-        "url": "app-invoice-add.html"
+        "url": "app-prescription-add.html"
       },
       {
         "name": "User Profile",

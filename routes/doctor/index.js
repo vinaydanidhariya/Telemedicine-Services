@@ -4,6 +4,7 @@ const authentication = require("../../middleware/login_module").check_auth;
 const db = require("../../models");
 const { sequelize } = require("../../models/");
 const { Op } = require('sequelize');
+const prescription = require("../../models/prescription");
 
 router.get("/dashboard", authentication, checkAccess("doctor/patient-list"), function (req, res, next) {
 	res.render("doctor/dashboard")
@@ -14,6 +15,99 @@ router.get("/list", authentication, checkAccess("doctor/patient-list"), function
 		title: "Patient-list"
 	})
 });
+
+router.get("/send-prescription", authentication, checkAccess("doctor/appointments-list"), function (req, res, next) {
+	res.render("doctor/send-prescription")
+});
+
+router.get("/send-prescription/:id", authentication, checkAccess("doctor/appointments-list"), async function (req, res, next) {
+	console.log(req.params);
+	try {
+
+		const prescriptionId = req.params.id
+		const prescription = await db.Prescription.findOne({
+			where: {
+				prescriptionId: prescriptionId,
+				doctorId: req.user.userId
+			},
+			include: [
+				{
+					model: db.User, // Assuming this is your doctor model
+					as: 'doctor', // Alias for the association in the Prescription model
+					attributes: ['userId', 'firstName', 'lastName', 'phone', 'email', 'department'] // Select specific doctor attributes you want
+				},
+				{
+					model: db.WhatsappUser, // Assuming this is your patient model
+					as: 'patient', // Alias for the association in the Prescription model
+					attributes: [
+						'userId', 'fullName', 'phone', 'email', 'gender',
+						// Convert dateOfBirth to age using SQL function
+						[db.sequelize.literal(`
+							EXTRACT(YEAR FROM age("patient"."date_of_birth"))
+						`), 'age']
+					]
+				}
+			],
+		});
+		console.log(prescription.toJSON());
+
+		res.render("doctor/send-prescription", {
+			title: "Prescription",
+			prescription: prescription.toJSON()
+		})
+	} catch (error) {
+		console.error("Error fetching prescription:", error);
+		// Handle the error appropriately, e.g., redirect or render an error page
+	}
+});
+
+router.post("/save-prescription", authentication, checkAccess("doctor/patient-list"), async function (req, res, next) {
+	try {
+		// Extract fields from nested objects using a single function
+		function extractFields(inputArray, pattern) {
+			return inputArray.map(obj => {
+				const extractedObj = {};
+				for (const key in obj) {
+					const match = key.match(pattern);
+					if (match) {
+						const [, index, fieldName] = match;
+						extractedObj[fieldName] = obj[key];
+					}
+				}
+				return extractedObj;
+			})
+		}
+
+		// Extract medicines and medical info using the generic extraction function
+		const extractedMedicines = extractFields(req.body.medicines, /medicines\[(\d+)\]\[(\w+)\]/);
+		const extractedMedicalInfo = extractFields(req.body.medicalIn, /medical-info\[(\d+)\]\[(\w+)\]/);
+		console.log(extractedMedicalInfo);
+		const prescriptionMsg = req.body.prescriptionMsg;
+		const note = req.body.note;
+		const patientId = req.body.patientId;
+
+		// Construct the organized data object
+		const organizedData = {
+			doctorId: req.user.userId,
+			patientId: patientId,
+			medicines: extractedMedicines,
+			medicalInfo: extractedMedicalInfo,
+			prescriptionMsg: prescriptionMsg,
+			note: note
+		};
+
+		// Create a new prescription record using the organized data
+		const createdPrescription = await db.Prescription.create(organizedData);
+		console.log('Prescription created:', createdPrescription.toJSON());
+
+		// Respond to the client
+		res.status(200).json({ message: 'Data received and processed successfully.' });
+	} catch (error) {
+		console.error('Error creating prescription:', error);
+		res.status(500).json({ message: 'An error occurred while processing the data.' });
+	}
+});
+
 
 router.post("/doctor-patient-list", authentication, checkAccess("doctor/patient-list"), async function (req, res, next) {
 	try {
@@ -42,9 +136,15 @@ router.post("/doctor-patient-list", authentication, checkAccess("doctor/patient-
 	}
 });
 
-router.get("/schedule", authentication, checkAccess("doctor/schedule"), function (req, res, next) {
+router.get("/schedule", authentication, checkAccess("doctor/schedule"), async function (req, res, next) {
+	const doctor = await db.User.findOne(
+		{ where: { userId: req.user.userId } },
+		{ raw: true }
+	)
+	console.log(doctor.toJSON());
 	res.render("doctor/doctor-schedule", {
-		title: "doctor-schedule"
+		title: "doctor-schedule",
+		doctor: doctor.toJSON()
 	})
 });
 
@@ -151,12 +251,13 @@ router.post('/events/', async (req, res) => {
 });
 
 router.get("/appointment/upcoming-appointment", authentication, checkAccess("doctor/appointments-list"), function (req, res, next) {
-	res.render("doctor/upcoming-appointment")
+	res.render("doctor/upcoming-appointment",
+		{ title: "Upcoming Appointment" })
 });
 
 router.post("/appointment/doctor-upcoming-appointment-list", async function (req, res, next) {
 	const appointment = await db.Appointment.findAll({
-		where: { doctorId: req.user.userId, status: false }, // Change the condition as needed
+		where: { doctorId: req.user.userId, status: "RECEIVED" }, // Change the condition as needed
 		include: [
 			{
 				model: db.WhatsappUser,
@@ -174,9 +275,10 @@ router.post("/appointment/doctor-upcoming-appointment-list", async function (req
 			},
 			{ model: db.User, as: "doctor", attributes: ["user_id", "first_name", "last_name"] },
 		],
-		attributes: ["appointment_id", "prescription", "status"],
+		attributes: ["appointment_id", "prescription_id", "status"],
 		// raw: true
 	});
+	console.log(appointment);
 	res.status(200).json(appointment);
 });
 
@@ -186,7 +288,7 @@ router.get("/appointment/past-appointment", authentication, checkAccess("doctor/
 
 router.post("/appointment/doctor-past-appointment-list", async function (req, res, next) {
 	const appointment = await db.Appointment.findAll({
-		where: { doctorId: req.user.userId, status: true }, // Change the condition as needed
+		where: { doctorId: req.user.userId, status: "COMPLETED" }, // Change the condition as needed
 		include: [
 			{
 				model: db.WhatsappUser,

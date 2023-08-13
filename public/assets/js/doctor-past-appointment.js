@@ -266,43 +266,40 @@ $(function () {
         // Retrieve the data associated with the row
         var rowData = l.row($(this).parents("tr")).data();
         // Assuming your modal content has an element with the ID "modalContent"
+        console.log(rowData);
         var modalContent = $(".modal-body");
-
         // Clear previous content in the modal (if any)
         modalContent.empty();
 
         // Create the HTML table
         var tableHTML = '<table class="table"><tbody>';
-        /*
-        full_name
-        price
-        email
-        user_enter_number
-        */
+
         // Function to traverse through nested objects and create table rows
         function createTableRows(data) {
             // List of desired properties
-            var desiredProperties = ['patient', 'doctor', 'prescription'];
+            var desiredProperties = ['full_name', 'price', 'email', 'user_enter_number'];
 
             // Iterate through the desired properties
             desiredProperties.forEach(function (key) {
+                // Create a table row for the current property-value pair
+                var row = '<tr><td>' + key + ':</td><td>';
+
                 // Check if the property exists in the data object
                 if (data.hasOwnProperty(key)) {
-                    // Create a table row for the current property-value pair
-                    var row = '<tr><td>' + key + ':</td><td>';
-
                     // Check if the property's value is editable
-                    if (key === "full_name" || key === "price" || key === "email" || key === "prescription") {
+                    if (key === "full_name" || key === "price" || key === "email" || key === "user_enter_number") {
                         row += '<input type="text" value="' + data[key] + '">';
                     } else {
                         row += data[key];
                     }
-
-                    row += '</td></tr>';
-
-                    // Append the row to the tableHTML
-                    tableHTML += row;
+                } else {
+                    row += 'N/A'; // If the property doesn't exist in the data
                 }
+
+                row += '</td></tr>';
+
+                // Append the row to the tableHTML
+                tableHTML += row;
             });
         }
 
@@ -313,7 +310,51 @@ $(function () {
         tableHTML += '</tbody></table>';
 
         // Append the table to the modal content
-        modalContent.append(tableHTML);
+        // modalContent.append(tableHTML);
+        modalContent.append(`  <h1>Telemedicine Prescription</h1>
+        <form id="prescription-form">
+            <h2>Patient Details</h2>
+            <label for="patient-id">Patient ID:</label>
+            <input type="text" id="patient-id" name="patientId" required><br>
+            
+            <label for="patient-name">Name of Patient:</label>
+            <input type="text" id="patient-name" name="patientName" required><br>
+            
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required><br>
+            
+            <label for="sex">Sex:</label>
+            <select id="sex" name="sex">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select><br>
+            
+            <label for="weight">Weight:</label>
+            <input type="text" id="weight" name="weight" required><br>
+            
+            <h2>Medical Information</h2>
+            <label for="diagnosis">Probable Diagnosis:</label>
+            <textarea id="diagnosis" name="diagnosis" required></textarea><br>
+            
+            <label for="history">Brief Medical History:</label>
+            <textarea id="history" name="history" required></textarea><br>
+            
+            <label for="medicine">Medicine:</label>
+            <textarea id="medicine" name="medicine" required></textarea><br>
+            
+            <label for="advice">Extra Advice:</label>
+            <textarea id="advice" name="advice"></textarea><br>
+            
+            <label for="investigation">Investigation:</label>
+            <textarea id="investigation" name="investigation"></textarea><br>
+            
+            <label for="follow-up">Follow-up:</label>
+            <textarea id="follow-up" name="followUp"></textarea><br>
+            
+            <input type="submit" value="Submit Prescription">
+        </form>`);
+
 
         // Show the modal manually
         $('#modalCenter').modal('show');

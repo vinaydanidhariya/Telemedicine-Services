@@ -58,9 +58,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: true,
       },
-      delete: {
+      deleteBlog: {
         type: DataTypes.BOOLEAN,
-        field: "delete",
+        field: "delete_blog",
         allowNull: true,
         defaultValue: false,
       },

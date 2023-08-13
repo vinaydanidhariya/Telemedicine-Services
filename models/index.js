@@ -36,6 +36,7 @@ class db {
     db.Schedule = require('./schedule')(sequelize, Sequelize.DataTypes);
     db.Appointment = require('./appointment')(sequelize, Sequelize.DataTypes);
     db.webSlider = require('./web_slider')(sequelize, Sequelize.DataTypes);
+    db.Prescription = require('./prescription')(sequelize, Sequelize.DataTypes);
 
     // Associates all tables here
     db.User.associate(db);
@@ -47,6 +48,7 @@ class db {
     db.Schedule.associate(db);
     db.Appointment.associate(db);
     db.webSlider.associate(db);
+    db.Prescription.associate(db);
 
     sequelize.sync({
     }).then(() => {

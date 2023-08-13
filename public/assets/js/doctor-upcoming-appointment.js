@@ -1,11 +1,9 @@
 $(function () {
-    var l, t, e = $(".datatable-doctor-upcoming-appointment-list"),
-        w = $("[name=cf22e452-2bac-11ee-be56-0242ac120002]").val()
+    var l, t, e = $(".datatable-doctor-upcoming-appointment-list")
     var r = (e.length && (l = e.DataTable({
         ajax: {
             url: '/doctor/appointment/doctor-upcoming-appointment-list',
             type: 'POST',
-            data: { 'doctor_id': w },
             dataSrc: ''
         },
         columns: [
@@ -28,19 +26,16 @@ $(function () {
                 data: "patient.appointment_time"
             },
             {
-                data: "prescription"
+                data: "prescription_id"
+            },
+            {
+                data: "status"
             },
             {
                 data: "patient.email"
             },
             {
                 data: "patient.user_enter_number"
-            },
-            {
-                data: "doctor.first_name"
-            },
-            {
-                data: "doctor.last_name"
             },
             {
                 data: "patient.price"
@@ -79,57 +74,28 @@ $(function () {
                 visible: false
             },
             {
+                targets: 6,
+                visible: false
+            },
+            {
                 targets: 3,
                 responsivePriority: 1,
                 render: function (data, type, row, meta) {
-                    var l = row.patient.full_name;
-                    var r = row.patient.gender;
-                    return `
-                        <div class="d-flex justify-content-start align-items-center user-name">
-                            <div class="avatar-wrapper">
-                                <div class="avatar me-2">
-                                    <span class="avatar-initial rounded-circle bg-label-${['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'][Math.floor(6 * Math.random())]}">${(l.match(/\b\w/g) || []).shift().toUpperCase()}</span>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <span class="emp_name text-truncate">${l}</span>
-                                <small class="emp_post text-truncate text-muted">${r}</small>
-                            </div>
-                        </div>`;
+                    var n = undefined,
+                        l = row.patient.full_name,
+                        r = row.patient.gender;
+                    return '<div class="d-flex justify-content-start align-items-center user-name"><div class="avatar-wrapper"><div class="avatar me-2">' + (n ? '<img src="' + n + '" alt="Avatar" class="rounded-circle">' : '<span class="avatar-initial rounded-circle bg-label-' + ["success", "danger", "warning", "info", "dark", "primary", "secondary"][Math.floor(6 * Math.random())] + '">' + (n = (((n = (l).match(/\b\w/g) || []).shift() || "") + (n.pop() || "")).toUpperCase()) + "</span>") + '</div></div><div class="d-flex flex-column"><span class="emp_name text-truncate">' + l + '</span><small class="emp_post text-truncate text-muted">' + r + "</small></div></div>"
                 }
             },
             {
-                targets: 9,
+                targets: 7,
                 render: function (data, type, row, meta) {
                     var status = row.status;
                     var statusMapping = {
-                        true: { title: "COMPLETE", class: "bg-label-primary" },
-                        false: { title: "PENDING", class: "bg-label-danger" },
+                        COMPLETED: { title: "COMPLETE", class: "bg-label-primary" },
+                        RECEIVED: { title: "RECEIVED", class: "bg-label-danger" },
                     };
                     return statusMapping[status] ? `<span class="badge ${statusMapping[status].class}">${statusMapping[status].title}</span>` : data;
-                }
-            },
-            {
-                targets: 8,
-                responsivePriority: 1
-            },
-            {
-                targets: 9,
-                render: function (data, type, row, meta) {
-                    var l = row.patient.full_name;
-                    var r = row.patient.gender;
-                    return `
-                        <div class="d-flex justify-content-start align-items-center user-name">
-                            <div class="avatar-wrapper">
-                                <div class="avatar me-2">
-                                    <span class="avatar-initial rounded-circle bg-label-${['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'][Math.floor(6 * Math.random())]}">${(l.match(/\b\w/g) || []).shift().toUpperCase()}</span>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <span class="emp_name text-truncate">${l}</span>
-                                <small class="emp_post text-truncate text-muted">${r}</small>
-                            </div>
-                        </div>`;
                 }
             },
             {
@@ -140,11 +106,23 @@ $(function () {
                 targets: 11,
                 orderable: false,
                 searchable: false,
-                title: "Actions",
+                title: "Write Prescription",
                 render: function (data, type, row, meta) {
                     return `
                         <a href="javascript:;" class="btn btn-sm btn-icon item-edit">
                             <i class="bx bxs-edit"></i>
+                        </a>`;
+                }
+            },
+            {
+                targets: 12,
+                orderable: false,
+                searchable: false,
+                title: "Prescription Document",
+                render: function (data, type, row, meta) {
+                    return `
+                        <a href="javascript:;" class="btn btn-sm btn-icon send-btn">
+                            <i class="bx bxs-send"></i>
                         </a>`;
                 }
             }
@@ -273,55 +251,82 @@ $(function () {
         // Clear previous content in the modal (if any)
         modalContent.empty();
 
-        // Create the HTML table
-        var tableHTML = '<table class="table"><tbody>';
-        /*
-        full_name
-        price
-        email
-        user_enter_number
-        */
-        // Function to traverse through nested objects and create table rows
-        function createTableRows(data) {
-            // List of desired properties
-            var desiredProperties = ['patient', 'doctor', 'prescription'];
-
-            // Iterate through the desired properties
-            desiredProperties.forEach(function (key) {
-                // Check if the property exists in the data object
-                if (data.hasOwnProperty(key)) {
-                    // Create a table row for the current property-value pair
-                    var row = '<tr><td>' + key + ':</td><td>';
-
-                    // Check if the property's value is editable
-                    if (key === "full_name" || key === "price" || key === "email" || key === "prescription") {
-                        row += '<input type="text" value="' + data[key] + '">';
-                    } else {
-                        row += data[key];
-                    }
-
-                    row += '</td></tr>';
-
-                    // Append the row to the tableHTML
-                    tableHTML += row;
-                }
-            });
-        }
-
-        // Call the function to create table rows for the rowData object
-        createTableRows(rowData);
-
         // Close the tableHTML
-        tableHTML += '</tbody></table>';
-
+        var HTML = `
+        <div class="container mt-5">
+            <form id="prescription-form">
+                <h3 class="mb-4">Patient Information</h3>
+        
+                <!-- Patient Details -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="patient-weight" class="form-label">Weight (kg):</label>
+                        <input type="text" id="patient-weight" name="patientWeight" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="patient-age" class="form-label">Age:</label>
+                        <input type="number" id="patient-age" name="patientAge" class="form-control" required>
+                    </div>
+                </div>
+        
+                <h3 class="mb-4">Medical Information</h3>
+                <!-- Medical Information -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="probable-diagnosis" class="form-label">Probable Diagnosis:</label>
+                        <textarea id="probable-diagnosis" name="probableDiagnosis" class="form-control" required></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="medical-history" class="form-label">Brief Medical History:</label>
+                        <textarea id="medical-history" name="medicalHistory" class="form-control" required></textarea>
+                    </div>
+                </div>
+        
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="prescribed-medicine" class="form-label">Prescribed Medicine:</label>
+                        <textarea id="prescribed-medicine" name="prescribedMedicine" class="form-control" required></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="extra-advice" class="form-label">Extra Advice:</label>
+                        <textarea id="extra-advice" name="extraAdvice" class="form-control"></textarea>
+                    </div>
+                </div>
+        
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="required-investigation" class="form-label">Required Investigation:</label>
+                        <textarea id="required-investigation" name="requiredInvestigation" class="form-control"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="follow-up-instructions" class="form-label">Follow-up Instructions:</label>
+                        <textarea id="follow-up-instructions" name="followUpInstructions" class="form-control"></textarea>
+                    </div>
+                </div>
+        
+                <!-- Buttons -->
+                <div class="text-center">
+                <button type="submit" class="btn btn-primary">
+                <i class='bx bx-envelope'></i> Send Email Prescription
+            </button>
+            <button type="submit" class="btn btn-primary">
+                <i class='bx bxl-whatsapp'></i> Send to WhatsApp Prescription
+            </button>
+                </div>
+            </form>
+        </div>
+    `
         // Append the table to the modal content
-        modalContent.append(tableHTML);
+        modalContent.append(HTML);
 
         // Show the modal manually
         $('#modalCenter').modal('show');
     });
 
-
+    $('.datatable-doctor-upcoming-appointment-list tbody').on('click', '.send-btn', function () {
+        var rowData = l.row($(this).parents("tr")).data();
+        window.location.href = `/doctor/send-prescription/${rowData.prescription_id}`;
+    });
 
 
     // Event listener for saving changes in the modal

@@ -7,6 +7,7 @@ const recipientNumber = process.env.RECIPIENT_PHONE_NUMBER;
 const myNumberId = process.env.PHONE_NUMBER_ID;
 const Config = require('../config/config.json')[process.env.NODE_ENV];
 const Sequelize = require('sequelize');
+const moment = require('moment');
 const { Op } = require('sequelize');
 
 
@@ -32,82 +33,12 @@ const getTextMessageInput = (recipient, text) => {
     });
 }
 
-async function findAvailableTimeSlots(from, to, doctorId) {
-    function generateTimeSlots(from, to) {
-        const currentDate = new Date();
-        if (
-            from.getDate() === currentDate.getDate() &&
-            from.getMonth() === currentDate.getMonth() &&
-            from.getFullYear() === currentDate.getFullYear()
-        ) {
-            console.log("today");
-            const scheduleStart = new Date();
-            const currentHour = scheduleStart.getHours();
-            const currentMinutes = scheduleStart.getMinutes();
-
-            // Round up the current minutes to the nearest multiple of 15
-            const roundedMinutes = Math.ceil(currentMinutes / 15) * 15;
-
-            scheduleStart.setHours(currentHour, roundedMinutes, 0, 0); // Set schedule start time to 8 am
-
-            const scheduleEnd = new Date(to);
-            scheduleEnd.setHours(20, 0, 0, 0); // Set schedule end time to 8 pm
-
-            const timeSlots = [];
-            let currentTime = new Date(scheduleStart);
-
-            while (currentTime <= scheduleEnd) {
-                // Format the time in AM/PM format (e.g., "8:00 AM")
-                const timeString = currentTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-                timeSlots.push(timeString);
-                currentTime.setMinutes(currentTime.getMinutes() + 15); // Increment by 15 minutes
-            }
-            return timeSlots;
-        } else {
-            console.log("not today");
-            const scheduleStart = new Date(from);
-            const currentHour = scheduleStart.getHours();
-            const currentMinutes = scheduleStart.getMinutes();
-
-            // Round up the current minutes to the nearest multiple of 15
-            const roundedMinutes = Math.ceil(currentMinutes / 15) * 15;
-
-            scheduleStart.setHours(currentHour, roundedMinutes, 0, 0); // Set schedule start time to 8 am
-
-            const scheduleEnd = new Date(to);
-            scheduleEnd.setHours(20, 0, 0, 0); // Set schedule end time to 8 pm
-
-            const timeSlots = [];
-            let currentTime = new Date(scheduleStart);
-
-            while (currentTime <= scheduleEnd) {
-                // Format the time in AM/PM format (e.g., "8:00 AM")
-                const timeString = currentTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-                timeSlots.push(timeString);
-                currentTime.setMinutes(currentTime.getMinutes() + 15); // Increment by 15 minutes
-            }
-            console.log(timeSlots);
-            return timeSlots;
-        }
-    }
-
-    // Function to exclude time slots falling between 1 pm and 3 pm
-    function excludeTimeRange(timeSlots, startTime, endTime) {
-        let date = startTime.toISOString().substring(0, 10)
-        return timeSlots.filter(slot => {
-            const slotTime = new Date(`${date} ${slot}`);
-            return !(slotTime >= startTime && slotTime < endTime);
-        });
-    }
+async function findAvailableTimeSlots(from, to, doctorId, user) {
 
     const startDate = new Date(from);
     const endDate = new Date(to);
 
-    // Find available 15-minute time slots
-    const allTimeSlots = generateTimeSlots(startDate, endDate);
-
-    // Get events from the database for the specified date range
-    const removeTime = await db.Schedule.findAll({
+    const events = await db.Schedule.findAll({
         where: {
             doctorId,
             // Apply filtering based on start_date and end_date
@@ -118,20 +49,180 @@ async function findAvailableTimeSlots(from, to, doctorId) {
                 [Op.between]: [startDate, endDate],
             },
         },
-        attributes: [['event_id', 'id'], ['title', 'text'], 'start_date', 'end_date'],
+        attributes: ['start_date', 'end_date'],
         raw: true,
     });
 
-    let excludedTimeSlots = [...allTimeSlots]; // Make a copy of allTimeSlots
-    for (const event of removeTime) {
-        const eventStart = new Date(event.start_date);
-        const eventEnd = new Date(event.end_date);
-        excludedTimeSlots = await excludeTimeRange(excludedTimeSlots, eventStart, eventEnd);
+    // Extract start and end times from events
+    const eventTimeRanges = events.map(event => {
+        return {
+            start: new Date(event.start_date),
+            end: new Date(event.end_date),
+        };
+    });
+
+    function generateTimeSlotsFromEventRanges(eventTimeRanges) {
+        const timeSlots = [];
+        const now = new Date(); // Get the current date and time
+
+        for (const eventRange of eventTimeRanges) {
+            let currentTime = new Date(eventRange.start);
+
+            // If the eventRange.start is in the past, set currentTime to now
+            if (currentTime < now) {
+                currentTime = now;
+            }
+
+            // Round up the start time minutes to the nearest multiple of 15
+            const startRoundedMinutes = Math.ceil(currentTime.getMinutes() / 15) * 15;
+            currentTime.setMinutes(startRoundedMinutes);
+
+            while (currentTime < eventRange.end) {
+                // Format the time in AM/PM format (e.g., "8:00 AM")
+                const timeString = currentTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+
+                // Only add time slots that are greater than or equal to now
+                if (currentTime >= now) {
+                    timeSlots.push(timeString);
+                }
+
+                currentTime.setMinutes(currentTime.getMinutes() + 15); // Increment by 15 minutes
+            }
+        }
+
+        return timeSlots;
     }
-    console.log(excludedTimeSlots);
-    return excludedTimeSlots;
+
+    // Generate time slots from eventTimeRanges
+    //date
+    //time
+    //did
+    let initialDate = user.appointmentDate;
+    let startDay = initialDate.setHours(0, 0, 0, 1);
+    let endDay = initialDate.setHours(23, 59, 59, 99);
+    console.log(startDay);
+    console.log(endDay);
+    const searchObject = {
+        appointmentDate: {
+            [Op.between]: [startDay, endDay]
+        },
+        selectedDoctor: user.selectedDoctor
+    }
+    console.log(searchObject);
+    const chosenSlots = await db.WhatsappUser.findAll({
+        where: searchObject,
+        raw: true
+    })
+    let timeSlots = generateTimeSlotsFromEventRanges(eventTimeRanges);
+    console.log("--------------------------------------------------------------");
+    console.log(chosenSlots);
+    if (chosenSlots && chosenSlots.length) {
+        let slotsToBeRemoved = [];
+        for (const slot of chosenSlots) {
+            if (slot && slot.appointmentTime) {
+                slotsToBeRemoved.push(slot.appointmentTime)
+            }
+        }
+        timeSlots = timeSlots.filter(function (el) {
+            return !slotsToBeRemoved.includes(el);
+        });
+
+    }
+    console.log(timeSlots);
+    const morningSlots = [];
+    const afternoonSlots = [];
+    const eveningSlots = [];
+    const nightSlots = [];
+
+    timeSlots.forEach(slot => {
+        const hour = parseInt(slot.split(':')[0]);
+        const secondS = slot.split(' ')[1];
+        if (hour >= 8 && hour < 12 && secondS == 'am') {
+            morningSlots.push(slot);
+        } else if (hour >= 1 && hour < 5 && secondS == 'pm') {
+            afternoonSlots.push(slot);
+        } else if (hour >= 5 && hour < 8 && secondS == 'pm') {
+            eveningSlots.push(slot);
+        } else if (hour >= 8 && hour < 12 && secondS == 'pm') {
+            nightSlots.push(slot);
+        }
+    });
+
+    return {
+        morningSlots: morningSlots,
+        afternoonSlots: afternoonSlots,
+        eveningSlots: eveningSlots,
+        nightSlots: nightSlots
+    };;
 }
 
+async function SendSlotMessages(recipientNumber) {
+    const user = await db.WhatsappUser.findOne({
+        where: { phone: recipientNumber },
+        attributes: ['selectedDoctor', 'appointmentDate', 'appointmentTime'],
+        raw: true
+    });
+    console.log(user);
+    const user_selected_doctor = user.selectedDoctor;
+    const doctor = await db.User.findOne({
+        where: { userId: user_selected_doctor },
+        attributes: ['onlineConsultationTimeFrom', 'onlineConsultationTimeTo', "userId"],
+        raw: true
+    });
+
+    const userAppointmentDate = new Date(user.appointmentDate);
+    const { onlineConsultationTimeFrom, onlineConsultationTimeTo, userId } = doctor;
+
+    const [fromHours, fromMinutes] = onlineConsultationTimeFrom.split(':');
+    const [toHours, toMinutes] = onlineConsultationTimeTo.split(':');
+
+    const from = new Date(userAppointmentDate);
+    from.setHours(parseInt(fromHours), parseInt(fromMinutes));
+
+    const to = new Date(userAppointmentDate);
+    to.setHours(parseInt(toHours), parseInt(toMinutes));
+
+    const timeSlots = await findAvailableTimeSlots(from, to, userId, user);
+
+    const timeSlotConvert = (slots, timePeriod) =>
+        slots.map((time, index) => ({
+            id: (index + 1).toString(),
+            title: `${timePeriod}Time: ${time}`,
+            description: "Duration: 15 minutes"
+        }));
+
+    if (!timeSlots.morningSlots.length && !timeSlots.afternoonSlots.length && !timeSlots.eveningSlots.length && !timeSlots.nightSlots.length) {
+        // Inform the user that the doctor is not available
+        await sendRegistrationMessage(
+            recipientNumber,
+            "🙁 Sorry, but we couldn't find any available slots for this doctor on the selected date.\n\n" +
+            "Please choose a different date or try again."
+        );
+        await db.WhatsappUser.update(
+            { userStat: 'DATE-SELECTION' },
+            { where: { phone: recipientNumber } }
+        );
+        sendAppointmentDateReplyButton(recipientNumber)
+        return;
+    }
+    const convertedMorningSlots = timeSlotConvert(timeSlots.morningSlots, "Morning");
+    const convertedAfternoonSlots = timeSlotConvert(timeSlots.afternoonSlots, "Afternoon");
+    const convertedEveningSlots = timeSlotConvert(timeSlots.eveningSlots, "Evening");
+    const convertedNightSlots = timeSlotConvert(timeSlots.nightSlots, "Night");
+
+    const sendTimeSlotsChunks = async (recipientNumber, slots, timePeriod) => {
+        const chunkSize = 10;
+        for (let i = 0; i < slots.length; i += chunkSize) {
+            const chunk = slots.slice(i, i + chunkSize);
+            await sendTimeListAppointmentMessage(recipientNumber, chunk, timePeriod);
+        }
+    };
+
+    await sendTimeSlotsChunks(recipientNumber, convertedMorningSlots, "Morning");
+    await sendTimeSlotsChunks(recipientNumber, convertedAfternoonSlots, "Afternoon");
+    await sendTimeSlotsChunks(recipientNumber, convertedEveningSlots, "Evening");
+    await sendTimeSlotsChunks(recipientNumber, convertedNightSlots, "Night");
+}
 
 
 let messageObject = (recipient) => {
@@ -196,59 +287,6 @@ function sendMessage(data) {
     };
     return axios(config)
 }
-
-const timeSlots = [
-    {
-        id: '1',
-        title: 'START TIME: 1:00 PM',
-        description: '15 Minute Duration'
-    },
-    {
-        id: '2',
-        title: 'START TIME: 1:15 PM',
-        description: '15 Minute Duration'
-    },
-    {
-        id: '3',
-        title: 'START TIME: 1:30 PM',
-        description: '15 Minute Duration'
-    },
-    {
-        id: '4',
-        title: 'START TIME: 1:45 PM',
-        description: '15 Minute Duration'
-    },
-    {
-        id: '5',
-        title: 'START TIME: 2:00 PM',
-        description: '15 Minute Duration'
-    },
-    {
-        id: '6',
-        title: 'START TIME: 2:15 PM',
-        description: '15 Minute Duration'
-    },
-    {
-        id: '7',
-        title: 'START TIME: 2:30 PM',
-        description: '15 Minute Duration'
-    },
-    {
-        id: '8',
-        title: 'START TIME: 2:45 PM',
-        description: '15 Minute Duration'
-    },
-    {
-        id: '9',
-        title: 'START TIME: 3:00 PM',
-        description: '15 Minute Duration'
-    },
-    {
-        id: '10',
-        title: 'START TIME: 3:15 PM',
-        description: '15 minute duration slots'
-    }
-]
 
 const genderMessage = {
     type: "button",
@@ -348,7 +386,6 @@ const sendGenderSelectionMessage = (recipient) => {
 // Function to handle different chatbot states
 const handleMessage = async (message, recipientNumber) => {
     const user = await db.WhatsappUser.findOne({ where: { phone: recipientNumber } });
-    console.log(user, "+++++++++++++++++++++++++++++++++++++++++++++++++++=");
     switch (user.userStat) {
         case 'PAYMENT_DONE':
             await db.WhatsappUser.update(
@@ -427,7 +464,6 @@ const buttonInteractiveObject = {
 
 const sendReplyButton = (reply, recipient) => {
     try {
-        console.log(reply);
         buttonInteractiveObject.body.text =
             reply.title +
             " (" +
@@ -436,7 +472,6 @@ const sendReplyButton = (reply, recipient) => {
         let newMessageObject = messageObject(recipient)
         newMessageObject.interactive = buttonInteractiveObject
 
-        console.log("button", newMessageObject);
         axios.post(
             `https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
             newMessageObject,
@@ -514,12 +549,10 @@ const sendAppointmentDateReplyButton = (recipient) => {
 const sendDoctorDepartmentList = (recipient, listOfDoctorDepartment) => {
     try {
         let newMessageObject = messageObject(recipient)
-        console.log("before list", newMessageObject);
 
         let newDrListInteractiveObject = DoctorDepartmentListInteractiveObject(listOfDoctorDepartment)
         newMessageObject.interactive = newDrListInteractiveObject;
 
-        console.log("list", JSON.stringify(newMessageObject, null, 2));
 
         axios.post(
             `https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
@@ -537,12 +570,10 @@ const sendDoctorDepartmentList = (recipient, listOfDoctorDepartment) => {
 const sendListDoctorMessage = (recipient, listOfDoctor) => {
     try {
         let newMessageObject = messageObject(recipient)
-        console.log("before list", newMessageObject);
 
         let newDrListInteractiveObject = drListInteractiveObject(listOfDoctor)
         newMessageObject.interactive = newDrListInteractiveObject;
 
-        console.log("list", JSON.stringify(newMessageObject, null, 2));
 
         axios.post(
             `https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
@@ -558,16 +589,13 @@ const sendListDoctorMessage = (recipient, listOfDoctor) => {
     }
 }
 
-const sendTimeListAppointmentMessage = (recipient, listOfAppointment) => {
+const sendTimeListAppointmentMessage = async (recipient, listOfAppointment, slotType) => {
     try {
-        let newMessageObject = messageObject(recipient)
+        const newMessageObject = messageObject(recipient, slotType);
 
-        let newAppointmentListInteractiveObject = appointmentTimeListInteractiveObject(listOfAppointment)
+        const newAppointmentListInteractiveObject = appointmentTimeListInteractiveObject(listOfAppointment, slotType);
         newMessageObject.interactive = newAppointmentListInteractiveObject;
-
-        console.log("list", JSON.stringify(newMessageObject, null, 2));
-
-        axios.post(
+        await axios.post(
             `https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
             newMessageObject,
             {
@@ -579,7 +607,7 @@ const sendTimeListAppointmentMessage = (recipient, listOfAppointment) => {
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 const DoctorDepartmentListInteractiveObject = (listOfDepartment) => {
     return ({
@@ -636,32 +664,32 @@ const drListInteractiveObject = (listOfDoctor) => {
     }
     );
 }
-const appointmentTimeListInteractiveObject = (listOfAppointment) => {
-    return ({
+const appointmentTimeListInteractiveObject = (listOfAppointment, slotType) => {
+    return {
         type: "list",
         header: {
             type: "text",
-            text: "Appointment Time",
+            text: `⏰ ${slotType} Time`,
         },
         body: {
-            text: "Please select the appointment time that suits you best. ⏰",
+            text: `Please select the ⏰ appointment ${slotType.toLowerCase()} time that suits you best.`,
         },
         footer: {
             text: "ChildDR",
         },
         action: {
-            button: "Select Time",
+            button: `${slotType} Time ⏰`,
             sections: [
                 {
                     title: "Doctors",
-                    rows:
-                        listOfAppointment
-                }
-            ]
+                    rows: listOfAppointment,
+                },
+            ],
         },
-    }
-    );
-}
+    };
+};
+
+
 const findDrList = async (department) => {
     const listOfDoctor = await db.User.findAll(
         {
@@ -753,7 +781,7 @@ module.exports = {
     sendAppointmentDateReplyButton,
     sendTimeListAppointmentMessage,
     validateName,
-    timeSlots,
+    SendSlotMessages,
     validatePhoneNumber,
     transactionMessage,
     getPaymentTemplatedMessageInput

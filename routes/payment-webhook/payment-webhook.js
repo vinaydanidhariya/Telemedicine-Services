@@ -80,6 +80,23 @@ router.post("/payment-callback1", async function (req, res, next) {
 
                     const message = await transactionMessage(name, amount / 100, orderId);
                     await sendRegistrationMessage(mobile, `${message}`);
+
+                    const userInfo = await db.WhatsappUser.findOne(
+                        {
+                            where: { phone: mobile }
+                        })
+                    console.log(userInfo);
+                    const prescription = await db.Prescription.create({
+                        patientId: userInfo.userId,
+                        doctorId: userInfo.selectedDoctor,
+                    });
+
+                    const appointment = await db.Appointment.create({
+                        patientId: userInfo.userId,
+                        doctorId: userInfo.selectedDoctor,
+                        prescriptionId: prescription.PrescriptionId, // Use "PrescriptionId" from the Prescription model
+                        status: "RECEIVED",
+                    });
                     await db.WhatsappUser.update(
                         {
                             userStat: "SEND-APPOINTMENT",
@@ -90,16 +107,14 @@ router.post("/payment-callback1", async function (req, res, next) {
                             },
                         }
                     );
-                    const user_info = await db.WhatsappUser.findOne(
-                        {
-                            where: { phone: mobile }
-                        })
-                    const formattedDate = moment(user_info.appointmentDate).format('DD/MM/YYYY');
-                    const data1 = appointmentMessage(user_info.fullName, formattedDate, user_info.appointmentTime)
+                    console.log(appointment);
+                    const formattedDate = moment(userInfo.appointmentDate).format('DD/MM/YYYY');
+                    const data1 = appointmentMessage(userInfo.fullName, formattedDate, userInfo.appointmentTime)
+
                     await sendRegistrationMessage(mobile, data1);
                     // const messageData = getPaymentTemplatedMessageInput(mobile, name, amount, orderId)
                     // sendMessage(messageData);
-                    res.status(200).send('received')
+                    res.status(200).send('RECEIVED')
                 }
             }
             else if (event === "payment.captured") {

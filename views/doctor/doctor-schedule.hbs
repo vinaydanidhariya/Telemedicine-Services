@@ -13,7 +13,7 @@
     }
 </style>
 <script>
-    function init() {
+    function init(from, to) {
         // Set the date format for XML data
         scheduler.config.xml_date = "%Y-%m-%d %H:%i";
 
@@ -21,8 +21,8 @@
         scheduler.config.time_format = "12"; // AM/PM format
 
         // Set the start and end time of the day
-        scheduler.config.first_hour = 8; // 8:00 AM
-        scheduler.config.last_hour = 18; // 6:00 PM
+        scheduler.config.first_hour = from;
+        scheduler.config.last_hour = to;
         scheduler.config.start_date = new Date(); // 6:00 PM
 
         // Initialize the scheduler with the date for the upcoming 1 week
@@ -55,10 +55,11 @@
         dp.setTransactionMode("REST");
         dp.init(scheduler);
         dp.setTransactionMode("POST", false);
+
     }
 </script>
 
-<body onload="init();">
+<body>
     <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
         <div class="dhx_cal_navline">
             <div class="dhx_cal_prev_button">&nbsp;</div>
@@ -72,3 +73,25 @@
         </div>
     </div>
 </body>
+<script>
+    // Convert time string to Date object
+    const consultationStartTime = "{{ doctor.onlineConsultationTimeFrom }}"; // Assuming the format is "08:00"
+    const consultationEndTime = "{{ doctor.onlineConsultationTimeTo }}";   // Assuming the format is "21:00"
+
+    function convertTimeStringToHoursMinutes(timeString) {
+        const [hours, minutes] = timeString.split(":");
+        return {
+            hours: parseInt(hours, 10),
+            minutes: parseInt(minutes, 10)
+        };
+    }
+
+    // Trigger the scheduler initialization when the page loads
+    window.onload = function () {
+        const fromTime = convertTimeStringToHoursMinutes(consultationStartTime);
+        const toTime = convertTimeStringToHoursMinutes(consultationEndTime);
+
+        // Initialize the scheduler with the extracted hours and minutes
+        init(fromTime.hours, toTime.hours);
+    };
+</script>

@@ -3,33 +3,32 @@ const { Sequelize, DataTypes, Model } = require("sequelize");
 const Config = require("../config/config.json");
 
 module.exports = (sequelize, DataTypes) => {
-    class Appointment extends Model {
+    class Prescription extends Model {
         static associate(models) {
-            // One-to-Many: User has many Appointments
-            Appointment.belongsTo(models.WhatsappUser, {
-                foreignKey: 'patientId', // The foreign key in the Appointments table that references Users
-                as: 'patient', // Alias for the association
+            Prescription.belongsTo(models.WhatsappUser, {
+                foreignKey: 'patient_id',
+                as: 'patient',
             });
 
-            // One-to-Many: Doctor has many Appointments
-            Appointment.belongsTo(models.User, {
-                foreignKey: 'doctorId', // The foreign key in the Appointments table that references Doctors
-                as: 'doctor', // Alias for the association
+            Prescription.belongsTo(models.User, {
+                foreignKey: 'doctor_id',
+                as: 'doctor',
             });
-            Appointment.belongsTo(models.Prescription, {
+
+            Prescription.hasOne(models.Appointment, {
                 foreignKey: 'prescriptionId', // The foreign key in the Appointments table that references Prescriptions
-                as: 'prescription', // Alias for the association
+                as: 'appointment', // Alias for the association
             });
         }
     }
-    Appointment.init(
+    Prescription.init(
         {
-            AppointmentId: {
+            prescriptionId: {
                 autoIncrement: true,
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 primaryKey: true,
-                field: "appointment_id",
+                field: "prescription_id",
             },
             patientId: {
                 type: DataTypes.INTEGER,
@@ -41,38 +40,40 @@ module.exports = (sequelize, DataTypes) => {
                 field: "doctor_id",
                 allowNull: false,
             },
-            prescriptionId: {
-                type: DataTypes.INTEGER, // Adjust the data type as needed
-                field: "prescription_id", // Adjust the field name
+            medicines: {
+                type: DataTypes.ARRAY(DataTypes.JSONB), // Store JSON data in an array
+                field: "medicines",
                 allowNull: true,
+                defaultValue: [], // Default value as an empty array
             },
-            status: {
-                type: DataTypes.TEXT,
-                field: "status",
-                allowNull: false,
+            medicalInfo: {
+                type: DataTypes.ARRAY(DataTypes.JSONB),
+                field: "medical_info",
+                allowNull: true,
+                defaultValue: [],
             }
         },
         {
             sequelize,
             timestamps: true,
-            modelName: "Appointment",
-            tableName: "appointment",
+            modelName: "Prescription",
+            tableName: "prescription",
             schema: Config.schema,
             freezeTableName: true,
             hasTrigger: true,
             indexes: [
                 {
-                    name: "appointment_pkey",
+                    name: "prescription_pkey",
                     unique: true,
                     fields: [
                         {
-                            name: "appointment_id",
+                            name: "prescription_id",
                         },
                     ],
                 },
             ],
         }
     );
-    return Appointment;
+    return Prescription;
 };
 
