@@ -89,6 +89,26 @@
 					</li>
 				</ul>
 			</li>
+			<li class="menu-item {{#compare title '==' 'DEPARTMENT'}}active{{/compare}}">
+				<a href="/department" class="menu-link menu-toggle">
+					<i class="menu-icon tf-icons bx bxs-user-detail bx-sm"></i>
+					<div data-i18n="Department">Department</div>
+				</a>
+				<ul class="menu-sub">
+					<li class="menu-item {{#compare title '==' 'DEPARTMENT'}}active{{/compare}}">
+						<a href="/department/add-department" class="menu-link">
+							<i class="menu-icon tf-icons bx bx-plus-circle"></i>	
+							<div data-i18n="Add Department">Add Department</div>
+						</a>
+					</li>
+					<li class="menu-item {{#compare title '==' 'DEPARTMENT-LIST'}}active{{/compare}}">
+						<a href="/department/department-list" class="menu-link">
+							<i class="menu-icon tf-icons bx bx-list-ol"></i>
+							<div data-i18n="Department List">Department List</div>
+						</a>
+					</li>
+				</ul>
+			</li>
 			<!-- Patient -->
 			<li class="menu-item {{#compare title '==' 'PATIENT-LIST'}}active{{/compare}}">
 				<a href="/doctors" class="menu-link menu-toggle">

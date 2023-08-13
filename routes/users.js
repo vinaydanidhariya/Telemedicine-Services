@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../models");
 const { convertToMd5 } = require("../utils/helper.js");
 const { sequelize } = require("../models");
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -15,14 +15,25 @@ router.post("/create-doctor", async function (req, res, next) {
       firstName,
       lastName,
       email,
-      date_of_birth,
-      qualifications,
-      gender,
-      price,
       password,
-      photo_url,
       phone,
-      department
+      dateOfBirth,
+      price,
+      qualifications,
+      department,
+      gender,
+
+      countryCode,
+      degreeText,
+      university,
+      graduationYear,
+      physicalPractice,
+      experience,
+      doctorRegistrationNumber,
+      onlineConsultationTimeFrom,
+      onlineConsultationTimeTo,
+      clinicTimeFrom,
+      clinicTimeTo,
     } = req.body;
 
     const passwordEncrypt = convertToMd5(password);
@@ -31,21 +42,42 @@ router.post("/create-doctor", async function (req, res, next) {
       lastName,
       type: "DOCTOR",
       email,
-      dateOfBirth: date_of_birth,
+      dateOfBirth,
       qualifications,
       department,
       gender,
       price,
       password: passwordEncrypt,
       status: true,
-      photoUrl: photo_url,
+      photoUrl: "/images/profile/1.png",
       phone,
+
+      degreeText,
+      university,
+      graduationYear,
+      physicalPractice,
+      experience,
+      doctorRegistrationNumber,
+      onlineConsultationTimeFrom,
+      onlineConsultationTimeTo,
+      clinicTimeFrom,
+      clinicTimeTo,
+
+      degreeUrl: `/uploads/degree_certificates/`,
+      aadharCardUrl: `/uploads/aadhar_cards/`,
+      panCardUrl: `/uploads/pan_cards/`,
+      digitalSignatureUrl: `/uploads/digital_signatures/`,
       createdDate: new Date(),
       updatedDate: new Date(),
     });
 
-    res.send("Add user");
+    return res.send({
+      status: 200,
+      message: "Admin User Created",
+      type: "success",
+    });
   } catch (error) {
+    res.send("error");
     console.log(error);
   }
 });
@@ -146,19 +178,13 @@ router.post("/doctor-department", async function (req, res, next) {
         //   ['department_name', 'ASC'],
         // ],
         attributes: [
-          ['department_id', 'id'],
-          [
-            'department_name',
-            'title'
-          ],
-          [
-            'description',
-            'description'
-          ],
+          ["department_id", "id"],
+          ["department_name", "title"],
+          ["description", "description"],
         ],
         raw: true,
         limit: 10,
-        tableName: "department"
+        tableName: "department",
       });
       console.log(listOfDepartment);
       res.send(listOfDepartment);
@@ -179,13 +205,14 @@ router.post("/add-department", async function (req, res, next) {
         departmentName,
         description,
         status,
-        photo_url
-      }).then((doctor) => {
-        res.send(200, "Department created successfully:", doctor);
-      }).catch((error) => {
-        console.error('Error creating doctor:', error);
-      });
-
+        photo_url,
+      })
+        .then((doctor) => {
+          res.send(200, "Department created successfully:", doctor);
+        })
+        .catch((error) => {
+          console.error("Error creating doctor:", error);
+        });
     } else {
       res.send("error");
     }
@@ -194,12 +221,12 @@ router.post("/add-department", async function (req, res, next) {
   }
 });
 
-router.post('/add-whatsappuser', async (req, res) => {
+router.post("/add-whatsappuser", async (req, res) => {
   try {
     const newUser = await db.WhatsappUser.create(req.body);
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create a new user.' });
+    res.status(500).json({ error: "Failed to create a new user." });
   }
 });
 
@@ -224,14 +251,12 @@ router.post("/doctor-count", async function (req, res, next) {
   }
 });
 
-router.post('/time-slot', async function (req, res, next) {
+router.post("/time-slot", async function (req, res, next) {
   console.log(req.body);
   // Function to generate all 15-minute time slots within the schedule hours (8 am to 8 pm) in time format (e.g., "8:00 AM")
   function generateTimeSlots(from, to) {
-
     const currentDate = new Date();
     if (
-
       from.getDate() === currentDate.getDate() &&
       from.getMonth() === currentDate.getMonth() &&
       from.getFullYear() === currentDate.getFullYear()
@@ -254,7 +279,10 @@ router.post('/time-slot', async function (req, res, next) {
 
       while (currentTime <= scheduleEnd) {
         // Format the time in AM/PM format (e.g., "8:00 AM")
-        const timeString = currentTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        const timeString = currentTime.toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "2-digit",
+        });
         timeSlots.push(timeString);
         currentTime.setMinutes(currentTime.getMinutes() + 15); // Increment by 15 minutes
       }
@@ -278,7 +306,10 @@ router.post('/time-slot', async function (req, res, next) {
 
       while (currentTime <= scheduleEnd) {
         // Format the time in AM/PM format (e.g., "8:00 AM")
-        const timeString = currentTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        const timeString = currentTime.toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "2-digit",
+        });
         timeSlots.push(timeString);
         currentTime.setMinutes(currentTime.getMinutes() + 15); // Increment by 15 minutes
       }
@@ -288,13 +319,12 @@ router.post('/time-slot', async function (req, res, next) {
 
   // Function to exclude time slots falling between 1 pm and 3 pm
   function excludeTimeRange(timeSlots, startTime, endTime) {
-    let date = startTime.toISOString().substring(0, 10)
-    return timeSlots.filter(slot => {
+    let date = startTime.toISOString().substring(0, 10);
+    return timeSlots.filter((slot) => {
       const slotTime = new Date(`${date} ${slot}`);
       return !(slotTime >= startTime && slotTime < endTime);
     });
   }
-
 
   const { from, to } = req.body;
 
@@ -314,7 +344,12 @@ router.post('/time-slot', async function (req, res, next) {
         [Op.between]: [startDate, endDate],
       },
     },
-    attributes: [['event_id', 'id'], ['title', 'text'], 'start_date', 'end_date'],
+    attributes: [
+      ["event_id", "id"],
+      ["title", "text"],
+      "start_date",
+      "end_date",
+    ],
     raw: true,
   });
 
@@ -324,7 +359,11 @@ router.post('/time-slot', async function (req, res, next) {
   for (let i = 0; i < removeTime.length; i++) {
     const eventStart = new Date(removeTime[i].start_date);
     const eventEnd = new Date(removeTime[i].end_date);
-    excludedTimeSlots = excludeTimeRange(excludedTimeSlots, eventStart, eventEnd);
+    excludedTimeSlots = excludeTimeRange(
+      excludedTimeSlots,
+      eventStart,
+      eventEnd
+    );
   }
 
   console.log(excludedTimeSlots);

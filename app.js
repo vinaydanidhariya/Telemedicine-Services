@@ -19,6 +19,7 @@ const paymentRouter = require("./routes/admin/payment.js")
 const blogsRouter = require("./routes/admin/Blog.js")
 const eventsRouter = require("./routes/admin/event")
 const webSettingsRouter = require("./routes/admin/web-setting")
+const departmentRouter = require("./routes/admin/department")
 const dashboardRouter = require("./routes/admin/dashboard")
 const uploadRouter = require("./routes/admin/upload")
 const auth = require("./middleware/login_module");
@@ -82,6 +83,7 @@ app.use("/events", eventsRouter);
 app.use('/upload', uploadRouter);
 app.use('/doctor', doctorAccess);
 app.use('/web-setting', webSettingsRouter);
+app.use('/department', departmentRouter);
 
 app.use(function (req, res, next) {
 	next(createError(404));

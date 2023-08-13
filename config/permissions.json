@@ -136,5 +136,29 @@
 	"post/web-setting/edit-slider-photo":{
 		"ADMIN": true,
 		"DOCTOR": false
+	},
+	"department/add-department":{
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/department/add-department":{
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"department/department-list":{
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/department/delete-department":{
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"department/edit-department":{
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"post/department/edit-department":{
+		"ADMIN": true,
+		"DOCTOR": false
 	}
 }
