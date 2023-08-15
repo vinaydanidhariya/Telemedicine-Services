@@ -51,6 +51,18 @@ module.exports = (sequelize, DataTypes) => {
                 field: "medical_info",
                 allowNull: true,
                 defaultValue: [],
+            },
+            prescriptionMsg: {
+                type: DataTypes.TEXT,
+                field: "prescription_msg",
+                allowNull: true,
+                defaultValue: [],
+            },
+            note: {
+                type: DataTypes.TEXT,
+                field: "note",
+                allowNull: true,
+                defaultValue: [],
             }
         },
         {

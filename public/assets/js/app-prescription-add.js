@@ -15,10 +15,6 @@
 })();
 
 $(function () {
-	$(".MedicalInformationSelect").select2({
-        placeholder: "Select an item",
-        allowClear: true // Add this line if you want to allow clearing the selection
-    });
 	var e = $(".btn-apply-changes"),
 		t = $(".source-item"),
 		c = {

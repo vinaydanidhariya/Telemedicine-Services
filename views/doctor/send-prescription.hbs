@@ -35,7 +35,7 @@
                                     <dd class="col-sm-6 d-flex justify-content-md-end">
                                         <div class="w-px-150">
                                             <input type="text" class="form-control datetime-picker"
-                                                placeholder="DD/MM/YYYY">
+                                                id="prescriptionDate" placeholder="DD/MM/YYYY">
                                         </div>
                                     </dd>
                                 </dl>
@@ -92,116 +92,121 @@
                                 </table>
                             </div>
                         </div>
+                        <form id="prescriptionFormValidation">
+                            <hr class="mx-n4" />
+                            <input type="hidden" value="{{prescription.prescriptionId}}" id="prescriptionId">
+                            <div class="source-item py-sm-3" id="prescriptionForm">
+                                <div class='repeater'>
+                                    <div class="mb-3 repeater-section" data-repeater-list="medicines">
+                                        <div class="repeater-wrapper pt-0 pt-md-4" data-repeater-item>
+                                            <!-- Medicine Section -->
+                                            <div class="d-flex border rounded position-relative pe-0">
+                                                <div class="row w-100 m-0 p-3">
+                                                    <p class="mb-2 repeater-title">Medicine Name</p>
 
-                        <hr class="mx-n4" />
-
-                        <form class="source-item py-sm-3" id="prescriptionForm">
-                            <div class='repeater'>
-                                <div class="mb-3 repeater-section" data-repeater-list="medicines">
-                                    <div class="repeater-wrapper pt-0 pt-md-4" data-repeater-item>
-                                        <!-- Medicine Section -->
-                                        <div class="d-flex border rounded position-relative pe-0">
-                                            <div class="row w-100 m-0 p-3">
-                                                <p class="mb-2 repeater-title">Medicine Name</p>
-
-                                                <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
-                                                    <p class="mb-2">Medicine</p>
-                                                    <textarea class="form-control" rows="1" name="medicineName"
-                                                        placeholder="TAB. DEMO MEDICINE 1"></textarea>
+                                                    <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
+                                                        <p class="mb-2">Medicine</p>
+                                                        <textarea class="form-control" rows="1" name="medicineName"
+                                                            placeholder="TAB. DEMO MEDICINE 1"></textarea>
+                                                    </div>
+                                                    <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
+                                                        <p class="mb-2 ">Dosage</p>
+                                                        <textarea class="form-control" rows="2" name="dosage"
+                                                            placeholder="10 Days (Tot:40 Tab) 1 Morning, 1 Aft, 1 Eve, 1 Night (After Food)"></textarea>
+                                                    </div>
+                                                    <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
+                                                        <p class="mb-2">Duration</p>
+                                                        <textarea class="form-control" rows="1" name="duration"
+                                                            placeholder="10 Days (Tot:20 Tab)"></textarea>
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
-                                                    <p class="mb-2 ">Dosage</p>
-                                                    <textarea class="form-control" rows="2" name="dosage"
-                                                        placeholder="10 Days (Tot:40 Tab) 1 Morning, 1 Aft, 1 Eve, 1 Night (After Food)"></textarea>
+                                                <div
+                                                    class="d-flex flex-column align-items-center justify-content-between border-start p-2">
+                                                    <i class="bx bx-x fs-4 text-muted cursor-pointer"
+                                                        data-repeater-delete></i>
                                                 </div>
-                                                <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
-                                                    <p class="mb-2">Duration</p>
-                                                    <textarea class="form-control" rows="1" name="duration"
-                                                        placeholder="10 Days (Tot:20 Tab)"></textarea>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="d-flex flex-column align-items-center justify-content-between border-start p-2">
-                                                <i class="bx bx-x fs-4 text-muted cursor-pointer"
-                                                    data-repeater-delete></i>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div
+                                            class="col-12 d-flex flex-column align-items-center justify-content-between">
+                                            <button type="button" class="btn btn-primary" data-repeater-create
+                                                data-repeater-list="medicines">Add
+                                                Medicine</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12 d-flex flex-column align-items-center justify-content-between">
-                                        <button type="button" class="btn btn-primary" data-repeater-create
-                                            data-repeater-list="medicines">Add
-                                            Medicine</button>
+                            </div>
+                            <div class="source-item py-sm-3" id="medicalInformationForm">
+                                <div class='repeater'>
+                                    <div class="mb-3 repeater-section" data-repeater-list="medical-info">
+                                        <div class="repeater-wrapper pt-0 pt-md-4" data-repeater-item>
+                                            <!-- Medical Information Section -->
+                                            <div class="d-flex border rounded position-relative pe-0">
+                                                <div class="row w-100 m-0 p-3">
+                                                    <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
+                                                        <p class="mb-2 repeater-title">Medical Information</p>
+                                                        <select class="form-select item-details mb-2"
+                                                            name="itemDetails">
+                                                            <option selected disabled>Select Item</option>
+                                                            <option value="Probable-Diagnosis">Probable Diagnosis
+                                                            </option>
+                                                            <option value="briefMedicalHistory">Brief Medical History
+                                                            </option>
+                                                            <option value="prescribedMedicine">Prescribed Medicine
+                                                            </option>
+                                                            <option value="requiredInvestigation">Required Investigation
+                                                            </option>
+                                                            <option value="followUpInstructions">Follow-Up Instructions
+                                                            </option>
+                                                            <option value="extraAdvice">Extra Advice</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
+                                                        <textarea class="form-control" rows="2" name="itemInformation"
+                                                            placeholder="Section Description"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="d-flex flex-column align-items-center justify-content-between border-start p-2">
+                                                    <i class="bx bx-x fs-4 text-muted cursor-pointer"
+                                                        data-repeater-delete></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div
+                                            class="col-12 d-flex flex-column align-items-center justify-content-between">
+                                            <button type="button" class="btn btn-primary" data-repeater-create
+                                                data-repeater-list="medicalInfo">Add Medical
+                                                Information</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-4 mx-n4" />
+
+                            <div class="row py-sm-3">
+                                <div class="col-md-12 mb-md-0 mb-3">
+                                    <input type="text" class="form-control" id="prescriptionMsg"
+                                        placeholder="Thanks for your business" />
+                                </div>
+                            </div>
+
+                            <hr class="my-4" />
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="note" class="form-label fw-semibold">Note:</label>
+                                        <textarea class="form-control" rows="2" id="note"
+                                            placeholder="prescription note"></textarea>
                                     </div>
                                 </div>
                             </div>
                         </form>
-                        <form class="source-item py-sm-3" id="medicalInformationForm">
-                            <div class='repeater'>
-                                <div class="mb-3 repeater-section" data-repeater-list="medical-info">
-                                    <div class="repeater-wrapper pt-0 pt-md-4" data-repeater-item>
-                                        <!-- Medical Information Section -->
-                                        <div class="d-flex border rounded position-relative pe-0">
-                                            <div class="row w-100 m-0 p-3">
-                                                <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
-                                                    <p class="mb-2 repeater-title">Medical Information</p>
-                                                    <select class="form-select item-details mb-2" name="itemDetails">
-                                                        <option selected disabled>Select Item</option>
-                                                        <option value="Probable-Diagnosis">Probable Diagnosis</option>
-                                                        <option value="briefMedicalHistory">Brief Medical History
-                                                        </option>
-                                                        <option value="prescribedMedicine">Prescribed Medicine</option>
-                                                        <option value="requiredInvestigation">Required Investigation
-                                                        </option>
-                                                        <option value="followUpInstructions">Follow-Up Instructions
-                                                        </option>
-                                                        <option value="extraAdvice">Extra Advice</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
-                                                    <textarea class="form-control" rows="2" name="itemInformation"
-                                                        placeholder="Section Description"></textarea>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="d-flex flex-column align-items-center justify-content-between border-start p-2">
-                                                <i class="bx bx-x fs-4 text-muted cursor-pointer"
-                                                    data-repeater-delete></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 d-flex flex-column align-items-center justify-content-between">
-                                        <button type="button" class="btn btn-primary" data-repeater-create
-                                            data-repeater-list="medicalInfo">Add Medical
-                                            Information</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                        <hr class="my-4 mx-n4" />
-
-                        <div class="row py-sm-3">
-                            <div class="col-md-12 mb-md-0 mb-3">
-                                <input type="text" class="form-control" id="prescriptionMsg"
-                                    placeholder="Thanks for your business" />
-                            </div>
-                        </div>
-
-                        <hr class="my-4" />
-
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="mb-3">
-                                    <label for="note" class="form-label fw-semibold">Note:</label>
-                                    <textarea class="form-control" rows="2" id="note"
-                                        placeholder="prescription note"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -216,9 +221,10 @@
                             <span class="d-flex align-items-center justify-content-center text-nowrap"><i
                                     class="bx bx-paper-plane bx-xs me-1"></i>Send prescription</span>
                         </button>
-                        <button class="btn btn-primary d-grid w-100 mb-3">
-                            <span class="d-flex align-items-center justify-content-center text-nowrap"><i
-                                    class="bx bx-paper-plane bx-xs me-1"></i>Generate prescription</span>
+                        <button id="generatePrescriptionButton" class="btn btn-primary d-grid w-100 mb-3">
+                            <span class="d-flex align-items-center justify-content-center text-nowrap">
+                                <i class="fa fa-eye bx-xs me-1" aria-hidden="true"></i>Preview prescription
+                            </span>
                         </button>
                         <button type="button" class="btn btn-label-secondary d-grid w-100" id="saveForm">Save</button>
                     </div>
@@ -228,7 +234,6 @@
             </div>
             <!-- /prescription Actions -->
         </div>
-
         <!-- Offcanvas -->
         <!-- Send prescription Sidebar -->
         <div class="offcanvas offcanvas-end" id="sendprescriptionOffcanvas" aria-hidden="true">
@@ -286,7 +291,6 @@
     </div>
     <!-- / Content -->
 
-
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Core JS -->
@@ -297,7 +301,7 @@
 <script src="../../assets/vendor/libs/cleavejs/cleave.js"></script>
 <script src="../../assets/vendor/libs/cleavejs/cleave-phone.js"></script>
 <script src="../../assets/vendor/libs/select2/select2.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/1.2.1/jquery.repeater.min.js"></script>
+<script src="../../assets/vendor/libs/jquery-repeater/jquery-repeater.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -311,10 +315,12 @@
                 medicines: [],
                 medicalIn: [],
                 prescriptionMsg: $('#prescriptionMsg').val(),
+                prescriptionId: $('#prescriptionId').val(),
+                prescriptionDate: $('#prescriptionDate').val(),
                 note: $('#note').val(),
                 patientId: 2
             };
-
+            console.log(formData)
             // Validate and populate data for medicine sections
             validateAndPopulateData('[data-repeater-list="medicines"]', formData.medicines);
 
@@ -377,8 +383,20 @@
         }
     });
 </script>
-{{!--
-<script src="../../assets/vendor/libs/jquery-repeater/jquery-repeater.js"></script> --}}
-<!-- Page JS -->
-<script src="../../assets/js/offcanvas-send-prescription.js"></script>
-<script src="../../assets/js/app-prescription-add.js"></script>
+
+<script>
+    // Get the button element by its ID
+    const generateButton = document.getElementById('generatePrescriptionButton');
+
+    // Add a click event listener to the button
+    generateButton.addEventListener('click', () => {
+        // Get the prescription ID from the hidden input
+        const prescriptionId = document.getElementById('prescriptionId').value;
+
+        // Construct the URL with the prescription ID
+        const url = `/doctor/generate-prescription/${prescriptionId}`;
+
+        // Navigate to the URL
+        window.location.href = url;
+    });
+</script>

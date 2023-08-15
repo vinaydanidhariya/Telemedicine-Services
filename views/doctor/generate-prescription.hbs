@@ -1,0 +1,220 @@
+<!-- Content wrapper -->
+<link rel="stylesheet" href="../../assets/vendor/libs/flatpickr/flatpickr.css" />
+<style>
+    .invoice-preview-card {
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        width: 794px;
+        /* Fixed width of 720px */
+        margin: 0 auto;
+        /* Center the card horizontally */
+    }
+
+
+    /* Style headings */
+    h4,
+    h6 {
+        margin-bottom: 10px;
+    }
+
+    /* Style paragraphs */
+    p {
+        margin-bottom: 5px;
+    }
+
+    /* Style the tables */
+    table {
+        max-width: 100%;
+        overflow-x: auto;
+        border-collapse: collapse;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    th,
+    td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        padding-left: 0;
+    }
+
+    /* Style the note */
+    .note {
+        font-weight: bold;
+    }
+
+    /* Set fixed width and height for specific divs */
+    .fixed-dimensions {
+        width: 600px;
+        padding-bottom: 10px;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="invoice-preview">
+            <div class="card invoice-preview-card">
+                <div class="fixed-dimensions">
+                    <div class="card-body">
+                        <div
+                            class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-0">
+                            <div class="mb-4">
+                                <div class="d-flex svg-illustration mb-3 gap-2">
+                                    <span class="app-brand-logo demo">
+                                        <!-- Add your logo here -->
+                                    </span>
+                                    <span class="app-brand-text demo text-body fw-bolder">ChildDr</span>
+                                </div>
+                                <p class="mb-1">Office 149, 450 South Brand Brooklyn</p>
+                                <p class="mb-1">San Diego County, CA 91905, USA</p>
+                                <p class="mb-0">+1 (123) 456 7891</p>
+                            </div>
+                            <div>
+                                <h4>Prescription #{{ prescription.prescriptionId }}</h4>
+                                <div>
+                                    <span class="me-1">Date:</span>
+                                    <span class="fw-semibold">{{ prescription.updatedAt }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                        <div class="row p-0">
+                            <div class="col-6 mb-4">
+                                <h6 class="pb-2">Prescription for:</h6>
+                                <p class="mb-1">{{ prescription.patient.fullName }}</p>
+                                <p class="mb-1">{{ prescription.patient.gender }}, {{ prescription.patient.age }}
+                                    years
+                                    old</p>
+                                <p class="mb-1">{{ prescription.patient.email }}</p>
+                                <p class="mb-0">{{ prescription.patient.phone }}</p>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="pb-2">Prescribed by:</h6>
+                                <p class="mb-1">{{ prescription.doctor.firstName }} {{ prescription.doctor.lastName
+                                    }}
+                                </p>
+                                <p class="mb-1">{{ prescription.doctor.department }}</p>
+                                <p class="mb-0">{{ prescription.doctor.email }}</p>
+                                <p class="mb-0">{{ prescription.doctor.phone }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table border-top mb-3">
+                        <thead>
+                            <tr>
+                                <th><strong>Medicine Name</strong></th>
+                                <th><strong>Dosage</strong></th>
+                                <th><strong>Duration</strong></th>
+                            </tr>
+                        </thead>
+                        {{#each prescription.medicines}}
+                        <tr>
+                            <td>{{this.medicineName}}</td>
+                            <td>{{this.dosage}}</td>
+                            <td>{{this.duration}}</td>
+                        </tr>
+                        {{/each}}
+                    </table>
+                    <table class="table border-top mb-3">
+                        <thead>
+                            <tr>
+                                <th><strong>Section Name</strong></th>
+                                <th><strong>Section Description</strong></th>
+                            </tr>
+                        </thead>
+                        {{#each prescription.medicalInfo}}
+                        <tr>
+                            <td>{{this.itemDetails}}</td>
+                            <td>{{this.itemInformation}}</td>
+                        </tr>
+                        {{/each}}
+                    </table>
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="fw-semibold">Note:</span>
+                            <span>{{ prescription.note }}</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="convertAndSendButton">Convert and Send</button>
+            </div>
+            <!-- /Invoice -->
+        </div>
+
+
+        <!-- /Offcanvas -->
+        <!-- Invoice Actions -->
+
+        <!-- /Invoice Actions -->
+
+
+    </div>
+    <!-- / Content -->
+
+
+    <div class="content-backdrop fade"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+    integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<!-- Add this script at the bottom of your HTML, before the closing </body> tag -->
+<script>
+    // Frontend code using jspdf and Fetch API
+    document.addEventListener('DOMContentLoaded', () => {
+        const convertAndSendButton = document.getElementById('convertAndSendButton');
+
+        convertAndSendButton.addEventListener('click', async () => {
+            try {
+                const invoicePreviewElement = document.querySelector('.fixed-dimensions');
+
+                // Convert invoice-preview content to PDF using jspdf or html2pdf.js
+                // ...
+                // Temporarily display the invoice preview element
+                var opt = {
+                    margin: 1,
+                    filename: 'myfile.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+
+                // New Promise-based usage:
+                html2pdf().set(opt).from().save();
+
+                // Old monolithic-style usage:
+                html2pdf(invoicePreviewElement, opt);
+
+
+
+                // Send the PDF ArrayBuffer to the server
+                const response = await fetch('/generate-pdf-and-email', {
+                    method: 'POST',
+                    body: value
+                });
+
+                if (response.ok) {
+                    console.log('PDF generated and email sent');
+                } else {
+                    console.error('Error generating PDF and sending email');
+                }
+            } catch (error) {
+                console.error('An error occurred:', error);
+            }
+        });
+    });
+
+</script>u
+<!-- Core JS -->
+<!-- build:js assets/vendor/js/core.js -->
+<script src="../../assets/vendor/libs/jquery/jquery.js"></script>
+<!-- Vendors JS -->
+<script src="../../assets/vendor/libs/flatpickr/flatpickr.js"></script>
+<script src="../../assets/vendor/libs/cleavejs/cleave.js"></script>
+<script src="../../assets/vendor/libs/cleavejs/cleave-phone.js"></script>
+<script src="../../assets/vendor/libs/select2/select2.js"></script>
+<script src="../../assets/vendor/libs/jquery-repeater/jquery-repeater.js"></script>
