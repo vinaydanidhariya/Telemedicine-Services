@@ -34,13 +34,17 @@ router.post("/create-doctor", async function (req, res, next) {
       onlineConsultationTimeTo,
       clinicTimeFrom,
       clinicTimeTo,
+      is_admin
     } = req.body;
-
+    let type = 'DOCTOR';
+    if (is_admin && is_admin == true || is_admin == "true") {
+      type = 'ADMIN';
+    }
     const passwordEncrypt = convertToMd5(password);
     const customer = await db.User.create({
       firstName,
       lastName,
-      type: "DOCTOR",
+      type,
       email,
       dateOfBirth,
       qualifications,
