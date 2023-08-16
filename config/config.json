@@ -4,7 +4,7 @@
 		"x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
 		"project": "Shree Hari Clinic",
 		"secret": "SHC#100&ShreeHariClinic@333",
-		"url": "http://localhost:5000",
+		"serverUrl": "https://40018dd7c14a-6958608321302419644.ngrok-free.app",
 		"database": "SHC_DEV",
 		"username": "postgres",
 		"schema": "SHC_DEV",
@@ -16,8 +16,8 @@
 			"port": 587,
 			"secure": false,
 			"auth": {
-				"user": "test@test.com",
-				"pass": "test"
+				"user": "vinaydanidhariya4114@gmail.com",
+				"pass": "bnatnehmtzvrvgox"
 			}
 		},
 		"replication": {
@@ -41,8 +41,7 @@
 		},
 		"Razorpay": {
 			"key_id": "rzp_test_eIM2tN4jZB7id4",
-			"key_secret": "ZrWjvHIA2dvJmxNJ0jvMIgnT",
-			"paymentCreateUrl": "https://40018dd7c14a-6958608321302419644.ngrok-free.app/whatsapp-payment/create-payment"
+			"key_secret": "ZrWjvHIA2dvJmxNJ0jvMIgnT"
 		}
 	},
 	"development": {
@@ -50,7 +49,7 @@
 		"x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
 		"project": "Shree Hari Clinic",
 		"secret": "SHC#100&ShreeHariClinic@333",
-		"url": "http://localhost:5000",
+		"serverUrl": "https://40018dd7c14a-6958608321302419644.ngrok-free.app",
 		"database": "SHC_DEV",
 		"username": "postgres",
 		"schema": "SHC_DEV",
@@ -87,8 +86,7 @@
 		},
 		"Razorpay": {
 			"key_id": "rzp_test_eIM2tN4jZB7id4",
-			"key_secret": "ZrWjvHIA2dvJmxNJ0jvMIgnT",
-			"paymentCreateUrl": "https://40018dd7c14a-6958608321302419644.ngrok-free.app/whatsapp-payment/create-payment"
+			"key_secret": "ZrWjvHIA2dvJmxNJ0jvMIgnT"
 		}
 	}
 }

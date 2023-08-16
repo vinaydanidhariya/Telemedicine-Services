@@ -1,6 +1,7 @@
 <!-- Content wrapper -->
 <link rel="stylesheet" href="../../assets/vendor/css/pages/app-prescription.css" />
 <link rel="stylesheet" href="../../assets/vendor/libs/flatpickr/flatpickr.css" />
+<link rel="stylesheet" href="/assets/vendor/libs/sweetalert2/sweetalert2.css" />
 
 <div class="content-wrapper">
     <!-- Content -->
@@ -247,26 +248,22 @@
                     <div class="mb-3">
                         <label for="prescription-from" class="form-label">From</label>
                         <input type="text" class="form-control" id="prescription-from" value="shelbyComapny@email.com"
-                            placeholder="company@email.com" />
+                            placeholder="Childdr@email.com" />
                     </div>
                     <div class="mb-3">
                         <label for="prescription-to" class="form-label">To</label>
-                        <input type="text" class="form-control" id="prescription-to" value="qConsolidated@email.com"
-                            placeholder="company@email.com" />
+                        <input type="text" class="form-control" id="prescription-to"
+                            value="{{prescription.patient.email}}" placeholder="Enter Recipient Email" />
                     </div>
                     <div class="mb-3">
                         <label for="prescription-subject" class="form-label">Subject</label>
-                        <input type="text" class="form-control" id="prescription-subject"
-                            value="prescription of purchased Admin Templates"
-                            placeholder="prescription regarding goods" />
+                        <input type="text" class="form-control" id="prescription-subject" value="Your Prescription"
+                            placeholder="Email Subject" />
                     </div>
                     <div class="mb-3">
                         <label for="prescription-message" class="form-label">Message</label>
                         <textarea class="form-control" name="prescription-message" id="prescription-message" cols="3"
-                            rows="8">Dear Queen Consolidated,
-                            Thank you for your business, always a pleasure to work with you!
-                            We have generated a new prescription in the amount of $95.59
-                            We would appreciate payment of this prescription by 05/11/2021</textarea>
+                            rows="8">ChildDr</textarea>
                     </div>
                     <div class="mb-4">
                         <span class="badge bg-label-primary">
@@ -275,7 +272,8 @@
                         </span>
                     </div>
                     <div class="mb-3 d-flex flex-wrap">
-                        <button type="button" class="btn btn-primary me-3" data-bs-dismiss="offcanvas">Send</button>
+                        <button type="button" class="btn btn-primary me-3" id="emailSendButton"
+                            data-bs-dismiss="offcanvas">Send</button>
                         <button type="button" class="btn btn-label-secondary"
                             data-bs-dismiss="offcanvas">Cancel</button>
                     </div>
@@ -302,14 +300,62 @@
 <script src="../../assets/vendor/libs/cleavejs/cleave-phone.js"></script>
 <script src="../../assets/vendor/libs/select2/select2.js"></script>
 <script src="../../assets/vendor/libs/jquery-repeater/jquery-repeater.js"></script>
+<script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
 
 <script>
     $(document).ready(function () {
-        // Initialize flatpickr
         flatpickr(".datetime-picker", {
-            dateFormat: "d/m/Y", // Format for date and time
+            dateFormat: "d/m/Y",
             defaultDate: new Date()
         });
+
+        const sendButton = document.querySelector("#emailSendButton");
+        sendButton.addEventListener("click", async function () {
+            const from = document.querySelector("#prescription-from").value;
+            const patientEmail = document.querySelector("#prescription-to").value;
+            const subject = document.querySelector("#prescription-subject").value;
+            const message = document.querySelector("#prescription-message").value;
+            const prescriptionId = document.getElementById('prescriptionId').value;
+
+            const requestBody = {
+                subject: subject,
+                message: message,
+                patientEmail: patientEmail,
+                prescriptionId: prescriptionId
+            };
+
+            try {
+                const response = await fetch("/doctor/download-pdf", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Prescription PDF sent successfully',
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Prescription PDF send request failed',
+                    });
+                }
+            } catch (error) {
+                console.error("An error occurred:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'An error occurred while processing your request',
+                });
+            }
+        });
+
         $('#saveForm').on('click', function () {
             var formData = {
                 medicines: [],
@@ -318,7 +364,7 @@
                 prescriptionId: $('#prescriptionId').val(),
                 prescriptionDate: $('#prescriptionDate').val(),
                 note: $('#note').val(),
-                patientId: 2
+                prescriptionId: $('#prescriptionId').val()
             };
             console.log(formData)
             // Validate and populate data for medicine sections

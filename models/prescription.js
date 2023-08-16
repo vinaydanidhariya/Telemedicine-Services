@@ -56,13 +56,11 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.TEXT,
                 field: "prescription_msg",
                 allowNull: true,
-                defaultValue: [],
             },
             note: {
                 type: DataTypes.TEXT,
                 field: "note",
                 allowNull: true,
-                defaultValue: [],
             }
         },
         {

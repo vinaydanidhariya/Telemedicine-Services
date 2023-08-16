@@ -738,7 +738,7 @@ const findDoctorDepartmentList = async () => {
 const GetPaymentUrl = async (wa_id) => {
     try {
         const user = await db.WhatsappUser.findOne({ where: { wa_id } });
-        const url = Config.Razorpay.paymentCreateUrl;
+        let url = Config.serverUrl + "/whatsapp-payment/create-payment";
         const response = await axios(url, {
             method: 'POST',
             headers: {

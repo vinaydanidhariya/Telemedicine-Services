@@ -30,7 +30,7 @@ router.post("/create-payment", async function (req, res, next) {
             },
         });
         console.log(id)
-        res.send(`https://40018dd7c14a-6958608321302419644.ngrok-free.app/payment?id=${id}`);
+        res.send(`${Config.serverUrl}/payment?id=${id}`);
     } catch (error) {
         console.log(error);
     }
@@ -85,16 +85,14 @@ router.post("/payment-callback1", async function (req, res, next) {
                         {
                             where: { phone: mobile }
                         })
-                    console.log(userInfo);
                     const prescription = await db.Prescription.create({
                         patientId: userInfo.userId,
-                        doctorId: userInfo.selectedDoctor,
+                        doctorId: userInfo.selectedDoctor
                     });
-
                     const appointment = await db.Appointment.create({
                         patientId: userInfo.userId,
                         doctorId: userInfo.selectedDoctor,
-                        prescriptionId: prescription.PrescriptionId, // Use "PrescriptionId" from the Prescription model
+                        prescriptionId: prescription.prescriptionId,
                         status: "RECEIVED",
                     });
                     await db.WhatsappUser.update(
@@ -107,7 +105,6 @@ router.post("/payment-callback1", async function (req, res, next) {
                             },
                         }
                     );
-                    console.log(appointment);
                     const formattedDate = moment(userInfo.appointmentDate).format('DD/MM/YYYY');
                     const data1 = appointmentMessage(userInfo.fullName, formattedDate, userInfo.appointmentTime)
 

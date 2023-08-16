@@ -6,9 +6,15 @@ const { sequelize } = require("../../models/");
 const { Op } = require('sequelize');
 const puppeteer = require('puppeteer');
 const nodemailer = require('nodemailer');
-const fs = require('fs')
+const fs = require('fs/promises');
 const path = require('path')
 var axios = require('axios');
+const util = require('util');
+const readFileAsync = util.promisify(fs.readFile);
+const request = require('request');
+const { validateMediaSize, mediaLimits } = require('../../helpers/validations'); // Make sure to adjust the path accordingly
+const multer = require('multer');
+const Config = require('../../config/config.json')[process.env.NODE_ENV]
 
 router.get("/dashboard", authentication, checkAccess("doctor/patient-list"), function (req, res, next) {
 	res.render("doctor/dashboard")
@@ -109,7 +115,7 @@ router.get("/send-prescription/:id", authentication, checkAccess("doctor/appoint
 	}
 });
 
-router.get("/send-pdf/:id", async function (req, res, next) {
+router.get("/prescription-pdf/:id", async function (req, res, next) {
 	console.log(req.params);
 	try {
 		const prescriptionId = req.params.id;
@@ -141,7 +147,6 @@ router.get("/send-pdf/:id", async function (req, res, next) {
 			],
 		});
 
-
 		console.log(prescription.toJSON());
 
 		res.render("doctor/pdf-prescription", {
@@ -155,183 +160,360 @@ router.get("/send-pdf/:id", async function (req, res, next) {
 	}
 });
 
-const util = require('util');
-const readFileAsync = util.promisify(fs.readFile);
+// Set up multer storage
+const storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+		const uploadDirectory = path.join(__dirname, '../../public/images/profile/');
+		cb(null, uploadDirectory);
+	},
+	filename: function (req, file, cb) {
+		cb(null, file.originalname); // Use the original filename
+	},
+});
 
-router.get('/download-pdf', async (req, res) => {
+// Create a multer instance with the storage configuration
+const upload = multer({ storage: storage });
+
+// Serve static files from a folder named "uploads"
+router.use('/uploads', express.static('uploads'));
+// Upload media endpoint
+router.post('/upload', upload.single('file'), async (req, res) => {
+	const uploadedFile = req.file;
+
+	if (!uploadedFile) {
+		return res.status(400).json({
+			error: "Media File is required",
+		});
+	}
+
+	let isFileValidSize = validateMediaSize(uploadedFile.size, uploadedFile.mimetype);
+	if (!isFileValidSize) {
+		return res.status(400).json({
+			error: `Media File size should be less than ${mediaLimits(
+				uploadedFile.mimetype
+			)}`,
+		});
+	}
+
 	try {
-		const retryCount = 3;
-		const delay = 1000;
-
-		async function sendEmailWithRetry() {
-			for (let attempt = 1; attempt <= retryCount; attempt++) {
-				try {
-					const browser = await puppeteer.launch();
-					const page = await browser.newPage();
-
-					const pagePromise = page.goto(`${req.protocol}://${req.get('host')}/doctor/send-pdf/2`, { waitUntil: 'networkidle0' });
-					const pdfPromise = page.pdf({ format: 'A4' });
-
-					const [_, pdfBuffer] = await Promise.all([pagePromise, pdfPromise]);
-
-					await browser.close();
-
-					// Send email and break out of the loop if successful
-					if (await sendEmail(pdfBuffer)) {
-						console.log('Email sent successfully');
-						break;
-					}
-				} catch (error) {
-					console.error(`Attempt ${attempt} failed with error:`, error);
-					if (attempt < retryCount) {
-						console.log(`Retrying in ${delay / 1000} seconds...`);
-						await new Promise(resolve => setTimeout(resolve, delay));
-					} else {
-						console.error('All retry attempts failed. Email could not be sent.');
-					}
-				}
-			}
-		}
-
-		async function sendEmail(pdfBuffer) {
-			try {
-				const transporter = nodemailer.createTransport({
-					service: 'Gmail',
-					auth: {
-						user: 'vinaydanidhariya4114@gmail.com',
-						pass: 'bnatnehmtzvrvgox'
-					}
-				});
-
-				const emailTemplatePath = path.join(__dirname, '../../email-templates', 'prescription.html');
-				const template = await readFileAsync(emailTemplatePath, 'utf-8');
-
-				const patientName = 'John Doe';
-				const doctorName = 'Dr. Smith';
-				const dynamicMessage = 'Thank you for choosing our medical services.';
-
-				const filledTemplate = template
-					.replace(/\[Patient Name\]/g, patientName)
-					.replace(/\[Doctor's Name\]/g, doctorName)
-					.replace(/\[Your Dynamic Message Here\]/g, dynamicMessage);
-
-				const mailOptions = {
-					from: 'Child Dr <vinaydanidhariya4114@gmail.com>',
-					to: 'vinaydanidhariya04114@gmail.com',
-					subject: 'Your Prescription',
-					html: filledTemplate,
-					attachments: [
-						{
-							filename: 'prescription.pdf',
-							content: pdfBuffer // Attach the PDF binary content here
-						}
-					]
-				};
-
-				await transporter.sendMail(mailOptions);
-
-				try {
-					const response = await axios.post(
-						`https://graph.facebook.com/v13.0/${process.env.PHONE_NUMBER_ID}/media`,
-						fs.createReadStream('/home/vinay4114/Desktop/Shree Hari Clinic/routes/doctor/webpage.pdf'), // Use the PDF binary content here
-						{
-							headers: {
-								Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
-								'content-type': 'application/pdf', // Set the correct content type
-							},
-							params: {
-								messaging_product: 'whatsapp', // Adjust as needed
-							},
-						}
-					);
-					console.log(response.data);
-				} catch (error) {
-					console.error('Error:', error);
-					// Handle the error appropriately
-				}
-
-
-
-				request.post(
-					{
-						url: `https://graph.facebook.com/v13.0/${process.env.PHONE_NUMBER_ID}/media`,
-						formData: {
-							file: {
-								value: fs.createReadStream(files.file.path),
-								options: {
-									filename: files.file.name,
-									contentType: files.file.type,
-								},
-							},
-							type: files.file.type,
-							messaging_product: process.env.MESSAGING_PRODUCT,
-						},
-						headers: {
-							Authorization: `Bearer ${process.env.META_AUTH_TOKEN}`,
-							"content-type": "multipart/form-data",
+		request.post(
+			{
+				url: `https://graph.facebook.com/v13.0/107565462372831/media`,
+				formData: {
+					file: {
+						value: fs.createReadStream(uploadedFile.path),
+						options: {
+							filename: uploadedFile.originalname,
+							contentType: uploadedFile.mimetype,
 						},
 					},
-					function (err, resp, body) {
-						if (err) {
-							console.log("Error!");
-						} else {
-							res.json(JSON.parse(body));
-						}
+					type: uploadedFile.mimetype,
+					messaging_product: "whatsapp",
+				},
+				headers: {
+					Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
+					"content-type": "multipart/form-data",
+				},
+			},
+			function (err, resp, body) {
+				if (err) {
+					console.log("Error!", err);
+				} else {
+					const body1 = JSON.parse(body);
+					const id = body1.id;
+
+					if (!id) {
+						return res.status(400).json({
+							error: "Required Fields: to, type and id",
+						});
 					}
-				);
+					request.post(
+						{
+							url: `https://graph.facebook.com/v13.0/${process.env.PHONE_NUMBER_ID}/messages`,
+							headers: {
+								Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
+								"content-type": "application/json",
+							},
+							body: `{
+						"messaging_product": "whatsapp",
+						"recipient_type": "individual",
+						"to": "919265979359",
+						"type": "document",
+						"document": {
+						"id": "${id}",
+						},
+						}`,
+						},
+						function (err, resp, body) {
+							if (err) {
+								console.log("Error!");
+							} else {
+								// Delete the uploaded file after processing
+								fs.unlink(uploadedFile.path, (unlinkErr) => {
+									if (unlinkErr) {
+										console.log('Error deleting file:', unlinkErr);
+									} else {
+										console.log('File deleted:', uploadedFile.path);
+									}
+								});
+								res.json(JSON.parse(body));
+							}
 
+						}
 
-
-
-
-
-
-				return true; // Successful email sending
-			} catch (error) {
-				console.error('Error sending email:', error);
-				return false; // Email sending failed
+					);
+				}
 			}
+		)
+		console.log(uploadedFile);
+	} catch (error) {
+		console.log("Error:", error);
+		res.status(500).json({ error: "An error occurred" });
+	}
+});
+
+router.post('/download-pdf', async (req, res) => {
+	try {
+		console.log(req.body);
+		const { prescriptionId, subject, message, patientEmail } = req.body
+		console.log(patientEmail);
+		const appointment = await db.Appointment.findOne({
+			where: { prescriptionId }, // Change the condition as needed
+			include: [
+				{
+					model: db.WhatsappUser,
+					as: "patient",
+					attributes: [
+						"user_id",
+						"full_name",
+						"gender",
+						[sequelize.fn("to_char", sequelize.col("appointment_date"), "DD/MM/YYYY"), "appointment_date"],
+						"appointment_time",
+						"price",
+						"email",
+						"user_enter_number",
+					],
+				},
+				{ model: db.User, as: "doctor", attributes: ["user_id", "first_name", "last_name"] },
+			],
+			attributes: ["appointment_id", "prescription_id", "status"],
+		});
+
+		console.log(appointment.toJSON());
+		const response = appointment.toJSON()
+		const userInfo = {
+			patientName: response.patient.full_name,
+			patientEmail: patientEmail,
+			doctorName: `${response.doctor.first_name} ${response.doctor.last_name}`,
+			dynamicMessage: message, // You didn't specify where the email message comes from in the response
+			subject: subject,
 		}
+		console.log(userInfo);
+		const recipientNumber = response.patient.user_enter_number
+		const pdfBuffer = await generatePDF(req, prescriptionId);
+		const emailResponse = await sendEmail(pdfBuffer, userInfo);
+		const facebookResponse = await sendToFacebookAPI(pdfBuffer, req, res, recipientNumber);
 
-		// Call the function to send email with retries
-		sendEmailWithRetry();
-
-		// console.log(response);
-
-		// var data = JSON.stringify({
-		// 	"messaging_product": "whatsapp",
-		// 	"recipient_type": "individual",
-		// 	"to": "919265979359",
-		// 	"type": "document",
-		// 	"document": {
-		// 		"filename": "prescritpion.pdf",
-		// 		"link": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
-		// 	}
-		// });
-
-		// var config = {
-		// 	method: 'post',
-		// 	url: 'https://graph.facebook.com/v17.0/107565462372831/messages',
-		// 	headers: {
-		// 		'Authorization': 'Bearer EAAKOJhgKrDgBO2swDENZARxc3yGzqM1xFuHMZBv3yoT7QsN9fKEkutVqWMLCMt5vZCZAB5378An7nvIfgZARKgfZC8CSLTkYxoouVh7v7S6hVquFGDkR8nqTIBLkNAHnQPcINxl4mozyZBDixbfJHfQFbuSk4hZAcl62C05PtSGi5aZC0jBap2AtQ9NVBIgu5MUdrQEpzKPGFwkFJgi2QXiIK',
-		// 		'Content-Type': 'application/json'
-		// 	},
-		// 	data: data
-		// };
-
-		// axios(config)
-		// 	.then(function (response) {
-		// 		console.log(JSON.stringify(response.data));
-		// 	})
-		// 	.catch(function (error) {
-		// 		console.log(error);
-		// 	});
-
+		res.status(200).send({
+			message: "Success: PDF generated, emailed, and sent to Facebook API.",
+			emailResponse: emailResponse,
+			facebookResponse: facebookResponse,
+		});
 	} catch (error) {
 		console.error('Error:', error);
 		res.status(500).send('An error occurred');
 	}
 });
+
+async function generatePDF(req, prescriptionId) {
+	const browser = await puppeteer.launch();
+	const page = await browser.newPage();
+
+	const response = await page.goto(`${req.protocol}://${req.get('host')}/doctor/prescription-pdf/${prescriptionId}`, { waitUntil: 'networkidle0' });
+
+	if (!response.ok()) {
+		throw new Error(`Page load failed with status: ${response.status()}`);
+	}
+
+	console.log('Page loaded successfully');
+
+	const pdfBuffer = await page.pdf({ format: 'A4' });
+
+	if (pdfBuffer.length === 0) {
+		throw new Error('Generated PDF buffer is empty');
+	}
+
+	console.log('PDF generated successfully');
+
+	await browser.close();
+
+	return pdfBuffer;
+}
+
+async function sendEmailWithRetry(pdfBuffer, req, res) {
+	const retryCount = 3;
+	const delay = 5000;
+	for (let attempt = 1; attempt <= retryCount; attempt++) {
+		try {
+			// Send email and break out of the loop if successful
+			if (await sendEmail(pdfBuffer)) {
+				console.log('Email sent successfully');
+				break; // Break the loop if both email and Facebook API succeed
+			}
+		} catch (error) {
+			console.error(`Attempt ${attempt} failed with error:`, error);
+			if (attempt < retryCount) {
+				console.log(`Retrying in ${delay / 1000} seconds...`);
+				await new Promise(resolve => setTimeout(resolve, delay));
+			} else {
+				console.error('All retry attempts failed. Email could not be sent.');
+				res.status(500).send('Email could not be sent.');
+			}
+		}
+	}
+}
+
+async function sendEmail(pdfBuffer, userInfo) {
+	try {
+		const transporter = nodemailer.createTransport({
+			service: 'Gmail',
+			auth: {
+				user: Config.nodemailer.auth.user,
+				pass: Config.nodemailer.auth.pass
+			}
+		});
+
+		const emailTemplatePath = path.join(__dirname, '../../email-templates', 'prescription.html');
+		const template = await fs.readFile(emailTemplatePath, 'utf-8'); // Use fs.readFile
+
+		const patientName = userInfo.patientName;
+		const doctorName = userInfo.doctorName;
+		const dynamicMessage = userInfo.dynamicMessage;
+		const subject = userInfo.subject;
+
+		const filledTemplate = template
+			.replace(/\[Patient Name\]/g, patientName)
+			.replace(/\[Doctor's Name\]/g, doctorName)
+			.replace(/\[Your Dynamic Message Here\]/g, dynamicMessage);
+
+		const mailOptions = {
+			from: `Child Dr <${Config.nodemailer.auth.user}>`,
+			to: userInfo.patientEmail,
+			subject: subject,
+			html: filledTemplate,
+			attachments: [
+				{
+					filename: 'prescription.pdf',
+					content: pdfBuffer
+				}
+			]
+		};
+
+		await transporter.sendMail(mailOptions);
+		return {
+			success: true,
+			message: "Email sent successfully",
+		};
+
+	} catch (error) {
+		console.error('Error sending email:', error);
+		return {
+			success: false,
+			message: "Email sending failed",
+			error: error.message, // Include error message for debugging
+		};
+	}
+}
+
+
+async function sendToFacebookAPI(pdfBuffer, req, res, recipientNumber) {
+	try {
+		const uploadResponse = await uploadPdfToFacebook(pdfBuffer);
+		console.log(uploadResponse);
+		if (!uploadResponse.id) {
+			return res.status(400).json({
+				error: "Required Fields: id not found in upload response",
+			});
+		}
+
+		const messageResponse = await sendPdfMessage(uploadResponse.id, recipientNumber);
+
+		console.log(messageResponse);
+		return messageResponse;
+	} catch (error) {
+		console.error('Facebook API Sending Error:', error);
+		res.status(500).json({ error: "Facebook API Error" });
+	}
+}
+
+async function uploadPdfToFacebook(pdfBuffer) {
+	return new Promise((resolve, reject) => {
+		request.post(
+			{
+				url: `https://graph.facebook.com/v13.0/107565462372831/media`,
+				formData: {
+					file: {
+						value: pdfBuffer,
+						options: {
+							filename: "prescription.pdf",
+							contentType: "application/pdf",
+						},
+					},
+					type: "application/pdf",
+					messaging_product: "whatsapp",
+				},
+				headers: {
+					Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
+					"content-type": "multipart/form-data",
+				},
+			},
+			(err, resp, body) => {
+				if (err) {
+					console.log("Error!", err);
+					reject(new Error("Facebook API Upload Error"));
+				} else {
+					const responseBody = JSON.parse(body);
+					resolve(responseBody);
+				}
+			}
+		);
+	});
+}
+
+async function sendPdfMessage(documentId, recipientNumber) {
+	return new Promise((resolve, reject) => {
+		const messageData = {
+			messaging_product: "whatsapp",
+			recipient_type: "individual",
+			to: "919265979359",
+			type: "document",
+			document: {
+				filename: "prescription.pdf",
+				id: documentId,
+			},
+		};
+
+		request.post(
+			{
+				url: `https://graph.facebook.com/v13.0/${process.env.PHONE_NUMBER_ID}/messages`,
+				headers: {
+					Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
+					"content-type": "application/json",
+				},
+				body: JSON.stringify(messageData),
+			},
+			(err, resp, body) => {
+				if (err) {
+					console.log("Error!", err);
+					reject(new Error("Facebook API Message Error"));
+				} else {
+					const responseBody = JSON.parse(body);
+					resolve(responseBody);
+				}
+			}
+		);
+	});
+}
 
 router.post("/save-prescription", authentication, checkAccess("doctor/patient-list"), async function (req, res, next) {
 	try {
