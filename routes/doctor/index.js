@@ -17,7 +17,9 @@ const multer = require('multer');
 const Config = require('../../config/config.json')[process.env.NODE_ENV]
 
 router.get("/dashboard", authentication, checkAccess("doctor/patient-list"), function (req, res, next) {
-	res.render("doctor/dashboard")
+	res.render("doctor/dashboard",{
+		title:"Dashboard"
+	})
 });
 
 router.get("/list", authentication, checkAccess("doctor/patient-list"), function (req, res, next) {
