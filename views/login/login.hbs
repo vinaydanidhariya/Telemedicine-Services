@@ -136,7 +136,7 @@
                         <div class="mb-3 form-password-toggle">
                             <div class="d-flex justify-content-between">
                                 <label class="form-label" for="password">Password</label>
-                                <a href="/forget-password">
+                                <a href="/forgot-password">
                                     <small>Forgot Password?</small>
                                 </a>
                             </div>
@@ -185,54 +185,59 @@
 
     <!-- Page JS -->
     <script src="/assets/js/pages-auth.js"></script>
+    <script>
+        function showAlert(type, message) {
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
 
+            const alertHTML = `
+                <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+                    <div class="alert ${alertClass} alert-dismissible fade show rounded-0" role="alert">
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+
+            const $alert = $(alertHTML);
+            $('#loginAlerts').html($alert);
+
+            // Automatically dismiss the alert after 5 seconds (adjust as needed)
+            setTimeout(function () {
+                $alert.alert('close');
+            }, 3000);
+        }
+
+        $(document).ready(function () {
+            $('#submit').on('click', function () {
+                const data = {
+                    email: $('[name=email-username]').val(),
+                    password: $('[name=password]').val(),
+                };
+                $.ajax({
+                    url: '/admin',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        if (response.type === 'success') {
+                            showAlert('success', response.message);
+                            window.location.href = '/admin/dashboard';
+                        } else {
+                            showAlert('danger', response.message);
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            showAlert('danger', xhr.responseJSON.error);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
-<script>
-    function successAlert(message) {
-        $('#loginAlerts').append(
-            ` <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </div>`
-        );
-    }
-    function failedAlert(message) {
-        $('#loginAlerts').append(
-            ` <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </div>`
-        );
-    }
 
-    $(document).ready(function () {
-        $('#submit').on('click', function () {
-            let data = {
-                email: $('[name=email-username]').val(),
-                password: $('[name=password]').val(),
-            };
-            $.ajax({
-                url: '/admin/',
-                type: 'post',
-                contentType: "application/json",
-                data: JSON.stringify(data),
-                success: function (response) {
-                    if (response.type == 'success') {
-                        successAlert(response.message);
-                        window.location.href = "/admin/dashboard";
-                    } else {
-                        failedAlert(response.message);
-                    }
-                }
-            });
-        });
-    });
-</script>
 
 <!-- beautify ignore:end -->

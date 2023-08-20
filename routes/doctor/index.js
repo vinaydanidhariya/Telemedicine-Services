@@ -13,12 +13,11 @@ const util = require('util');
 const readFileAsync = util.promisify(fs.readFile);
 const request = require('request');
 const { validateMediaSize, mediaLimits } = require('../../helpers/validations'); // Make sure to adjust the path accordingly
-const multer = require('multer');
-const Config = require('../../config/config.json')[process.env.NODE_ENV]
+const Config = require('../../config/config.json')[process.env.NODE_ENV];
 
 router.get("/dashboard", authentication, checkAccess("doctor/patient-list"), function (req, res, next) {
-	res.render("doctor/dashboard",{
-		title:"Dashboard"
+	res.render("doctor/dashboard", {
+		title: "Dashboard"
 	})
 });
 
@@ -159,118 +158,6 @@ router.get("/prescription-pdf/:id", async function (req, res, next) {
 	} catch (error) {
 		console.error("Error fetching prescription:", error);
 		// Handle the error appropriately, e.g., redirect or render an error page
-	}
-});
-
-// Set up multer storage
-const storage = multer.diskStorage({
-	destination: function (req, file, cb) {
-		const uploadDirectory = path.join(__dirname, '../../public/images/profile/');
-		cb(null, uploadDirectory);
-	},
-	filename: function (req, file, cb) {
-		cb(null, file.originalname); // Use the original filename
-	},
-});
-
-// Create a multer instance with the storage configuration
-const upload = multer({ storage: storage });
-
-// Serve static files from a folder named "uploads"
-router.use('/uploads', express.static('uploads'));
-// Upload media endpoint
-router.post('/upload', upload.single('file'), async (req, res) => {
-	const uploadedFile = req.file;
-
-	if (!uploadedFile) {
-		return res.status(400).json({
-			error: "Media File is required",
-		});
-	}
-
-	let isFileValidSize = validateMediaSize(uploadedFile.size, uploadedFile.mimetype);
-	if (!isFileValidSize) {
-		return res.status(400).json({
-			error: `Media File size should be less than ${mediaLimits(
-				uploadedFile.mimetype
-			)}`,
-		});
-	}
-
-	try {
-		request.post(
-			{
-				url: `https://graph.facebook.com/v13.0/107565462372831/media`,
-				formData: {
-					file: {
-						value: fs.createReadStream(uploadedFile.path),
-						options: {
-							filename: uploadedFile.originalname,
-							contentType: uploadedFile.mimetype,
-						},
-					},
-					type: uploadedFile.mimetype,
-					messaging_product: "whatsapp",
-				},
-				headers: {
-					Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
-					"content-type": "multipart/form-data",
-				},
-			},
-			function (err, resp, body) {
-				if (err) {
-					console.log("Error!", err);
-				} else {
-					const body1 = JSON.parse(body);
-					const id = body1.id;
-
-					if (!id) {
-						return res.status(400).json({
-							error: "Required Fields: to, type and id",
-						});
-					}
-					request.post(
-						{
-							url: `https://graph.facebook.com/v13.0/${process.env.PHONE_NUMBER_ID}/messages`,
-							headers: {
-								Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
-								"content-type": "application/json",
-							},
-							body: `{
-						"messaging_product": "whatsapp",
-						"recipient_type": "individual",
-						"to": "919265979359",
-						"type": "document",
-						"document": {
-						"id": "${id}",
-						},
-						}`,
-						},
-						function (err, resp, body) {
-							if (err) {
-								console.log("Error!");
-							} else {
-								// Delete the uploaded file after processing
-								fs.unlink(uploadedFile.path, (unlinkErr) => {
-									if (unlinkErr) {
-										console.log('Error deleting file:', unlinkErr);
-									} else {
-										console.log('File deleted:', uploadedFile.path);
-									}
-								});
-								res.json(JSON.parse(body));
-							}
-
-						}
-
-					);
-				}
-			}
-		)
-		console.log(uploadedFile);
-	} catch (error) {
-		console.log("Error:", error);
-		res.status(500).json({ error: "An error occurred" });
 	}
 });
 
@@ -427,7 +314,6 @@ async function sendEmail(pdfBuffer, userInfo) {
 	}
 }
 
-
 async function sendToFacebookAPI(pdfBuffer, req, res, recipientNumber) {
 	try {
 		const uploadResponse = await uploadPdfToFacebook(pdfBuffer);
@@ -487,7 +373,7 @@ async function sendPdfMessage(documentId, recipientNumber) {
 		const messageData = {
 			messaging_product: "whatsapp",
 			recipient_type: "individual",
-			to: "919265979359",
+			to: recipientNumber,
 			type: "document",
 			document: {
 				filename: "prescription.pdf",

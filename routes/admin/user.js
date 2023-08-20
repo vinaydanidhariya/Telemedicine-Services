@@ -9,25 +9,33 @@ const { v4: uuidv4 } = require('uuid');
 const authentication = require("../../middleware/login_module").check_auth;
 const config = require('../../config/config.js');
 const { checkAccess } = require("../../middleware/authorization");
+const rateLimit = require('express-rate-limit');
 
 router.get("/", function (req, res, next) {
 	if (req.isAuthenticated()) {
-		return res.redirect('/admin/dashboard');
-	} else {
-		res.render("login/login", {
-			title: "Login",
-			layout: false
-		});
+		const dashboardPath = (req.user.type === "ADMIN") ? "/admin/dashboard" : "/doctor/dashboard";
+		return res.redirect(dashboardPath);
 	}
-});
-router.get("/profile", authentication, function (req, res, next) {
-	res.render("profile/profile", {
-		title: "Dashboard",
-		layout: "default"
+
+	res.render("login/login", {
+		title: "Login",
+		layout: false
 	});
 });
 
-router.post("/", function (req, res, next) {
+router.get("/profile", authentication, function (req, res, next) {
+	res.render("profile/profile", {
+		title: "Dashboard",
+	});
+});
+
+const loginLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 5,
+	message: { error: 'Too many login attempts, please try again later.' }
+});
+
+router.post("/", loginLimiter, function (req, res, next) {
 	try {
 		passport.authenticate("local", async function (err, user, info) {
 			if (err || !user) {

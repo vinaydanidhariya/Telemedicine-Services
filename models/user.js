@@ -73,6 +73,16 @@ module.exports = (sequelize, DataTypes) => {
         field: "password",
         allowNull: true,
       },
+      resetToken: {
+        type: DataTypes.TEXT,
+        field: "reset_token",
+        allowNull: true,
+      },
+      resetTokenExpiration: {
+        type: DataTypes.DATE,
+        field: "reset_token_expiration",
+        allowNull: true,
+      },
       isEmailVerified: {
         type: DataTypes.BOOLEAN,
         field: "email_verfication_status",

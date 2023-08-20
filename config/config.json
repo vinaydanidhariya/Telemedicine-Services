@@ -50,33 +50,36 @@
 		"project": "Shree Hari Clinic",
 		"secret": "SHC#100&ShreeHariClinic@333",
 		"serverUrl": "https://40018dd7c14a-6958608321302419644.ngrok-free.app",
-		"database": "SHC_DEV",
-		"username": "postgres",
-		"schema": "SHC_DEV",
+		"database": "child_dr",
+		"username": "nirav2565",
+		"schema": "CHILD_DR_DEV",
 		"dialect": "postgres",
 		"logging": true,
-		"dialectOptions": {},
+		"dialectOptions": {
+			"ssl": true
+		},
+		"port": 5432,
 		"nodemailer": {
 			"host": "smtp.gmail.com",
 			"port": 587,
 			"secure": false,
 			"auth": {
-				"user": "test@test.com",
-				"pass": "test"
+				"user": "vinaydanidhariya4114@gmail.com",
+				"pass": "bnatnehmtzvrvgox"
 			}
 		},
 		"replication": {
 			"read": [
 				{
-					"host": "localhost",
-					"username": "postgres",
-					"password": "launchl00k#"
+					"host": "dpg-cjgfsrc1ja0c73clp4h0-a",
+					"username": "nirav2565",
+					"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
 				}
 			],
 			"write": {
-				"host": "localhost",
-				"username": "postgres",
-				"password": "launchl00k#"
+				"host": "dpg-cjgfsrc1ja0c73clp4h0-a",
+				"username": "nirav2565",
+				"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
 			}
 		},
 		"pool": {
