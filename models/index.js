@@ -13,13 +13,14 @@ class db {
     }
 
     try {
-      sequelize = new Sequelize(Config.database, Config.username, Config.password, Config, {
-        logging: console.log,
-        logging: function (str) {
-          console.log(str);
-          // do your own logging
-        }
-      });
+      // sequelize = new Sequelize(Config.database, Config.username, Config.password, Config, {
+      //   logging: console.log,
+      //   logging: function (str) {
+      //     console.log(str);
+      //     // do your own logging
+      //   }
+      // });
+      sequelize = new Sequelize('postgres://nirav2565:sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5@dpg-cjgfsrc1ja0c73clp4h0-a.oregon-postgres.render.com/child_dr?ssl=true')
     } catch (error) {
       console.log(error);
       throw 'Error while connecting database';

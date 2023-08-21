@@ -1,6 +1,6 @@
 'use strict';
 const { sequelize, Model } = require('sequelize')
-const Config = require("../config/config.json");
+const Config = require("../config/config.json")[process.env.NODE_ENV];
 
 module.exports = (sequelize, DataTypes) => {
     class PaymentTransaction extends Model {
