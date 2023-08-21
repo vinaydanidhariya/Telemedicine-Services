@@ -7,7 +7,6 @@ const Config = require('../../config/config.json')[process.env.NODE_ENV];
 const db = require('../../models')
 const { sendRegistrationMessage, getPaymentTemplatedMessageInput, sendMessage, transactionMessage } = require('../../utils/messageHelper');
 const { appointmentMessage } = require('../../utils/messages');
-const { Transaction } = require("sequelize");
 
 router.post("/create-payment", async function (req, res, next) {
     try {
@@ -84,11 +83,19 @@ router.post("/payment-callback1", async function (req, res, next) {
                     const userInfo = await db.WhatsappUser.findOne(
                         {
                             where: { phone: mobile }
-                        })
+                        });
+                    console.log("userInfo");
+                    console.log(userInfo);
                     const prescription = await db.Prescription.create({
                         patientId: userInfo.userId,
                         doctorId: userInfo.selectedDoctor
                     });
+                    const doctorInfo = await db.User.findOne(
+                        {
+                            where: { userId: userInfo.selectedDoctor }
+                        });
+                    console.log("doctorInfo");
+                    console.log(doctorInfo);
                     const appointment = await db.Appointment.create({
                         patientId: userInfo.userId,
                         doctorId: userInfo.selectedDoctor,
@@ -106,11 +113,49 @@ router.post("/payment-callback1", async function (req, res, next) {
                         }
                     );
                     const formattedDate = moment(userInfo.appointmentDate).format('DD/MM/YYYY');
-                    const data1 = appointmentMessage(userInfo.fullName, formattedDate, userInfo.appointmentTime)
+                    let data1;
 
+
+                    let result = await meet({
+                        clientId: Config.GoogleCred.clientId,
+                        refreshToken: "1//0gR-aOkH6Lg0ZCgYIARAAGBASNwF-L9IrOB0pTheVKO5IomFEKgUdu2oJ6vWa9DdvSN6ckQhKNFw9f882LfXzfyv5pUPUjqbXPdA",
+                        date: "2023-08-21",
+                        startTime: "19:30",
+                        endTime: "22:00",
+                        clientSecret: Config.GoogleCred.googleClientSecret,
+                        summary: "ChildDR-Online doctor consultation!",
+                        location: "Virtual venue",
+                        description: "Online consultation with your doctor",
+                        attendees: [{ email: "vinaydanidhariya4114@gmail.com" }, { email: "vinaydanidhariya04114@gmail.com" }],
+                        alert: 1,
+                        reminders: {
+                            useDefault: false,
+                            overrides: [
+                                {
+                                    method: "email",
+                                    minutes: 15,
+                                },
+                                {
+                                    method: "email",
+                                    minutes: 60,
+                                },
+                                {
+                                    method: "popup",
+                                    minutes: 10,
+                                },
+                            ]
+                        },
+                        colorId: 4,
+                        sendUpdates: "all",
+                        status: "confirmed",
+                        alert: 1,
+                    });
+                    if (result.status == 'success' || result.status == 'confirmed' || result.status == 'Confirmed') {
+                        data1 = appointmentMessage(userInfo.fullName, formattedDate, userInfo.appointmentTime, result.link)
+                    }else{
+                        data1 = appointmentMessage(userInfo.fullName, formattedDate, userInfo.appointmentTime, "FAILED CASE LINK")
+                    }
                     await sendRegistrationMessage(mobile, data1);
-                    // const messageData = getPaymentTemplatedMessageInput(mobile, name, amount, orderId)
-                    // sendMessage(messageData);
                     res.status(200).send('RECEIVED')
                 }
             }
@@ -135,4 +180,123 @@ router.get("/", async function (req, res, next) {
     }
 });
 
+const { google } = require('googleapis');
+
+// Set up OAuth 2.0 client
+const oauth2Client = new google.auth.OAuth2(
+    Config.GoogleCred.clientId,
+    Config.GoogleCred.googleClientSecret,
+    Config.GoogleCred.callBackURL,
+);
+
+router.get('/oauth2callback', async (req, res) => {
+
+    const authUrl = oauth2Client.generateAuthUrl({
+        access_type: 'offline',
+        scope: 'https://www.googleapis.com/auth/calendar.events',
+    });
+    res.redirect(authUrl);
+
+});
+
+router.get('/google-redirect', async (req, res) => {
+    // const { tokens } = await oauth2Client.getToken(req.query.code);
+    // console.log(tokens);
+    // oauth2Client.setCredentials(tokens);
+
+    let result = await meet({
+        clientId: Config.GoogleCred.clientId,
+        refreshToken: "1//0gR-aOkH6Lg0ZCgYIARAAGBASNwF-L9IrOB0pTheVKO5IomFEKgUdu2oJ6vWa9DdvSN6ckQhKNFw9f882LfXzfyv5pUPUjqbXPdA",
+        date: "2023-08-21",
+        startTime: "19:30",
+        endTime: "22:00",
+        clientSecret: Config.GoogleCred.googleClientSecret,
+        summary: "ChildDR-Online doctor consultation!",
+        location: "Virtual venue",
+        description: "Online consultation with your doctor",
+        attendees: [{ email: "vinaydanidhariya4114@gmail.com" }, { email: "vinaydanidhariya04114@gmail.com" }],
+        alert: 1,
+        reminders: {
+            useDefault: false,
+            overrides: [
+                {
+                    method: "email",
+                    minutes: 15,
+                },
+                {
+                    method: "email",
+                    minutes: 60,
+                },
+                {
+                    method: "popup",
+                    minutes: 10,
+                },
+            ]
+        },
+        colorId: 4,
+        sendUpdates: "all",
+        status: "confirmed",
+    });
+    console.log(result);
+    return res.send();
+});
+
+async function meet(options) {
+    const { google } = require('googleapis');
+    const { OAuth2 } = google.auth
+
+    let oAuth2Client = new OAuth2(
+        options.clientId,
+        options.clientSecret
+    )
+
+    oAuth2Client.setCredentials({
+        refresh_token: options.refreshToken,
+    });
+
+    // Create a new calender instance.
+    let calendar = google.calendar({ version: 'v3', auth: oAuth2Client });
+
+    const event = {
+        summary: options.summary,
+        location: options.location,
+        description: options.description,
+        colorId: 1,
+        conferenceData: {
+            createRequest: {
+                requestId: "zzz",
+                conferenceSolutionKey: {
+                    type: "hangoutsMeet"
+                }
+            }
+        },
+        start: {
+            dateTime: `${options.date}T${options.startTime}:00`,
+            timeZone: 'Asia/Kolkata',
+        },
+        end: {
+            dateTime: `${options.date}T${options.endTime}:00`,
+            timeZone: 'Asia/Kolkata',
+        },
+        attendees: options.attendees
+    }
+
+    let link = await calendar.events.insert({
+        calendarId: 'primary',
+        conferenceDataVersion: '1',
+        resource: event
+    })
+
+    if (link && link.data && link.data.status && link.data.status == 'confirmed') {
+        return {
+            link: link.data.hangoutLink,
+            status: 'success'
+        }
+    } else {
+        return {
+            link: 'NA',
+            status: 'failed'
+        }
+    }
+}
 module.exports = router;

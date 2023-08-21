@@ -42,6 +42,12 @@
 		"Razorpay": {
 			"key_id": "rzp_test_eIM2tN4jZB7id4",
 			"key_secret": "ZrWjvHIA2dvJmxNJ0jvMIgnT"
+		},
+		"GoogleCred": {
+			"clientId": "127925894032-scshjisrosrtn3jth8jm9knatvibhvoo.apps.googleusercontent.com",
+			"refreshToken": "rzp_test_eIM2tN4jZB7id4",
+			"googleClientSecret": "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",
+			"callBackURL":"http://localhost:3000/whatsapp-payment/google-redirect"
 		}
 	},
 	"development": {
@@ -90,6 +96,12 @@
 		"Razorpay": {
 			"key_id": "rzp_test_eIM2tN4jZB7id4",
 			"key_secret": "ZrWjvHIA2dvJmxNJ0jvMIgnT"
+		},
+		"GoogleCred": {
+			"clientId": "127925894032-scshjisrosrtn3jth8jm9knatvibhvoo.apps.googleusercontent.com",
+			"refreshToken": "rzp_test_eIM2tN4jZB7id4",
+			"googleClientSecret": "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",
+			"callBackURL":"http://localhost:3000/whatsapp-payment/google-redirect"
 		}
 	}
 }

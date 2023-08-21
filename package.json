@@ -19,6 +19,8 @@
     "express-rate-limit": "^6.9.0",
     "express-session": "^1.17.3",
     "fwsp-server-response": "^2.2.6",
+    "google-cal-meet-api": "^1.1.7",
+    "google-meet-api": "^1.0.0",
     "handlebars": "^4.7.7",
     "handlebars-helpers": "^0.10.0",
     "handlebars-paginate": "^0.1.0",
