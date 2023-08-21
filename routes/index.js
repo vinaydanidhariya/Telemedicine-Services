@@ -1,6 +1,6 @@
 'use strict'
 console.log("process.env.NODE_ENV=>>>>>>>>>>>>>.");
-console.log(process.env.NODE_ENV);
+console.log(process.env.APP_ID);
 const { serverUrl, nodemailer } = require("../config/config.json")[process.env.NODE_ENV];
 const { sendApiResponse, convertToMd5 } = require('../utils/helper')
 const nodeMailer = require('nodemailer')
