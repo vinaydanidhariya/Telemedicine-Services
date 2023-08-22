@@ -153,6 +153,9 @@ router.post("/doctor-memeber-list", async function (req, res, next) {
 		const { code, department } = req.body;
 		if (code === "778899") {
 			const USER = await db.User.findAll({
+				where: {
+					delete: false
+				},
 				attributes: [
 					"userId",
 					"firstName",
