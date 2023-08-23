@@ -137,13 +137,13 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
     timeSlots.forEach(slot => {
         const hour = parseInt(slot.split(':')[0]);
         const secondS = slot.split(' ')[1];
-        if (hour >= 8 && hour < 12 && secondS == 'am') {
+        if (hour >= 8 && hour < 12 && secondS == 'AM') {
             morningSlots.push(slot);
-        } else if (hour >= 1 && hour < 5 && secondS == 'pm') {
+        } else if (hour >= 1 && hour < 5 && secondS == 'PM') {
             afternoonSlots.push(slot);
-        } else if (hour >= 5 && hour < 8 && secondS == 'pm') {
+        } else if (hour >= 5 && hour < 8 && secondS == 'PM') {
             eveningSlots.push(slot);
-        } else if (hour >= 8 && hour < 12 && secondS == 'pm') {
+        } else if (hour >= 8 && hour < 12 && secondS == 'PM') {
             nightSlots.push(slot);
         }
     });
@@ -194,7 +194,6 @@ async function SendSlotMessages(recipientNumber) {
             title: `${timePeriod}Time: ${time}`,
             description: "Duration: 15 minutes"
         }));
-
     if (!timeSlots.morningSlots.length && !timeSlots.afternoonSlots.length && !timeSlots.eveningSlots.length && !timeSlots.nightSlots.length) {
         // Inform the user that the doctor is not available
         await sendRegistrationMessage(
