@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../../models");
+const moment = require('moment');
 const authentication = require("../../middleware/login_module").check_auth;
 
 var multer = require("multer");
@@ -66,8 +67,8 @@ router.post("/add-event", authentication, checkAccess("post/event/add-event"), a
 						photo: req.file.filename,
 						description,
 						sortDescription: sort_description,
-						date: new Date(),
-						updatedDate: new Date(),
+						date: moment.utc(),
+						updatedDate: moment.utc(),
 					})
 						.then(() => {
 							let message = `event Created successfully`;

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../models");
 const authentication = require("../../middleware/login_module").check_auth;
-
+const moment = require('moment')
 var multer = require("multer");
 
 var storage = multer.diskStorage({
@@ -75,8 +75,8 @@ router.post(
                 sliderTitle: slider_title,
                 shortDescription: short_description,
                 photo: `/slider/${req.file.filename}`,
-                date: new Date(),
-                updatedDate: new Date(),
+                date: moment.utc(),
+                updatedDate: moment.utc(),
               })
               .then(() => {
                 let message = `webSlider Created successfully`;
@@ -220,7 +220,7 @@ router.post(
           slider_title,
           photo,
           short_description,
-          updatedDate: new Date(),
+          updatedDate: moment.utc(),
         },
         {
           where: {

@@ -6,7 +6,6 @@ const multer = require("multer");
 const Path = require('path');
 const moment = require('moment');
 const { convertToMd5 } = require("../../utils/helper.js");
-const { where } = require("sequelize");
 const authentication = require("../../middleware/login_module").check_auth;
 
 router.get("/add-doctor", authentication, checkAccess('admin/doctor/add-doctor'), async function (req, res, next) {
@@ -204,8 +203,6 @@ router.post("/add-doctor", checkAccess('post/admin/doctor/add-doctor'), async fu
 					panCardUrl: `/uploads/pan_cards/${req.files.panCard[0].filename}`,
 					digitalSignatureUrl: `/uploads/digital_signatures/${req.files.digitalSignature[0].filename}`,
 					phone: `${phone}`,
-					createdDate: new Date(),
-					updatedDate: new Date(),
 				};
 
 				db.User.create(userObj)
@@ -343,8 +340,6 @@ router.post("/edit-doctor", authentication, checkAccess("admin/doctor/edit-docto
 					clinicTimeTo,
 
 					phone: `${phone}`,
-					createdDate: new Date(),
-					updatedDate: new Date(),
 				};
 
 				// Check if the image fields are sent in the request

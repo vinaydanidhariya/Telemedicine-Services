@@ -4,7 +4,7 @@ const db = require("../../models");
 const authentication = require("../../middleware/login_module").check_auth;
 
 var multer = require("multer");
-
+const moment = require('moment')
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "public/slider");
@@ -203,7 +203,7 @@ router.get(
       }
 
       res.render("department/edit-department", {
-        data:departmentPost
+        data: departmentPost
       });
     } catch (error) {
       console.error("Error retrieving department post:", error);
@@ -219,16 +219,16 @@ router.post(
   async function (req, res, next) {
     console.log(req.body);
     try {
-      const { department_id,  department_name, description } = req.body;
+      const { department_id, department_name, description } = req.body;
       await db.Department.update(
         {
-          departmentName:department_name,
+          departmentName: department_name,
           description,
-          updatedDate: new Date(),
+          updatedDate: moment.utc(),
         },
         {
           where: {
-            departmentId:department_id
+            departmentId: department_id
           },
         }
       );

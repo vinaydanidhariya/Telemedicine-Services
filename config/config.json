@@ -77,13 +77,13 @@
 		"replication": {
 			"read": [
 				{
-					"host": "dpg-cjgfsrc1ja0c73clp4h0-a",
+					"host": "dpg-cjgfsrc1ja0c73clp4h0-a.oregon-postgres.render.com",
 					"username": "nirav2565",
 					"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
 				}
 			],
 			"write": {
-				"host": "dpg-cjgfsrc1ja0c73clp4h0-a",
+				"host": "dpg-cjgfsrc1ja0c73clp4h0-a.oregon-postgres.render.com",
 				"username": "nirav2565",
 				"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
 			}

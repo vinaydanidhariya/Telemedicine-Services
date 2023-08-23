@@ -63,7 +63,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 
     function generateTimeSlotsFromEventRanges(eventTimeRanges) {
         const timeSlots = [];
-        const now = new Date(); // Get the current date and time
+        const now = moment.utc(); // Get the current date and time
 
         for (const eventRange of eventTimeRanges) {
             let currentTime = new Date(eventRange.start);

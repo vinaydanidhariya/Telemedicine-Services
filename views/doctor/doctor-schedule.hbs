@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="/assets/vendor/libs/dhtmlx/dhtmlxscheduler_material.css">
 <script src="/assets/vendor/libs/dhtmlx/dhtmlxscheduler.js"></script>
 <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <style>
     html,
     body {
@@ -23,10 +24,10 @@
         // Set the start and end time of the day
         scheduler.config.first_hour = from;
         scheduler.config.last_hour = to;
-        scheduler.config.start_date = new Date(); // 6:00 PM
+        scheduler.config.start_date = moment.utc(); // 6:00 PM
 
         // Initialize the scheduler with the date for the upcoming 1 week
-        const startDate = new Date();
+        const startDate = moment.utc();
         const endDate = new Date();
         endDate.setDate(endDate.getDate() + 7); // Add 7 days to get the end date for 1 week from today
         scheduler.config.end_date = endDate; // 6:00 PM

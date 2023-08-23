@@ -64,7 +64,7 @@ router.post("/payment-callback1", async function (req, res, next) {
                     await db.PaymentTransaction.create({
                         payerUserId: userId,
                         PaymentTransactionId,
-                        paymentDate: new Date(),
+                        paymentDate: moment.utc(),
                         payerName: name,
                         payerEmail: email,
                         payerMobile: mobile,

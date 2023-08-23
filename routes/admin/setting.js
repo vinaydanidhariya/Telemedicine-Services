@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authentication = require("../../middleware/login_module").check_auth;
 const db = require("../../models/");
+const moment = require('moment');
 
 router.get("/", authentication, checkAccess("setting"), async function (req, res, next) {
 	try {
@@ -25,7 +26,7 @@ router.post("/", authentication, checkAccess("post/setting"), async function (re
 		const { mailServer, from, username, password, port, GoogleAPIkeys, OAuthclientID, razorpayAPIKeyID, KeySecret, protocol } = req.body;
 
 		await db.Setting.update({
-			mailServer, from, username, password, port, GoogleAPIkeys, OAuthclientID, razorpayAPIKeyID, KeySecret, protocol, updatedDate: new Date(),
+			mailServer, from, username, password, port, GoogleAPIkeys, OAuthclientID, razorpayAPIKeyID, KeySecret, protocol, updatedDate: moment.utc(),
 		}, {
 			where: {
 				settingId: 2

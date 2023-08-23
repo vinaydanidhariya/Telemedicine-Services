@@ -306,7 +306,7 @@
     $(document).ready(function () {
         flatpickr(".datetime-picker", {
             dateFormat: "d/m/Y",
-            defaultDate: new Date()
+            defaultDate: moment.utc()
         });
 
         const sendButton = document.querySelector("#emailSendButton");

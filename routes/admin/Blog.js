@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../models");
 const authentication = require("../../middleware/login_module").check_auth;
+const moment = require('moment');
 
 var multer = require("multer");
 var storage = multer.diskStorage({
@@ -68,8 +69,8 @@ router.post("/add-blog", authentication,checkAccess('post/blogs/add-blog'),async
 						description,
 						sortDescription: sort_description,
 						authorName: author_name,
-						date: new Date(),
-						updatedDate: new Date(),
+						date:  moment.utc(),
+						updatedDate:  moment.utc(),
 					})
 						.then(() => {
 							let message = `Blog Created successfully`;
