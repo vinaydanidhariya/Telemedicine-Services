@@ -26,6 +26,8 @@
         scheduler.config.first_hour = fromTimeUTC.hours();
         scheduler.config.last_hour = toTimeUTC.hours();
         scheduler.config.start_date = fromTimeUTC.toDate();
+        const startDate = fromTimeUTC.toDate();
+
 
         scheduler.init("scheduler_here", startDate, "week");
 
