@@ -23,8 +23,8 @@
         const toTimeUTC = moment.utc().startOf('day').add(to.hours, 'hours').add(to.minutes, 'minutes');
 
         // Set the start and end time of the day in UTC
-        scheduler.config.first_hour = fromTimeUTC.hours();
-        scheduler.config.last_hour = toTimeUTC.hours();
+        scheduler.config.first_hour = from;
+        scheduler.config.last_hour = to;
         scheduler.config.start_date = fromTimeUTC.toDate();
         const startDate = fromTimeUTC.toDate();
 
@@ -58,6 +58,7 @@
 </script>
 
 <body>
+    <h1>asdad</h1>
     <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
         <div class="dhx_cal_navline">
             <div class="dhx_cal_prev_button">&nbsp;</div>
