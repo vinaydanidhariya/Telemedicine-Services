@@ -55,7 +55,7 @@
 		"x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
 		"project": "Shree Hari Clinic",
 		"secret": "SHC#100&ShreeHariClinic@333",
-		"serverUrl": "https://40018dd7c14a-6958608321302419644.ngrok-free.app",
+		"serverUrl": "https://childdr-nodejs1.onrender.com",
 		"database": "child_dr",
 		"username": "nirav2565",
 		"schema": "CHILD_DR_DEV",
