@@ -147,6 +147,10 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
             nightSlots.push(slot);
         }
     });
+    console.log("morningSlots", morningSlots);
+    console.log("afternoonSlots", afternoonSlots);
+    console.log("eveningSlots", eveningSlots);
+    console.log("nightSlots", nightSlots);
 
     return {
         morningSlots: morningSlots,
@@ -209,6 +213,7 @@ async function SendSlotMessages(recipientNumber) {
     const convertedAfternoonSlots = timeSlotConvert(timeSlots.afternoonSlots, "Afternoon");
     const convertedEveningSlots = timeSlotConvert(timeSlots.eveningSlots, "Evening");
     const convertedNightSlots = timeSlotConvert(timeSlots.nightSlots, "Night");
+    console.log("message", convertedMorningSlots, convertedAfternoonSlots, convertedEveningSlots, convertedNightSlots);
 
     const sendTimeSlotsChunks = async (recipientNumber, slots, timePeriod) => {
         const chunkSize = 10;
