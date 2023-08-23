@@ -75,13 +75,8 @@ router.post(
 								sliderTitle: slider_title,
 								shortDescription: short_description,
 								photo: `/slider/${req.file.filename}`,
-<<<<<<< HEAD
 								date: moment.utc(),
 								updatedDate: moment.utc(),
-=======
-								date: new Date(),
-								updatedDate: new Date(),
->>>>>>> 2c520c0e3534df02359527ddac00c77c4d22d2d9
 							})
 							.then(() => {
 								let message = `webSlider Created successfully`;
@@ -113,74 +108,6 @@ router.post(
 			console.log(error);
 		}
 	}
-<<<<<<< HEAD
-=======
-);
-
-router.get("/slider-photo-list", authentication, checkAccess("web-setting/slider-photo-list"), async (req, res) => {
-	try {
-		// Retrieve all event posts from the database using the event model
-		const sliderPosts = await db.webSlider.findAll({
-			attributes: [
-				"web_slider_id",
-				"short_description",
-				"slider_title",
-				"photo",
-			], // You can directly specify the attribute without an alias
-			raw: true, // Get raw JSON data instead of Sequelize instances
-		});
-
-		console.log("event posts retrieved:", sliderPosts);
-
-		res.render("web-settings/slider-photo-list", {
-			title: "SLIDER-LIST",
-			sliderPosts,
-			sessionUser: req.user,
-		});
-	} catch (error) {
-		console.error("Error retrieving event posts:", error);
-		// Handle errors appropriately
-		res.status(500).send("Error retrieving event posts"); // Return an error response to the client
-	}
-});
-
-
-router.post(
-	"/delete-slider-photo",
-	authentication,
-	checkAccess("post/delete-slider-photo"),
-	async function (req, res, next) {
-		try {
-			const { code, slider_id } = req.body;
-			console.log(req.body);
-			if (code === "778899") {
-				await db.webSlider.destroy({
-					where: {
-						webSliderId: slider_id,
-					},
-				});
-				res.send({
-					status: 200,
-					message: "Doctor Deleted successfully",
-					type: "success",
-				});
-			} else {
-				res.send({
-					status: 400,
-					message: `unauthorized request`,
-					type: "fails",
-				});
-			}
-		} catch (error) {
-			console.log(error);
-			res.send({
-				status: 400,
-				message: `Error While Deleting Doctor`,
-				type: "fails",
-			});
-		}
-	}
->>>>>>> 2c520c0e3534df02359527ddac00c77c4d22d2d9
 );
 
 router.get(
@@ -224,11 +151,7 @@ router.post(
 					slider_title,
 					photo,
 					short_description,
-<<<<<<< HEAD
 					updatedDate: moment.utc(),
-=======
-					updatedDate: new Date(),
->>>>>>> 2c520c0e3534df02359527ddac00c77c4d22d2d9
 				},
 				{
 					where: {
