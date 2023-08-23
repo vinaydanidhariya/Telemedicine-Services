@@ -15,19 +15,17 @@
 </style>
 <script>
     function init(from, to) {
-        // Set the date format for XML data
         scheduler.config.xml_date = "%Y-%m-%d %H:%i";
-        scheduler.config.server_utc = true
-        // Set the start and end time of the day
-        scheduler.config.first_hour = from;
-        scheduler.config.last_hour = to;
-        scheduler.config.start_date = moment.utc(); // 6:00 PM
+        scheduler.config.server_utc = true;
 
-        // Initialize the scheduler with the date for the upcoming 1 week
-        const startDate = moment.utc();
-        const endDate = new Date();
-        endDate.setDate(endDate.getDate() + 7); // Add 7 days to get the end date for 1 week from today
-        scheduler.config.end_date = endDate; // 6:00 PM
+        // Convert from and to times to UTC
+        const fromTimeUTC = moment.utc().startOf('day').add(from.hours, 'hours').add(from.minutes, 'minutes');
+        const toTimeUTC = moment.utc().startOf('day').add(to.hours, 'hours').add(to.minutes, 'minutes');
+
+        // Set the start and end time of the day in UTC
+        scheduler.config.first_hour = fromTimeUTC.hours();
+        scheduler.config.last_hour = toTimeUTC.hours();
+        scheduler.config.start_date = fromTimeUTC.toDate();
 
         scheduler.init("scheduler_here", startDate, "week");
 
