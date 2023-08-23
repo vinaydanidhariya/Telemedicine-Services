@@ -91,14 +91,6 @@
 
         // Initialize the scheduler with the extracted hours and minutes
         init(fromTime.hours, toTime.hours);
-        // Convert the local start date to UTC before sending to the server
-        scheduler.config.start_date = scheduler.date.add(scheduler.config.start_date, scheduler.date.offset(new Date(), "minute"));
 
-        // Attach an event handler to convert dates to UTC before sending to the server
-        scheduler.attachEvent("onBeforeDataSending", function (id, mode, data) {
-            data.start_date = scheduler.date.toUTC(data.start_date);
-            data.end_date = scheduler.date.toUTC(data.end_date);
-            return true;
-        });
     };
 </script>
