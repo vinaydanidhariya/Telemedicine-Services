@@ -257,10 +257,8 @@ router.post("/", async (req, res) => {
                         await SendSlotMessages(recipientNumber);
                     }
                     else if (interactiveType === "button_reply" && user.userStat === "DATE-SELECTION" && reply.id === "tomorrowButton") {
-                        const today =  moment.utc();
-                        const tomorrow = new Date(today);
-                        tomorrow.setDate(today.getDate() + 1);
-
+                        const today = moment.utc();
+                        const tomorrow = moment.utc(today).add(1, 'day');
                         await db.WhatsappUser.update(
                             { userStat: 'TIME-SELECTION', appointmentDate: tomorrow },
                             { where: { phone: recipientNumber } }
