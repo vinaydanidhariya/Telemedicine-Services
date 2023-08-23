@@ -17,7 +17,7 @@
     function init(from, to) {
         // Set the date format for XML data
         scheduler.config.xml_date = "%Y-%m-%d %H:%i";
-
+        scheduler.config.server_utc = true
         // Set the start and end time of the day
         scheduler.config.first_hour = from;
         scheduler.config.last_hour = to;
