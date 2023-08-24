@@ -113,21 +113,25 @@ router.post("/payment-callback1", async function (req, res, next) {
                         }
                     );
                     const formattedDate = moment(userInfo.appointmentDate).format('DD/MM/YYYY');
+                    const meetFormattedDate = moment(userInfo.appointmentDate).format('YYYY/MM/DD');
                     let data1;
 
+                    const time12Hour = userInfo.appointmentTime;
+                    const slotsStart = moment(time12Hour, 'h:mm a').format('HH:mm');
 
-                    let result = await meet({
+                    const slotsEnd = moment(slotsStart, 'HH:mm').add(15, 'minutes').format('HH:mm');
+
+                    const meetOptions = {
                         clientId: Config.GoogleCred.clientId,
                         refreshToken: "1//0gR-aOkH6Lg0ZCgYIARAAGBASNwF-L9IrOB0pTheVKO5IomFEKgUdu2oJ6vWa9DdvSN6ckQhKNFw9f882LfXzfyv5pUPUjqbXPdA",
-                        date: "2023-08-21",
-                        startTime: "19:30",
-                        endTime: "22:00",
+                        date: meetFormattedDate,
+                        startTime: slotsStart,
+                        endTime: slotsEnd,
                         clientSecret: Config.GoogleCred.googleClientSecret,
                         summary: "ChildDR-Online doctor consultation!",
                         location: "Virtual venue",
                         description: "Online consultation with your doctor",
-                        attendees: [{ email: "vinaydanidhariya4114@gmail.com" }, { email: "vinaydanidhariya04114@gmail.com" }],
-                        alert: 1,
+                        attendees: [{ email: doctorInfo.email }, { email: userInfo.email }],
                         reminders: {
                             useDefault: false,
                             overrides: [
@@ -148,11 +152,24 @@ router.post("/payment-callback1", async function (req, res, next) {
                         colorId: 4,
                         sendUpdates: "all",
                         status: "confirmed",
-                        alert: 1,
-                    });
+                        alert: 30,
+                    };
+
+                    try {
+                        await meet(meetOptions);
+                        console.log("🎉 Appointment scheduled successfully!");
+                        console.log("💼 A virtual appointment has been scheduled with your doctor.");
+                        console.log("🕒 Date:", meetFormattedDate);
+                        console.log("⏰ Time:", slotsStart, "-", slotsEnd);
+                        console.log("📌 Location: Virtual venue");
+                        console.log("📅 You will receive email reminders before the appointment.");
+                    } catch (error) {
+                        console.error("❌ Appointment scheduling failed:", error.message);
+                    }
+
                     if (result.status == 'success' || result.status == 'confirmed' || result.status == 'Confirmed') {
                         data1 = appointmentMessage(userInfo.fullName, formattedDate, userInfo.appointmentTime, result.link)
-                    }else{
+                    } else {
                         data1 = appointmentMessage(userInfo.fullName, formattedDate, userInfo.appointmentTime, "FAILED CASE LINK")
                     }
                     await sendRegistrationMessage(mobile, data1);
