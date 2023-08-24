@@ -112,17 +112,16 @@ router.post("/payment-callback1", async function (req, res, next) {
                             },
                         }
                     );
-                    const formattedDate = moment(userInfo.appointmentDate).format('DD/MM/YYYY');
-                    const meetFormattedDate = moment(userInfo.appointmentDate).format('YYYY/MM/DD');
+                    const formattedDate = moment(userInfo.appointmentDate).format('DD-MM-YYYY');
+                    const meetFormattedDate = moment(userInfo.appointmentDate).format('YYYY-MM-DD');
                     let data1;
 
                     const time12Hour = userInfo.appointmentTime;
                     const slotsStart = moment(time12Hour, 'h:mm a').format('HH:mm');
 
                     const slotsEnd = moment(slotsStart, 'HH:mm').add(15, 'minutes').format('HH:mm');
-
-
-
+                    console.log("slotsStart", slotsStart);
+                    console.log("slotsEnd", slotsEnd);
                     try {
                         const meetOptions = {
                             clientId: Config.GoogleCred.clientId,
@@ -155,7 +154,6 @@ router.post("/payment-callback1", async function (req, res, next) {
                             colorId: 4,
                             sendUpdates: "all",
                             status: "confirmed",
-                            alert: 30,
                         };
                         const result = await meet(meetOptions);
                         console.log("🎉 Appointment scheduled successfully!");
