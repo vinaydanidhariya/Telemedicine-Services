@@ -4,6 +4,7 @@ const db = require("../models");
 const { convertToMd5 } = require("../utils/helper.js");
 const { sequelize } = require("../models");
 const { Op } = require("sequelize");
+const moment = require('moment');
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -70,9 +71,7 @@ router.post("/create-doctor", async function (req, res, next) {
 			degreeUrl: `/uploads/degree_certificates/`,
 			aadharCardUrl: `/uploads/aadhar_cards/`,
 			panCardUrl: `/uploads/pan_cards/`,
-			digitalSignatureUrl: `/uploads/digital_signatures/`,
-			createdDate: new Date(),
-			updatedDate: new Date(),
+			digitalSignatureUrl: `/uploads/digital_signatures/`
 		});
 
 		return res.send({
@@ -262,14 +261,15 @@ router.post("/time-slot", async function (req, res, next) {
 	console.log(req.body);
 	// Function to generate all 15-minute time slots within the schedule hours (8 am to 8 pm) in time format (e.g., "8:00 AM")
 	function generateTimeSlots(from, to) {
-		const currentDate = new Date();
+		const currentDate = moment.utc();
+
 		if (
 			from.getDate() === currentDate.getDate() &&
 			from.getMonth() === currentDate.getMonth() &&
 			from.getFullYear() === currentDate.getFullYear()
 		) {
 			console.log("today");
-			const scheduleStart = new Date();
+			const scheduleStart = moment.utc();
 			const currentHour = scheduleStart.getHours();
 			const currentMinutes = scheduleStart.getMinutes();
 

@@ -179,22 +179,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         field: "type",
         allowNull: true,
-      },
-      createdDate: {
-        type: DataTypes.DATE,
-        field: "created_date",
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
-      updatedDate: {
-        type: DataTypes.DATE,
-        field: "updated_date",
-        allowNull: false,
-      },
+      }
     },
     {
       sequelize,
-      timestamps: false,
+      timestamps: true,
       modelName: "User",
       tableName: "user",
       schema: Config.schema,

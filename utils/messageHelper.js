@@ -63,7 +63,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
     console.log(eventTimeRanges);
     function generateTimeSlotsFromEventRanges(eventTimeRanges) {
         const timeSlots = [];
-        const now = new Date(); // Get the current date and time
+        const now = moment.utc(); // Get the current date and time
 
         for (const eventRange of eventTimeRanges) {
             let currentTime = new Date(eventRange.start);
@@ -137,16 +137,20 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
     timeSlots.forEach(slot => {
         const hour = parseInt(slot.split(':')[0]);
         const secondS = slot.split(' ')[1];
-        if (hour >= 8 && hour < 12 && secondS == 'am') {
+        if (hour >= 8 && hour < 12 && secondS == 'AM') {
             morningSlots.push(slot);
-        } else if (hour >= 1 && hour < 5 && secondS == 'pm') {
+        } else if (hour >= 1 && hour < 5 && secondS == 'PM') {
             afternoonSlots.push(slot);
-        } else if (hour >= 5 && hour < 8 && secondS == 'pm') {
+        } else if (hour >= 5 && hour < 8 && secondS == 'PM') {
             eveningSlots.push(slot);
-        } else if (hour >= 8 && hour < 12 && secondS == 'pm') {
+        } else if (hour >= 8 && hour < 12 && secondS == 'PM') {
             nightSlots.push(slot);
         }
     });
+    console.log("morningSlots", morningSlots);
+    console.log("afternoonSlots", afternoonSlots);
+    console.log("eveningSlots", eveningSlots);
+    console.log("nightSlots", nightSlots);
 
     return {
         morningSlots: morningSlots,
@@ -190,7 +194,6 @@ async function SendSlotMessages(recipientNumber) {
             title: `${timePeriod}Time: ${time}`,
             description: "Duration: 15 minutes"
         }));
-
     if (!timeSlots.morningSlots.length && !timeSlots.afternoonSlots.length && !timeSlots.eveningSlots.length && !timeSlots.nightSlots.length) {
         // Inform the user that the doctor is not available
         await sendRegistrationMessage(
@@ -209,6 +212,7 @@ async function SendSlotMessages(recipientNumber) {
     const convertedAfternoonSlots = timeSlotConvert(timeSlots.afternoonSlots, "Afternoon");
     const convertedEveningSlots = timeSlotConvert(timeSlots.eveningSlots, "Evening");
     const convertedNightSlots = timeSlotConvert(timeSlots.nightSlots, "Night");
+    console.log("message", convertedMorningSlots, convertedAfternoonSlots, convertedEveningSlots, convertedNightSlots);
 
     const sendTimeSlotsChunks = async (recipientNumber, slots, timePeriod) => {
         const chunkSize = 10;

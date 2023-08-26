@@ -487,9 +487,7 @@ router.post("/doctor-patient-list", authentication, checkAccess("doctor/patient-
 router.get("/schedule", authentication, checkAccess("doctor/schedule"), async function (req, res, next) {
 	const doctor = await db.User.findOne(
 		{ where: { userId: req.user.userId } },
-		{ raw: true }
 	)
-	console.log(doctor.toJSON());
 	res.render("doctor/doctor-schedule", {
 		title: "doctor-schedule",
 		doctor: doctor.toJSON()
