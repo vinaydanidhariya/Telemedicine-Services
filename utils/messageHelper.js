@@ -319,6 +319,7 @@ const genderMessage = {
         ],
     },
 };
+
 const welcomeMessage = {
     type: "button",
     header: {
@@ -363,6 +364,7 @@ const sendWelcomeMessage = (recipient) => {
         console.log(error);
     }
 }
+
 const sendGenderSelectionMessage = (recipient) => {
     try {
         let newMessageObject = messageObject(recipient)
@@ -567,6 +569,7 @@ const sendDoctorDepartmentList = (recipient, listOfDoctorDepartment) => {
         console.log(error);
     }
 }
+
 const sendListDoctorMessage = (recipient, listOfDoctor) => {
     try {
         let newMessageObject = messageObject(recipient)
@@ -689,7 +692,6 @@ const appointmentTimeListInteractiveObject = (listOfAppointment, slotType) => {
     };
 };
 
-
 const findDrList = async (department) => {
     const listOfDoctor = await db.User.findAll(
         {
@@ -764,7 +766,61 @@ Payment ID: *${orderId}*
         console.error('Error:', error);
     }
 }
+
+const tocBlock = {
+    type: "button",
+    header: {
+        type: "text",
+        text: "ChildDR 🏥",
+    },
+    body: {
+        text: `As per govenment rules and policies we are bound to read and follow certain regulation and policies we insist you to read it first. link http://google.com`,
+    },
+    footer: {
+        text: "Please read Term & Conditions above.",
+    },
+    action: {
+        buttons: [
+            {
+                type: "reply",
+                reply: {
+                    id: "AGREE",
+                    title: "AGREE",
+                },
+            },
+            {
+                type: "reply",
+                reply: {
+                    id: "DISAGREE",
+                    title: "DISAGREE",
+                },
+            }
+        ],
+    },
+};
+
+const sendTOCBlock = (recipient) => {
+    try {
+        let newMessageObject = messageObject(recipient)
+        newMessageObject.interactive = tocBlock;
+
+        axios.post(
+            `https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+            newMessageObject,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+
+                },
+            }
+        );
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
+    sendTOCBlock,
     findDrList,
     GetPaymentUrl,
     findAvailableTimeSlots,
@@ -786,5 +842,3 @@ module.exports = {
     transactionMessage,
     getPaymentTemplatedMessageInput
 };
-
-

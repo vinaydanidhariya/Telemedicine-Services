@@ -3,9 +3,8 @@ var express = require("express");
 var router = express.Router();
 const moment = require('moment');
 const db = require('../../models/');
-const { GetPaymentUrl, findDrList, findDoctorDepartmentList, sendDoctorDepartmentList, SendSlotMessages, findAvailableTimeSlots, timeSlots, sendTimeListAppointmentMessage, sendWelcomeMessage, sendListDoctorMessage, sendRegistrationMessage, sendGenderSelectionMessage, sendAppointmentDateReplyButton } = require("../../utils/messageHelper");
-const { onSpecificDayMessage, appointmentMessage } = require('../../utils/messages')
-const { Op } = require('sequelize');
+const { GetPaymentUrl, findDrList, findDoctorDepartmentList, sendDoctorDepartmentList, SendSlotMessages, sendListDoctorMessage, sendRegistrationMessage, sendGenderSelectionMessage, sendAppointmentDateReplyButton, sendTOCBlock } = require("../../utils/messageHelper");
+const { appointmentMessage } = require('../../utils/messages');
 
 
 router.post("/", async (req, res) => {
@@ -22,27 +21,15 @@ router.post("/", async (req, res) => {
             const ExitsUser = await db.WhatsappUser.findOne({ where: { wa_id: wa_id } });
             if (!ExitsUser) {
                 const name = body['entry'][0]['changes'][0]['value']['contacts'][0].profile.name;
-                // await db.WhatsappUser.create({
-                //     profileName: name,
-                //     wa_id: wa_id,
-                //     phone: recipientNumber,
-                //     userStat: 'START'
-                // });
-                // sendWelcomeMessage(recipientNumber);
                 await db.WhatsappUser.create({
                     profileName: name,
                     wa_id: wa_id,
                     phone: recipientNumber,
-                    userStat: 'DEPARTMENT-SELECTION'
+                    userStat: 'TERM-CONDITIONS'
                 });
-                const listOfDepartment = await findDoctorDepartmentList()
-                if (listOfDepartment.length > 0) {
-                    sendDoctorDepartmentList(recipientNumber, listOfDepartment);
-                } else {
-                    sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DEPARTMENT AVAILABLE");
-                }
-                return res.sendStatus(200);
 
+                sendTOCBlock(recipientNumber);
+                return res.sendStatus(200);
             }
 
             const user = await db.WhatsappUser.findOne({ where: { wa_id: wa_id } });
@@ -50,24 +37,16 @@ router.post("/", async (req, res) => {
             switch (messageType) {
                 case "text":
                     let textMessage = message.text.body;
-                    console.log(user);
                     if (message.text.body === "Removed") {
-                        const deleteResult = await db.WhatsappUser.update(
+                        await db.WhatsappUser.update(
                             {
-                                userStat: "DEPARTMENT-SELECTION"
+                                userStat: "TERM-CONDITIONS"
                             }, {
                             where: {
                                 wa_id: wa_id,
                             },
                         });
-                        await sendRegistrationMessage(recipientNumber, "USER SESSION DESTROYED");
-                        // sendWelcomeMessage(recipientNumber);
-                        const listOfDepartment = await findDoctorDepartmentList()
-                        if (listOfDepartment.length > 0) {
-                            sendDoctorDepartmentList(recipientNumber, listOfDepartment);
-                        } else {
-                            sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DEPARTMENT AVAILABLE");
-                        }
+                        sendTOCBlock(recipientNumber);
                         return res.sendStatus(200)
                     }
                     else if (message.text.body === "Tester") {
@@ -76,22 +55,37 @@ router.post("/", async (req, res) => {
 
                     } else {
                         switch (user.userStat) {
-
-                            case 'FULL-NAME':
-                                var nameRegex = /^[A-Za-z\s]+$/;
+                            case 'TERM-CONDITIONS-AGREE': {
+                                await db.WhatsappUser.update(
+                                    {
+                                        userStat: "DEPARTMENT-SELECTION"
+                                    }, {
+                                    where: {
+                                        wa_id: wa_id,
+                                    },
+                                });
+                                const listOfDepartment = await findDoctorDepartmentList();
+                                if (listOfDepartment.length > 0) {
+                                    sendDoctorDepartmentList(recipientNumber, listOfDepartment);
+                                } else {
+                                    sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DEPARTMENT AVAILABLE");
+                                }
+                                return res.sendStatus(200)
+                            }
+                            case 'FULL-NAME': {
+                                const nameRegex = /^[A-Za-z\s]+$/;
                                 if (nameRegex.test(textMessage)) {
                                     await db.WhatsappUser.update(
                                         { userStat: 'DATE-OF-BIRTH', fullName: textMessage },
                                         { where: { phone: recipientNumber } }
                                     );
-
                                     sendRegistrationMessage(recipientNumber, "Please enter the Birth-date of your Child/Patient. 📅 \nPlease enter it in the format DD/MM/YYYY (e.g., 01/01/2000)");
                                     return res.sendStatus(200)
-
                                 } else {
                                     sendRegistrationMessage(recipientNumber, "Enter Proper Patient Name ❌");
                                     return res.sendStatus(200)
                                 }
+                            }
 
                             case 'DATE-OF-BIRTH':
                                 var DOBFormat = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)\d{2})$/;
@@ -295,6 +289,25 @@ router.post("/", async (req, res) => {
                             { where: { phone: recipientNumber } }
                         );
                         await sendRegistrationMessage(recipientNumber, "Please Enter Your Email Address 📧?");
+                    }
+
+                    if (interactiveType === "button_reply" && user.userStat === "TERM-CONDITIONS") {
+                        if (reply.id === 'TERM-CONDITIONS') {
+                            await db.WhatsappUser.update(
+                                { userStat: 'TERM-CONDITIONS-AGREE' },
+                                { where: { phone: recipientNumber } }
+                            );
+                            const listOfDepartment = await findDoctorDepartmentList();
+                            if (listOfDepartment.length > 0) {
+                                sendDoctorDepartmentList(recipientNumber, listOfDepartment);
+                            } else {
+                                sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DEPARTMENT AVAILABLE");
+                            }
+                            return res.sendStatus(200)
+                        } else {
+                            sendRegistrationMessage(recipientNumber, "Apologies to inconvinience but we cannot proceed futher until you agreed with terms & condition");
+                        }
+
                     }
 
                     break;
