@@ -291,7 +291,7 @@ router.post("/", async (req, res) => {
                     }
 
                     if (interactiveType === "button_reply" && user.userStat === "TERM-CONDITIONS") {
-                        if (reply.id === 'TERM-CONDITIONS') {
+                        if (reply.id === 'AGREE') {
                             await db.WhatsappUser.update(
                                 { userStat: 'TERM-CONDITIONS-AGREE' },
                                 { where: { phone: recipientNumber } }
