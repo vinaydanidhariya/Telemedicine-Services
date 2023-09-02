@@ -296,6 +296,10 @@ router.post("/", async (req, res) => {
                                 { userStat: 'TERM-CONDITIONS-AGREE' },
                                 { where: { phone: recipientNumber } }
                             );
+                            await db.WhatsappUser.update(
+                                { userStat: 'DEPARTMENT-SELECTION' },
+                                { where: { phone: recipientNumber } }
+                            );
                             const listOfDepartment = await findDoctorDepartmentList();
                             if (listOfDepartment.length > 0) {
                                 sendDoctorDepartmentList(recipientNumber, listOfDepartment);
