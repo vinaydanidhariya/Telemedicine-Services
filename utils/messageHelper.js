@@ -35,8 +35,8 @@ const getTextMessageInput = (recipient, text) => {
 
 async function findAvailableTimeSlots(from, to, doctorId, user) {
 
-    const startDate = new Date(from);
-    const endDate = new Date(to);
+    const startDate = new Date(from).toUTCString();
+    const endDate = new Date(to).toUTCString();;
     console.log(startDate);
     console.log(endDate);
     const events = await db.Schedule.findAll({
