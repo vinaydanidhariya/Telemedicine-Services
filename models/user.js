@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // One-to-Many: User has many Appointments
       User.hasMany(models.Appointment, {
-        foreignKey: 'doctor_id', // The foreign key in the Appointments table that references Doctors
-        as: 'appointments', // Alias for the association
+        foreignKey: "doctor_id", // The foreign key in the Appointments table that references Doctors
+        as: "appointments", // Alias for the association
       });
     }
   }
@@ -179,7 +179,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         field: "type",
         allowNull: true,
-      }
+      },
+      otpString: {
+        type: DataTypes.TEXT,
+        field: "otp_string",
+        allowNull: true,
+      },
+      isOTP: {
+        type: DataTypes.BOOLEAN,
+        field: "is_otp",
+        allowNull: true,
+        defaultValue:false
+      },
     },
     {
       sequelize,

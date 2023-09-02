@@ -1,6 +1,7 @@
 let CryptoJS = require("crypto-js");
-const db = require('../models/')
-const config = require('../config/config.js')
+const db = require("../models/");
+const config = require("../config/config.js");
+const { generateOTP } = require("../utils/helper");
 module.exports = {
 	login: async function (app) {
 		try {
@@ -29,7 +30,7 @@ module.exports = {
 							where: {
 								email: username,
 							},
-							raw: true
+							raw: true,
 						})
 							.then(async function (user) {
 								// if user not found
@@ -40,10 +41,7 @@ module.exports = {
 									});
 								} else {
 									// check user must active and not deleted
-									if (
-										user.status != "true" ||
-										user.deleted
-									) {
+									if (user.status != "true" || user.deleted) {
 										return done(null, false, {
 											message:
 												"User is inactive or deleted.Please contact admin",
@@ -57,7 +55,18 @@ module.exports = {
 												"Please enter valid login details",
 										});
 									}
-
+									//logic for send otp
+									const otpString = generateOTP(6);
+									//set otp into user
+									await db.User.update(
+										{
+											otpString,
+										},
+										{
+											where: { email: username },
+										}
+									);
+									
 									delete user.password;
 									return done(null, user);
 								}
@@ -106,29 +115,39 @@ module.exports = {
 	},
 	check_auth: async function (req, res, next) {
 		if (req.isAuthenticated()) {
-			if (req.user.logout != undefined && req.user.logout == true) {
-				req.logout(); //passport logout method
-				//set flash message
-				res.render(
-					'403',{
-					status: 403,
-					message: "You are not authorized Please login first",
-					type: "error",
-				});
-				//redirect to requested page
-				res.redirect("/?u=" + req.originalUrl);
-			}
-			res.locals.userSession = req.user;
-			return next(); //return next
-		} else {
-			console.log(req.originalUrl.includes('/admin'));
-			if (req.originalUrl.includes('/admin')) {
-				res.redirect('/admin/error')
+			const user = await db.User.findOne({
+				where: { userId: req.user.userId },
+			});
+			if (user.isOTP) {
+				const dashboardPath =
+					req.user.type === "ADMIN"
+						? "/admin/dashboard"
+						: "/doctor/dashboard";
+
+				res.locals.userSession = req.user;
+				if (req.user.logout != undefined && req.user.logout == true) {
+					req.logout(); //passport logout method
+					//set flash message
+					return res.render("403", {
+						status: 403,
+						message: "You are not authorized Please login first",
+						type: "error",
+					});
+				}
+				console.log("asd");
+				next();
+				// return res.redirect(dashboardPath);
 			} else {
-				return res.redirect('/error')
+				return res.redirect("/admin/verify-otp");
+			}
+		} else {
+			console.log(req.originalUrl.includes("/admin"));
+			if (req.originalUrl.includes("/admin")) {
+				res.redirect("/admin/error");
+			} else {
+				return res.redirect("/error");
 			}
 		}
-
 	},
 	admin_login: async function (app) {
 		try {
