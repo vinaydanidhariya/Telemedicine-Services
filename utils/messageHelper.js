@@ -43,12 +43,12 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
         where: {
             doctorId:parseInt(doctorId),
             // Apply filtering based on start_date and end_date
-            start_date: {
-                [Op.gte]: startDate
-            },
-            end_date: {
-                [Op.lte]:  endDate,
-            },
+            // start_date: {
+            //     [Op.gte]: startDate
+            // },
+            // end_date: {
+            //     [Op.lte]:  endDate,
+            // },
         },
         attributes: ['start_date', 'end_date'],
         raw: true,
