@@ -239,6 +239,7 @@ let messageObject = (recipient) => {
     }
     )
 };
+
 function getPaymentTemplatedMessageInput(recipient, name, amount, orderId) {
     return {
         "messaging_product": "whatsapp",
@@ -279,6 +280,7 @@ function getPaymentTemplatedMessageInput(recipient, name, amount, orderId) {
         }
     }
 }
+
 function sendMessage(data) {
     var config = {
         method: 'post',

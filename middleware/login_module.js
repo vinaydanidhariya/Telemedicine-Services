@@ -1,7 +1,7 @@
 let CryptoJS = require("crypto-js");
 const db = require("../models/");
 const config = require("../config/config.js");
-const { generateOTP } = require("../utils/helper");
+const { generateOTP, sendOTPEmail } = require("../utils/helper");
 module.exports = {
 	login: async function (app) {
 		try {
@@ -57,6 +57,16 @@ module.exports = {
 									}
 									//logic for send otp
 									const otpString = generateOTP(6);
+									try {
+										console.log(`${user.firstName} ${user.lastName}`);
+										await sendOTPEmail(user.email,otpString,`${user.firstName} ${user.lastName}`);
+									} catch (error) {
+										console.log(err);
+										return done(null, false, {
+											message:
+												"Something went wrong in send email",
+										});
+									}
 									//set otp into user
 									await db.User.update(
 										{
@@ -66,7 +76,7 @@ module.exports = {
 											where: { email: username },
 										}
 									);
-									
+
 									delete user.password;
 									return done(null, user);
 								}
