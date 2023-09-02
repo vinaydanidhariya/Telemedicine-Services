@@ -1,26 +1,3 @@
-<!-- Content wrapper -->
-<!-- Jquery js -->
-<script type="text/javascript" src="/assets/vendor/libs/jquery/jquery.js"></script>
-
-<!-- Popper js -->
-<script src="/assets/vendor/libs/popper/popper.js"></script>
-
-<!-- Bootstrap js -->
-<script src="/assets/vendor/js/bootstrap.js"></script>
-<link rel="stylesheet" href="/assets/vendor/libs/flatpickr/flatpickr.css" />
-<script src="/assets/vendor/libs/flatpickr/flatpickr.js"></script>
-
-<!-- jQuery Validation JS -->
-<script type="text/javascript" src="/assets/vendor/libs/jquery/jquery.validate.js"></script>
-<link rel="stylesheet" href="/assets/vendor/libs/sweetalert2/sweetalert2.css" />
-
-<script src="/assets/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
-<script src="/assets/vendor/libs/select2/select2.js"></script>
-<link rel="stylesheet" href="/assets/vendor/libs/select2/select2.css">
-<link rel="stylesheet" href="../../assets/vendor/libs/quill/typography.css" />
-<link rel="stylesheet" href="../../assets/vendor/libs/quill/katex.css" />
-<link rel="stylesheet" href="../../assets/vendor/libs/quill/editor.css" />
-
 <div class="content-wrapper">
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -38,13 +15,14 @@
                         <form id="add-department" class="row g-3" method="post">
                             <div class="col-md-6">
                                 <label class="form-label" for="department-title">department Title</label>
-                                <input type="text" id="department_name"required maxlength="24"  value="" class="form-control"
-                                    placeholder="Department Title" name="department_name" />
+                                <input type="text" id="department_name" required maxlength="24" value=""
+                                    class="form-control" placeholder="Department Title" name="department_name" />
                             </div>
                             <div class="md-6">
                                 <label class="form-label" for="Short Discription">Short Description</label>
-                                <textarea type="text" id="description" required maxlength="72" value="" class="form-control"
-                                    placeholder="Short Description" rows="4" name="description" /></textarea>
+                                <textarea type="text" id="description" required maxlength="72" value=""
+                                    class="form-control" placeholder="Short Description" rows="4"
+                                    name="description" /></textarea>
                             </div>
                             <div class="row pt-4">
                                 <button type="submit" id="submit" class="btn btn-primary" name="submitButton"
@@ -59,15 +37,6 @@
     <!-- / Content -->
     <div class="content-backdrop fade"></div>
 </div>
-<script src="../../assets/vendor/libs/quill/quill.js"></script>
-<script src="../../assets/vendor/libs/quill/image-resize.js"></script>
-<!-- Content wrapper -->
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
-
-<script src="/assets/vendor/libs/jquery/jquery.js"></script>
-<script src="/assets/vendor/libs/jquery/jquery.validate.js"></script>
-<script src="/assets/vendor/libs/jquery/additional-methods.min.js"></script>
 
 <script>
     $(document).ready(function () {

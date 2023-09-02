@@ -1,298 +1,273 @@
-<!-- Content wrapper --><!-- Jquery js -->
-<html>
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">CONSULTANT/</span> EDIT-CONSULTANT</h4>
+        <!-- Basic Layout & Basic with Icons -->
+        <div class="row">
+            <!-- Basic with Icons -->
+            <div class="col-xxl">
+                <div class="card mb-4">
 
-<head>
-    <link rel="stylesheet" href="/assets/vendor/libs/select2/select2.css">
-    <script type="text/javascript" src="/assets/vendor/libs/jquery/jquery.js"></script>
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0">EDIT-CONSULTANT</h5>
+                    </div>
 
-    <!-- Popper js -->
-    <script src="/assets/vendor/libs/popper/popper.js"></script>
+                    <div class="card-body">
+                        <form id="editDoctor" enctype="multipart/form-data" class="row g-3" method="post">
+                            <!-- Account Details -->
+                            <div class="col-12">
+                                <h6 class="fw-semibold">1. Account Details</h6>
+                                <hr class="mt-0">
+                            </div>
 
-    <!-- Bootstrap js -->
-    <script src="/assets/vendor/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="/assets/vendor/libs/flatpickr/flatpickr.css">
-    <script src="/assets/vendor/libs/flatpickr/flatpickr.js"></script>
-    <!-- jQuery Validation JS -->
-    <script type="text/javascript" src="/assets/vendor/libs/jquery/jquery.validate.js"></script>
-    <link rel="stylesheet" href="/assets/vendor/libs/sweetalert2/sweetalert2.css">
+                            <div class="col-md-6">
+                                <label class="form-label" for="formValidationFirstName">First Name</label>
+                                <input type="text" id="formValidationFirstName" class="form-control"
+                                    name="formValidationFirstName" value="{{data.firstName}}">
+                            </div>
 
-    <script src="/assets/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
-    <script src="/assets/vendor/libs/select2/select2.js" defer=""></script>
+                            <div class="col-md-6">
+                                <label class="form-label" for="formValidationLastName">Last Name</label>
+                                <input type="text" id="formValidationLastName" value="{{data.lastName}}"
+                                    class="form-control" name="formValidationLastName">
+                            </div>
 
-</head>
+                            <div class="col-md-6">
+                                <label class="form-label" for="formValidationEmail">Email</label>
+                                <input class="form-control" type="text" value="{{data.email}}" disabled=""
+                                    name="formValidationEmail">
+                            </div>
 
-<body>
-    <div class="content-wrapper">
-        <!-- Content -->
-        <div class="container-xxl flex-grow-1 container-p-y">
-            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Doctors/</span> Add-Doctor</h4>
-            <!-- Basic Layout & Basic with Icons -->
-            <div class="row">
-                <!-- Basic with Icons -->
-                <div class="col-xxl">
-                    <div class="card mb-4">
-
-                        <div class="card-header d-flex align-items-center justify-content-between">
-                            <h5 class="mb-0">ADD-DOCTORS</h5>
-                        </div>
-
-                        <div class="card-body">
-                            <form id="editDoctor" enctype="multipart/form-data" class="row g-3" method="post">
-                                <!-- Account Details -->
-                                <div class="col-12">
-                                    <h6 class="fw-semibold">1. Account Details</h6>
-                                    <hr class="mt-0">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="formValidationFirstName">First Name</label>
-                                    <input type="text" id="formValidationFirstName" class="form-control"
-                                        name="formValidationFirstName" value="{{data.firstName}}">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="formValidationLastName">Last Name</label>
-                                    <input type="text" id="formValidationLastName" value="{{data.lastName}}"
-                                        class="form-control" name="formValidationLastName">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="formValidationEmail">Email</label>
-                                    <input class="form-control" type="text" value="{{data.email}}" disabled=""
-                                        name="formValidationEmail">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        {{!-- <div class="col-md-3">
-                                            <label class="form-label" for="phonePrefix">Code</label>
-                                            <select class="form-control" name="countryCode">
-                                                <option value="+91" selected="">India</option>
-                                                <option value="+1">United States</option>
-                                                <option value="+359">Bulgaria</option>
-                                                <option value="+55">Brazil</option>
-                                                <option value="+86">China</option>
-                                                <option value="+420">Czech Republic</option>
-                                                <option value="+45">Denmark</option>
-                                                <option value="+33">France</option>
-                                                <option value="+49">Germany</option>
-                                                <option value="+212">Morocco</option>
-                                                <option value="+31">Netherlands</option>
-                                                <option value="+92">Pakistan</option>
-                                                <option value="+40">Romania</option>
-                                                <option value="+7">Russia</option>
-                                                <option value="+421">Slovakia</option>
-                                                <option value="+34">Spain</option>
-                                                <option value="+66">Thailand</option>
-                                                <option value="+971">United Arab Emirates</option>
-                                                <option value="+44">United Kingdom</option>
-                                                <option value="+58">Venezuela</option>
-                                            </select>
-                                        </div> --}}
-                                        <div class="col-md-8">
-                                            <label class="form-label" for="formValidationMobile">Phone Number :</label>
-                                            <label class="form-label" for="formValidationMobile">{{data.phone}}</label>
-                                            <input type="number" id="formValidationMobile" class="form-control "
-                                                placeholder="999-456-7890" value="{{data.phone}}"
-                                                name="formValidationMobile">
-                                        </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    {{!-- <div class="col-md-3">
+                                        <label class="form-label" for="phonePrefix">Code</label>
+                                        <select class="form-control" name="countryCode">
+                                            <option value="+91" selected="">India</option>
+                                            <option value="+1">United States</option>
+                                            <option value="+359">Bulgaria</option>
+                                            <option value="+55">Brazil</option>
+                                            <option value="+86">China</option>
+                                            <option value="+420">Czech Republic</option>
+                                            <option value="+45">Denmark</option>
+                                            <option value="+33">France</option>
+                                            <option value="+49">Germany</option>
+                                            <option value="+212">Morocco</option>
+                                            <option value="+31">Netherlands</option>
+                                            <option value="+92">Pakistan</option>
+                                            <option value="+40">Romania</option>
+                                            <option value="+7">Russia</option>
+                                            <option value="+421">Slovakia</option>
+                                            <option value="+34">Spain</option>
+                                            <option value="+66">Thailand</option>
+                                            <option value="+971">United Arab Emirates</option>
+                                            <option value="+44">United Kingdom</option>
+                                            <option value="+58">Venezuela</option>
+                                        </select>
+                                    </div> --}}
+                                    <div class="col-md-8">
+                                        <label class="form-label" for="formValidationMobile">Phone Number :</label>
+                                        <label class="form-label" for="formValidationMobile">{{data.phone}}</label>
+                                        <input type="number" id="formValidationMobile" class="form-control "
+                                            placeholder="999-456-7890" value="{{data.phone}}"
+                                            name="formValidationMobile">
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="col-12">
-                                    <h6 class="mt-2">2. Personal Info</h6>
-                                    <hr class="mt-0">
-                                </div>
+                            <div class="col-12">
+                                <h6 class="mt-2">2. Personal Info</h6>
+                                <hr class="mt-0">
+                            </div>
 
-                                <div class="col-md-6">
-                                    <label for="formValidationFile" class="form-label">Profile Pic</label>
-                                    <input class="form-control" type="file" name="formValidationFile"
-                                        accept="image/png, image/jpg, image/jpeg" id="formValidationFile">
-                                    <label class="form-label">Previous photo :</label>
-                                    <label>{{data.photoUrl}}</label>
-                                </div>
+                            <div class="col-md-6">
+                                <label for="formValidationFile" class="form-label">Profile Pic</label>
+                                <input class="form-control" type="file" name="formValidationFile"
+                                    accept="image/png, image/jpg, image/jpeg" id="formValidationFile">
+                                <label class="form-label">Previous photo :</label>
+                                <label>{{data.photoUrl}}</label>
+                            </div>
 
-                                <div class="col-md-6 flatpickr">
-                                    <label class="form-label" for="formValidationDob">DOB</label>
-                                    <input type="text" class="form-control flatpickr-validation"
-                                        name="formValidationDob" id="formValidationDob" value="{{formattedDate}}">
-                                </div>
+                            <div class="col-md-6 flatpickr">
+                                <label class="form-label" for="formValidationDob">DOB</label>
+                                <input type="text" class="form-control flatpickr-validation" name="formValidationDob"
+                                    id="formValidationDob" value="{{formattedDate}}">
+                            </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label" for="formValidationPrice">Price</label>
-                                    <input type="number" class="form-control" name="formValidationPrice"
-                                        id="formValidationPrice" value="{{data.price}}">
-                                </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="formValidationPrice">Price</label>
+                                <input type="number" class="form-control" name="formValidationPrice"
+                                    id="formValidationPrice" value="{{data.price}}">
+                            </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label" for="formValidationQualifications">Qualifications</label>
-                                    <input type="text" value="{{data.qualifications}}" class="form-control"
-                                        name="formValidationQualifications">
-                                </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="formValidationQualifications">Qualifications</label>
+                                <input type="text" value="{{data.qualifications}}" class="form-control"
+                                    name="formValidationQualifications">
+                            </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label" for="formValidationSelectDepartment">Department</label>
-                                    <select id="formValidationSelectDepartment" name="formValidationSelectDepartment"
-                                        class="form-select select2" data-allow-clear="true">
-                                    </select>
-                                    <label class="form-label" for="formValidationDob">Previous Department:</label>
-                                    <label>{{data.department}}</label>
-                                </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="formValidationSelectDepartment">Department</label>
+                                <select id="formValidationSelectDepartment" name="formValidationSelectDepartment"
+                                    class="form-select select2" data-allow-clear="true">
+                                </select>
+                                <label class="form-label" for="formValidationDob">Previous Department:</label>
+                                <label>{{data.department}}</label>
+                            </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label" for="formValidationSelectDepartment">Experience</label>
-                                    <input type="number" id="FormValidationExperience" value="{{data.experience}}"
-                                        name="FormValidationExperience" class="form-control">
-                                </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="formValidationSelectDepartment">Experience</label>
+                                <input type="number" id="FormValidationExperience" value="{{data.experience}}"
+                                    name="FormValidationExperience" class="form-control">
+                            </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label" for="basic-default-bio">Physical Practice
-                                        Location</label>
-                                    <textarea class="form-control" id="basic-default-bio"
-                                        name="FormValidationPhysicalPractice" required="" autocomplete="off"
-                                        spellcheck="false">{{data.physicalPractice}}</textarea>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="basic-default-bio">Physical Practice
+                                    Location</label>
+                                <textarea class="form-control" id="basic-default-bio"
+                                    name="FormValidationPhysicalPractice" required="" autocomplete="off"
+                                    spellcheck="false">{{data.physicalPractice}}</textarea>
+                            </div>
+                            <input type="hidden" name="doctor" value="{{data.userId}}">
+                            <div class="col-md-6">
+                                <label class="form-label">Gender</label>
+                                <div class="form-check custom">
+                                    <input type="radio" id="formValidationGender" name="formValidationGender"
+                                        class="form-check-input" value="male" {{#compare data.gender '==' 'male'
+                                        }}checked="checked" {{/compare}} />
+                                    <label class="form-check-label" for="formValidationGender">Male</label>
                                 </div>
-                                <input type="hidden" name="doctor" value="{{data.userId}}">
-                                <div class="col-md-6">
-                                    <label class="form-label">Gender</label>
-                                    <div class="form-check custom">
-                                        <input type="radio" id="formValidationGender" name="formValidationGender"
-                                            class="form-check-input" value="male" {{#compare data.gender '==' 'male'
-                                            }}checked="checked" {{/compare}} />
-                                        <label class="form-check-label" for="formValidationGender">Male</label>
+                                <div class="form-check custom">
+                                    <input type="radio" id="formValidationGender2" name="formValidationGender"
+                                        class="form-check-input" value="female" {{#compare data.gender '==' 'female'
+                                        }}checked="checked" {{/compare}} />
+                                    <label class="form-check-label" for="formValidationGender2">Female</label>
+                                </div>
+                            </div>
+                            <input type="hidden" name="doctorUpdate" value="{{data.userId}}">
+
+                            <div class="col-12">
+                                <h6 class="mt-2">3. Graduation Education Info</h6>
+                                <hr class="mt-0">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label" for="formValidationPrice">University/College:</label>
+                                <input type="text" class="form-control" value="{{data.university}}"
+                                    name="formValidationUniversity">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label" for="Degree">Degree:</label>
+                                <input type="text" class="form-control" value="{{data.degreeText}}"
+                                    name="formValidationDegreeText">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label" for="GraduationYear">Graduation Year:</label>
+                                <input type="text" class="form-control" value="{{data.graduationYear}}"
+                                    name="formValidationGradYear">
+                            </div>
+
+                            <div class="col-12">
+                                <h6 class="mt-2">4. Timing</h6>
+                                <hr class="mt-0">
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <p>Timing For Online Consultation</p>
+                                    <div class="col-md-3">
+                                        <label class="form-label" for="formValidationDegree">From:</label>
+                                        <input type="time" class="form-control"
+                                            value="{{data.onlineConsultationTimeFrom}}" placeholder="HH:MM"
+                                            name="onlineConsultationTimeFrom">
                                     </div>
-                                    <div class="form-check custom">
-                                        <input type="radio" id="formValidationGender2" name="formValidationGender"
-                                            class="form-check-input" value="female" {{#compare data.gender '==' 'female'
-                                            }}checked="checked" {{/compare}} />
-                                        <label class="form-check-label" for="formValidationGender2">Female</label>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="doctorUpdate" value="{{data.userId}}">
-
-                                <div class="col-12">
-                                    <h6 class="mt-2">3. Graduation Education Info</h6>
-                                    <hr class="mt-0">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="formValidationPrice">University/College:</label>
-                                    <input type="text" class="form-control" value="{{data.university}}"
-                                        name="formValidationUniversity">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="Degree">Degree:</label>
-                                    <input type="text" class="form-control" value="{{data.degreeText}}"
-                                        name="formValidationDegreeText">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="GraduationYear">Graduation Year:</label>
-                                    <input type="text" class="form-control" value="{{data.graduationYear}}"
-                                        name="formValidationGradYear">
-                                </div>
-
-                                <div class="col-12">
-                                    <h6 class="mt-2">4. Timing</h6>
-                                    <hr class="mt-0">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <p>Timing For Online Consultation</p>
-                                        <div class="col-md-3">
-                                            <label class="form-label" for="formValidationDegree">From:</label>
-                                            <input type="time" class="form-control"
-                                                value="{{data.onlineConsultationTimeFrom}}" placeholder="HH:MM"
-                                                name="onlineConsultationTimeFrom">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label" for="formValidationDegree">To:</label>
-                                            <input type="time" class="form-control"
-                                                value="{{data.onlineConsultationTimeTo}}" placeholder="HH:MM"
-                                                name="onlineConsultationTimeTo">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <p>Timing For Clinic</p>
-                                        <div class="col-md-3">
-                                            <label class="form-label" for="formValidationDegree">From:</label>
-                                            <input type="time" class="form-control" value="{{data.clinicTimeFrom}}"
-                                                placeholder="HH:MM" name="clinicTimeFrom">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label" for="formValidationDegree">To:</label>
-                                            <input type="time" class="form-control" value="{{data.clinicTimeTo}}"
-                                                placeholder="HH:MM" name="clinicTimeTo">
-                                        </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label" for="formValidationDegree">To:</label>
+                                        <input type="time" class="form-control"
+                                            value="{{data.onlineConsultationTimeTo}}" placeholder="HH:MM"
+                                            name="onlineConsultationTimeTo">
                                     </div>
                                 </div>
+                            </div>
 
-
-                                <div class="col-12">
-                                    <h6 class="mt-2">5. Documents</h6>
-                                    <p class="error">*IN PDF FORMATE ONLY</p>
-                                    <hr class="mt-0">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <p>Timing For Clinic</p>
+                                    <div class="col-md-3">
+                                        <label class="form-label" for="formValidationDegree">From:</label>
+                                        <input type="time" class="form-control" value="{{data.clinicTimeFrom}}"
+                                            placeholder="HH:MM" name="clinicTimeFrom">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label" for="formValidationDegree">To:</label>
+                                        <input type="time" class="form-control" value="{{data.clinicTimeTo}}"
+                                            placeholder="HH:MM" name="clinicTimeTo">
+                                    </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label" for="formValidationDegree">Doctor Registration
-                                        Number:</label>
-                                    <input type="text" class="form-control" value="{{data.doctorRegistrationNumber}}"
-                                        name="formValidationDoctorRegistrationNumber">
-                                </div>
+                            </div>
 
 
-                                <div class="col-md-6">
-                                    <label class="form-label" for="formValidationDegree">Degree:</label>
-                                    <input type="file" class="form-control" value="{{data.degreeUrl}}"
-                                        name="formValidationFileDegreePhoto">
-                                    <label class="form-label">Previous degree :</label>
-                                    <label>{{data.degreeUrl}}</label>
-                                </div>
+                            <div class="col-12">
+                                <h6 class="mt-2">5. Documents</h6>
+                                <p class="error">*IN PDF FORMATE ONLY</p>
+                                <hr class="mt-0">
+                            </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label" for="Degree">Aadhar Card:</label>
-                                    <input type="file" class="form-control" name="formValidationFileAadharCard"
-                                        id="aadharCard">
-                                    <label class="form-label">Previous Aadhar Card :</label>
-                                    <label>{{data.aadharCardUrl}}</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label" for="GraduationYear">Pan Card:</label>
-                                    <input type="file" class="form-control" name="formValidationFilePanCard">
-                                    <label class="form-label">Previous Pan Card :</label>
-                                    <label>{{data.panCardUrl}}</label>
-                                </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="formValidationDegree">Doctor Registration
+                                    Number:</label>
+                                <input type="text" class="form-control" value="{{data.doctorRegistrationNumber}}"
+                                    name="formValidationDoctorRegistrationNumber">
+                            </div>
 
 
-                                <div class="col-md-6">
-                                    <label class="form-label" for="GraduationYear">Digital Signature:</label>
-                                    <input type="file" class="form-control" name="formValidationFileDigitalSignature">
-                                    <label class="form-label">Previous Digital Signature :</label>
-                                    <label>{{data.digitalSignatureUrl}}</label>
-                                </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="formValidationDegree">Degree:</label>
+                                <input type="file" class="form-control" value="{{data.degreeUrl}}"
+                                    name="formValidationFileDegreePhoto">
+                                <label class="form-label">Previous degree :</label>
+                                <label>{{data.degreeUrl}}</label>
+                            </div>
 
-                                <div class="row pt-4">
-                                    <button type="submit" id="editDoctorSubmit" class="btn btn-primary"
-                                        name="submitButton" style="width: 30rem; margin: 0 auto;">Submit</button>
-                                </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="Degree">Aadhar Card:</label>
+                                <input type="file" class="form-control" name="formValidationFileAadharCard"
+                                    id="aadharCard">
+                                <label class="form-label">Previous Aadhar Card :</label>
+                                <label>{{data.aadharCardUrl}}</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="GraduationYear">Pan Card:</label>
+                                <input type="file" class="form-control" name="formValidationFilePanCard">
+                                <label class="form-label">Previous Pan Card :</label>
+                                <label>{{data.panCardUrl}}</label>
+                            </div>
 
-                            </form>
-                        </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label" for="GraduationYear">Digital Signature:</label>
+                                <input type="file" class="form-control" name="formValidationFileDigitalSignature">
+                                <label class="form-label">Previous Digital Signature :</label>
+                                <label>{{data.digitalSignatureUrl}}</label>
+                            </div>
+
+                            <div class="row pt-4">
+                                <button type="submit" id="editDoctorSubmit" class="btn btn-primary" name="submitButton"
+                                    style="width: 30rem; margin: 0 auto;">Submit</button>
+                            </div>
+
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- / Content -->
-        <div class="content-backdrop fade"></div>
     </div>
-    <!-- Content wrapper -->
-</body>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+</div>
+<!-- Content wrapper -->
 <script src="/assets/vendor/libs/axios/axios.min.js"></script>
 <script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
 <script>
@@ -700,5 +675,3 @@
             }));
     });
 </script>
-
-</html>

@@ -170,4 +170,31 @@ router.post(
 	}
 );
 
+router.get("/slider-photo-list", authentication, checkAccess("web-setting/slider-photo-list"), async (req, res) => {
+	try {
+		// Retrieve all event posts from the database using the event model
+		const sliderPosts = await db.webSlider.findAll({
+			attributes: [
+				"web_slider_id",
+				"short_description",
+				"slider_title",
+				"photo",
+			], // You can directly specify the attribute without an alias
+			raw: true, // Get raw JSON data instead of Sequelize instances
+		});
+
+		console.log("event posts retrieved:", sliderPosts);
+
+		res.render("web-settings/slider-photo-list", {
+			title: "SLIDER-LIST",
+			sliderPosts,
+			sessionUser: req.user,
+		});
+	} catch (error) {
+		console.error("Error retrieving event posts:", error);
+		// Handle errors appropriately
+		res.status(500).send("Error retrieving event posts"); // Return an error response to the client
+	}
+}
+);
 module.exports = router;

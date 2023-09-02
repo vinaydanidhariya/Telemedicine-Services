@@ -37,7 +37,8 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 
     const startDate = new Date(from);
     const endDate = new Date(to);
-
+    console.log(startDate);
+    console.log(endDate);
     const events = await db.Schedule.findAll({
         where: {
             doctorId,
@@ -52,6 +53,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
         attributes: ['start_date', 'end_date'],
         raw: true,
     });
+    console.log("events===================>");
     console.log(events);
     // Extract start and end times from events
     const eventTimeRanges = events.map(event => {
