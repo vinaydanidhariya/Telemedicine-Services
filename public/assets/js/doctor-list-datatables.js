@@ -211,7 +211,7 @@ $(function () {
                     }
                 }
             }
-        }), $("div.head-label").html('<h5 class="card-title mb-0">LIST OF DOCTORS</h5>')), 101);
+        }), $("div.head-label").html('<h5 class="card-title mb-0">LIST OF CONSULTANT</h5>')), 101);
 
     $(".datatables-basic tbody").on("click", ".delete-record", function () {
         var $row = $(this).closest("tr");

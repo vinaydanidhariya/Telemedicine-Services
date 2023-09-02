@@ -11,7 +11,7 @@ const authentication = require("../../middleware/login_module").check_auth;
 router.get("/add-doctor", authentication, checkAccess('admin/doctor/add-doctor'), async function (req, res, next) {
 	try {
 		res.render("doctors/add-doctor", {
-			title: "Doctor- Add Doctor",
+			title: "CONSULTANT- ADD CONSULTANT",
 		});
 	} catch (error) {
 		console.log(error);
@@ -262,7 +262,7 @@ router.get("/edit-doctor", authentication, checkAccess("admin/doctor/edit-doctor
 			const newData = data.toJSON()
 			const formattedDate = moment(data.dateOfBirth).format("DD/MM/YYYY");
 			res.render("doctors/edit-doctor", {
-				title: "DOCTORS",
+				title: "CONSULTANT EDIT",
 				data: newData,
 				formattedDate
 			});
@@ -413,7 +413,7 @@ router.post("/edit-doctor", authentication, checkAccess("admin/doctor/edit-docto
 router.get("/doctors-list", authentication, checkAccess("admin/doctor/doctors-list"), async function (req, res, next) {
 	try {
 		res.render("doctors/list-doctors", {
-			title: "DOCTORS",
+			title: "CONSULTANT LIST",
 		});
 	} catch (error) {
 		console.log(error);

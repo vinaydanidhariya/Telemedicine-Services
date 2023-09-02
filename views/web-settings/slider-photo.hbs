@@ -1,26 +1,3 @@
-<!-- Content wrapper -->
-<!-- Jquery js -->
-<script type="text/javascript" src="/assets/vendor/libs/jquery/jquery.js"></script>
-
-<!-- Popper js -->
-<script src="/assets/vendor/libs/popper/popper.js"></script>
-
-<!-- Bootstrap js -->
-<script src="/assets/vendor/js/bootstrap.js"></script>
-<link rel="stylesheet" href="/assets/vendor/libs/flatpickr/flatpickr.css" />
-<script src="/assets/vendor/libs/flatpickr/flatpickr.js"></script>
-
-<!-- jQuery Validation JS -->
-<script type="text/javascript" src="/assets/vendor/libs/jquery/jquery.validate.js"></script>
-<link rel="stylesheet" href="/assets/vendor/libs/sweetalert2/sweetalert2.css" />
-
-<script src="/assets/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
-<script src="/assets/vendor/libs/select2/select2.js"></script>
-<link rel="stylesheet" href="/assets/vendor/libs/select2/select2.css">
-<link rel="stylesheet" href="../../assets/vendor/libs/quill/typography.css" />
-<link rel="stylesheet" href="../../assets/vendor/libs/quill/katex.css" />
-<link rel="stylesheet" href="../../assets/vendor/libs/quill/editor.css" />
-
 <div class="content-wrapper">
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -89,63 +66,63 @@
             },
             messages: {
                 slider_title: {
-            required: '*Please enter title ',
-        },
-            short_description: {
-            required: '*Please enter description',
-        },
-            photo: {
-            required: '*Please enter chose photo',
-        },
+                    required: '*Please enter title ',
+                },
+                short_description: {
+                    required: '*Please enter description',
+                },
+                photo: {
+                    required: '*Please enter chose photo',
+                },
             },
-        highlight: function (element, errorClass, validClass) {
-            $(element).closest('.form-group').addClass(errorClass).removeClass(validClass);
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).closest('.form-group').removeClass(errorClass).addClass(validClass);
-        },
-        errorPlacement: function (error, element) {
-            error.insertAfter(element);
-        },
-        submitHandler: function (form) {
-            if ($("#submit").valid()) {
-                var sliderForm = $('#add-slider');
-                var sliderformdata = new FormData();
-                sliderformdata.append('slider_title', sliderForm.find('[name="slider_title"]').val());
-                sliderformdata.append('short_description', sliderForm.find('[name="short_description"]').val());
-                const image = sliderForm.find('[name="slider_photo"]').prop('files')[0];
-                sliderformdata.append('slider_photo', image);
+            highlight: function (element, errorClass, validClass) {
+                $(element).closest('.form-group').addClass(errorClass).removeClass(validClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).closest('.form-group').removeClass(errorClass).addClass(validClass);
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element);
+            },
+            submitHandler: function (form) {
+                if ($("#submit").valid()) {
+                    var sliderForm = $('#add-slider');
+                    var sliderformdata = new FormData();
+                    sliderformdata.append('slider_title', sliderForm.find('[name="slider_title"]').val());
+                    sliderformdata.append('short_description', sliderForm.find('[name="short_description"]').val());
+                    const image = sliderForm.find('[name="slider_photo"]').prop('files')[0];
+                    sliderformdata.append('slider_photo', image);
 
-                $.ajax({
-                    url: '/web-setting/add-slider-photo',
-                    type: 'POST',
-                    data: sliderformdata,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        if (response.type === 'success') {
-                            Swal.fire({
-                                icon: "success",
-                                title: response.message,
-                                showConfirmButton: !1,
-                                timer: 1500,
-                                customClass: {
-                                    confirmButton: "btn btn-primary"
-                                },
-                                buttonsStyling: !1,
-                            }).then(function () {
-                                window.location.href = window.location.href;
-                            });
+                    $.ajax({
+                        url: '/web-setting/add-slider-photo',
+                        type: 'POST',
+                        data: sliderformdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            if (response.type === 'success') {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: response.message,
+                                    showConfirmButton: !1,
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: "btn btn-primary"
+                                    },
+                                    buttonsStyling: !1,
+                                }).then(function () {
+                                    window.location.href = window.location.href;
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            // Handle the error if the AJAX request fails
+                            console.error('Error saving event post:', error);
                         }
-                    },
-                    error: function (error) {
-                        // Handle the error if the AJAX request fails
-                        console.error('Error saving event post:', error);
-                    }
-                });
+                    });
+                }
             }
-        }
         });
     });
 </script>
