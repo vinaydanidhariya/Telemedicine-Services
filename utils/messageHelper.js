@@ -35,8 +35,8 @@ const getTextMessageInput = (recipient, text) => {
 
 async function findAvailableTimeSlots(from, to, doctorId, user) {
 
-    const startDate = new Date(from).toUTCString();
-    const endDate = new Date(to).toUTCString();;
+    const startDate = new Date(from);
+    const endDate = new Date(to);
     console.log(startDate);
     console.log(endDate);
     const events = await db.Schedule.findAll({
@@ -44,10 +44,10 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
             doctorId,
             // Apply filtering based on start_date and end_date
             start_date: {
-                [Op.between]: [startDate, endDate],
+                [Op.gte]: startDate
             },
             end_date: {
-                [Op.between]: [startDate, endDate],
+                [Op.lte]:  endDate,
             },
         },
         attributes: ['start_date', 'end_date'],
