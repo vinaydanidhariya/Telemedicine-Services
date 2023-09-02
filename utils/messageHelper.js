@@ -41,7 +41,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
     console.log(endDate);
     const events = await db.Schedule.findAll({
         where: {
-            doctorId,
+            doctorId:parseInt(doctorId),
             // Apply filtering based on start_date and end_date
             start_date: {
                 [Op.gte]: startDate
