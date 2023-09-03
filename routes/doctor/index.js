@@ -67,22 +67,22 @@ router.get(
 					"medicalInfo",
 					"prescriptionMsg",
 					"note",
-					[
-						db.sequelize.fn(
-							"to_char",
-							db.sequelize.col("createdAt"),
-							"DD/MM/YYYY"
-						),
-						"createdAt",
-					],
-					[
-						db.sequelize.fn(
-							"to_char",
-							db.sequelize.col("updatedAt"),
-							"DD/MM/YYYY"
-						),
-						"updatedAt",
-					],
+					// [
+					// 	db.sequelize.fn(
+					// 		"to_char",
+					// 		db.sequelize.col("createdAt"),
+					// 		"DD/MM/YYYY"
+					// 	),
+					// 	"createdAt",
+					// ],
+					// [
+					// 	db.sequelize.fn(
+					// 		"to_char",
+					// 		db.sequelize.col("updatedAt"),
+					// 		"DD/MM/YYYY"
+					// 	),
+					// 	"updatedAt",
+					// ],
 				],
 				include: [
 					{

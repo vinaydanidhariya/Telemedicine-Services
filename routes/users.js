@@ -146,7 +146,7 @@ router.post("/doctor-list", async function (req, res, next) {
 	}
 });
 
-router.post("/doctor-memeber-list", async function (req, res, next) {
+router.post("/doctor-member-list", async function (req, res, next) {
 	console.log(req.body);
 	try {
 		const { code, department } = req.body;
@@ -162,7 +162,9 @@ router.post("/doctor-memeber-list", async function (req, res, next) {
 					"department",
 					"qualifications",
 					"photo_url",
+					"price",
 				],
+				raw : true
 			});
 			console.log(USER);
 			res.send(USER);
