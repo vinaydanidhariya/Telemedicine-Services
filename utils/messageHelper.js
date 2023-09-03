@@ -33,8 +33,8 @@ const getTextMessageInput = (recipient, text) => {
 };
 
 async function findAvailableTimeSlots(from, to, doctorId, user) {
-	let startDate = moment.utc(from, "YYYY-MM-DD HH:mm");
-	let endDate = moment.utc(to, "YYYY-MM-DD HH:mm");
+	let startDate = moment(from, "YYYY-MM-DD HH:mm");
+	let endDate = moment(to, "YYYY-MM-DD HH:mm");
 
 	console.log(startDate, "utcTIME");
 	console.log(endDate, "utcTIME");
@@ -58,41 +58,38 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	// Extract start and end times from events
 	const eventTimeRanges = events.map((event) => {
 		return {
-			start: moment.utc(event.start_date),
-			end: moment.utc(event.end_date),
+			start: moment(event.start_date),
+			end: moment(event.end_date),
 		};
 	});
 	console.log(eventTimeRanges);
 	function generateTimeSlotsFromEventRanges(eventTimeRanges) {
 		const timeSlots = [];
-		const now = moment.utc(); // Get the current date and time
+		const now = moment(); // Get the current date and time in UTC
 
 		for (const eventRange of eventTimeRanges) {
-			let currentTime = new Date(eventRange.start);
+			let currentTime = moment(eventRange.start); // Convert eventRange.start to a Moment.js object
 
 			// If the eventRange.start is in the past, set currentTime to now
-			if (currentTime < now) {
-				currentTime = now;
+			if (currentTime.isBefore(now)) {
+				currentTime = now.clone(); // Use clone to avoid modifying the original moment object
 			}
 
 			// Round up the start time minutes to the nearest multiple of 15
 			const startRoundedMinutes =
-				Math.ceil(currentTime.getMinutes() / 15) * 15;
-			currentTime.setMinutes(startRoundedMinutes);
+				Math.ceil(currentTime.minutes() / 15) * 15;
+			currentTime.minutes(startRoundedMinutes);
 
-			while (currentTime < eventRange.end) {
+			while (currentTime.isBefore(eventRange.end)) {
 				// Format the time in AM/PM format (e.g., "8:00 AM")
-				const timeString = currentTime.toLocaleTimeString([], {
-					hour: "numeric",
-					minute: "2-digit",
-				});
+				const timeString = currentTime.format("h:mm A");
 
 				// Only add time slots that are greater than or equal to now
-				if (currentTime >= now) {
+				if (currentTime.isSameOrAfter(now)) {
 					timeSlots.push(timeString);
 				}
 
-				currentTime.setMinutes(currentTime.getMinutes() + 15); // Increment by 15 minutes
+				currentTime.add(15, "minutes"); // Increment by 15 minutes
 			}
 		}
 
