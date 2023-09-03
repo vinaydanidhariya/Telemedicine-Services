@@ -65,10 +65,10 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	console.log(eventTimeRanges);
 	function generateTimeSlotsFromEventRanges(eventTimeRanges) {
 		const timeSlots = [];
-		const now = moment().utcOffset("+05:30").format(); // Get the current date and time in UTC
+		const now = moment().utc(); // Get the current date and time in UTC
 
 		for (const eventRange of eventTimeRanges) {
-			let currentTime = moment(eventRange.start).utcOffset("+05:30").format(); // Convert eventRange.start to a Moment.js object
+			let currentTime = moment(eventRange.start).utc(); // Convert eventRange.start to a Moment.js object in UTC
 
 			// If the eventRange.start is in the past, set currentTime to now
 			if (currentTime.isBefore(now)) {
@@ -81,8 +81,10 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 			currentTime.minutes(startRoundedMinutes);
 
 			while (currentTime.isBefore(eventRange.end)) {
-				// Format the time in AM/PM format (e.g., "8:00 AM")
-				const timeString = currentTime.format("h:mm A");
+				// Format the time in AM/PM format (e.g., "8:00 AM") in UTC
+				const timeString = currentTime
+					.utcOffset("+05:30")
+					.format("h:mm A");
 
 				// Only add time slots that are greater than or equal to now
 				if (currentTime.isSameOrAfter(now)) {
