@@ -37,7 +37,14 @@
         scheduler.setLoadMode("day");
 
         // Load data from the backend
-        scheduler.load("/doctor/events", "json");
+        scheduler.load("/doctor/events", "json", function () {
+            // After loading data, loop through events and convert UTC dates to local time zone
+            scheduler.forEachEvent(function (event) {
+                event.start_date = moment(event.start_date).utc().toDate();
+                event.end_date = moment(event.end_date).utc().toDate();
+            });
+        });
+
 
         scheduler.plugins({
             recurring: true
@@ -57,7 +64,6 @@
 </script>
 
 <body>
-    <h1>asdad</h1>
     <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
         <div class="dhx_cal_navline">
             <div class="dhx_cal_prev_button">&nbsp;</div>
