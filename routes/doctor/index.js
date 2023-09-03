@@ -205,22 +205,22 @@ router.get("/prescription-pdf/:id", async function (req, res, next) {
 				"medicalInfo",
 				"prescriptionMsg",
 				"note",
-				[
-					db.sequelize.fn(
-						"to_char",
-						db.sequelize.col("createdAt"),
-						"DD/MM/YYYY"
-					),
-					"createdAt",
-				],
-				[
-					db.sequelize.fn(
-						"to_char",
-						db.sequelize.col("updatedAt"),
-						"DD/MM/YYYY"
-					),
-					"updatedAt",
-				],
+				// [
+				// 	db.sequelize.fn(
+				// 		"to_char",
+				// 		db.sequelize.col("createdAt"),
+				// 		"DD/MM/YYYY"
+				// 	),
+				// 	"createdAt",
+				// ],
+				// [
+				// 	db.sequelize.fn(
+				// 		"to_char",
+				// 		db.sequelize.col("updatedAt"),
+				// 		"DD/MM/YYYY"
+				// 	),
+				// 	"updatedAt",
+				// ],
 			],
 			include: [
 				{
@@ -323,7 +323,7 @@ router.post("/download-pdf", async (req, res) => {
 			pdfBuffer,
 			req,
 			res,
-			recipientNumber
+			"91" + recipientNumber
 		);
 
 		res.status(200).send({
@@ -368,30 +368,30 @@ async function generatePDF(req, prescriptionId) {
 	return pdfBuffer;
 }
 
-async function sendEmailWithRetry(pdfBuffer, req, res) {
-	const retryCount = 3;
-	const delay = 5000;
-	for (let attempt = 1; attempt <= retryCount; attempt++) {
-		try {
-			// Send email and break out of the loop if successful
-			if (await sendEmail(pdfBuffer)) {
-				console.log("Email sent successfully");
-				break; // Break the loop if both email and Facebook API succeed
-			}
-		} catch (error) {
-			console.error(`Attempt ${attempt} failed with error:`, error);
-			if (attempt < retryCount) {
-				console.log(`Retrying in ${delay / 1000} seconds...`);
-				await new Promise((resolve) => setTimeout(resolve, delay));
-			} else {
-				console.error(
-					"All retry attempts failed. Email could not be sent."
-				);
-				res.status(500).send("Email could not be sent.");
-			}
-		}
-	}
-}
+// async function sendEmailWithRetry(pdfBuffer, req, res) {
+// 	const retryCount = 3;
+// 	const delay = 5000;
+// 	for (let attempt = 1; attempt <= retryCount; attempt++) {
+// 		try {
+// 			// Send email and break out of the loop if successful
+// 			if (await sendEmail(pdfBuffer)) {
+// 				console.log("Email sent successfully");
+// 				break; // Break the loop if both email and Facebook API succeed
+// 			}
+// 		} catch (error) {
+// 			console.error(`Attempt ${attempt} failed with error:`, error);
+// 			if (attempt < retryCount) {
+// 				console.log(`Retrying in ${delay / 1000} seconds...`);
+// 				await new Promise((resolve) => setTimeout(resolve, delay));
+// 			} else {
+// 				console.error(
+// 					"All retry attempts failed. Email could not be sent."
+// 				);
+// 				res.status(500).send("Email could not be sent.");
+// 			}
+// 		}
+// 	}
+// }
 
 async function sendEmail(pdfBuffer, userInfo) {
 	try {
