@@ -216,9 +216,9 @@ router.get('/oauth2callback', async (req, res) => {
 });
 
 router.get('/google-redirect', async (req, res) => {
-    // const { tokens } = await oauth2Client.getToken(req.query.code);
-    // console.log(tokens);
-    // oauth2Client.setCredentials(tokens);
+    const { tokens } = await oauth2Client.getToken(req.query.code);
+    console.log(tokens);
+    oauth2Client.setCredentials(tokens);
 
     let result = await meet({
         clientId: Config.GoogleCred.clientId,
