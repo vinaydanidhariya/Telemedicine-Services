@@ -77,8 +77,8 @@ router.post("/payment-callback1", async function (req, res, next) {
                         { useStat: "PAYMENT-DONE", paymentId: orderId },
                         { where: { phone: mobile } })
 
-                    const message = await transactionMessage(name, amount / 100, orderId);
-                    await sendRegistrationMessage(mobile, `${message}`);
+                    // const message = await transactionMessage(name, amount / 100, orderId);
+                    // await sendRegistrationMessage(mobile, `${message}`);
 
                     const userInfo = await db.WhatsappUser.findOne(
                         {
@@ -125,7 +125,7 @@ router.post("/payment-callback1", async function (req, res, next) {
                     try {
                         const meetOptions = {
                             clientId: Config.GoogleCred.clientId,
-                            refreshToken: "1//0gR-aOkH6Lg0ZCgYIARAAGBASNwF-L9IrOB0pTheVKO5IomFEKgUdu2oJ6vWa9DdvSN6ckQhKNFw9f882LfXzfyv5pUPUjqbXPdA",
+                            refreshToken: "1//0giYcRIolDtmKCgYIARAAGBASNwF-L9Irb8kmNj9f9mQRAq9tVn8BNtqZaEEc7ExHzkq2EqnaJWXTLkftBCY6Iy9MBbew0dirar0",
                             date: meetFormattedDate,
                             startTime: slotsStart,
                             endTime: slotsEnd,
