@@ -38,8 +38,8 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	console.log(to);
 
 	// Convert 'from' and 'to' to UTC
-	const fromUtc = moment.utc(moment(from + " 00:00", 'DD-MM-YYYY HH:mm'), 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
-	const toUtc = moment.utc(moment(to + " 22:00", 'DD-MM-YYYY HH:mm'), 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
+	const fromUtc = moment.utc(from);
+	const toUtc = moment.utc(to);
 
 	console.log("=============FROM (UTC)===========");
 	console.log(fromUtc);
@@ -53,15 +53,12 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 				[Op.gte]: fromUtc,
 			},
 			end_date: {
-				[Op.lte]: moment.utc(moment(toUtc).add(1, "days"), 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm'),
+				[Op.lte]: toUtc,
 			},
 		},
 		attributes: ["start_date", "end_date"],
 		raw: true,
 	});
-
-	console.log("events===================>");
-	console.log(events);
 
 	console.log("events===================>");
 	console.log(events);
