@@ -102,23 +102,12 @@ $(function () {
                 targets: 10,
                 responsivePriority: 1
             },
+            
             {
                 targets: 11,
                 orderable: false,
                 searchable: false,
                 title: "Write Prescription",
-                render: function (data, type, row, meta) {
-                    return `
-                        <a href="javascript:;" class="btn btn-sm btn-icon item-edit">
-                            <i class="bx bxs-edit"></i>
-                        </a>`;
-                }
-            },
-            {
-                targets: 12,
-                orderable: false,
-                searchable: false,
-                title: "Prescription Document",
                 render: function (data, type, row, meta) {
                     return `
                         <a href="javascript:;" class="btn btn-sm btn-icon send-btn">
