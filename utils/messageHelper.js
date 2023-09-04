@@ -36,16 +36,12 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	console.log("=============FROM===========");
 	console.log(from);
 	console.log(to);
-	console.log(moment(x + "18:30"));
-	console.log(moment(y + "18:30").add(1, "days"));
 	console.log("=============FROM===========");
-	let startDate = moment(from, "YYYY-MM-DD HH:mm");
-	let endDate = moment(to, "YYYY-MM-DD HH:mm");
 
-	console.log(startDate, "utcTIME");
-	console.log(endDate, "utcTIME");
 	let x = from.slice(0, 10);
 	let y = to.slice(0, 10);
+	console.log(moment(x + "18:30"));
+	console.log(moment(y + "18:30").add(1, "days"));
 	const events = await db.Schedule.findAll({
 		where: {
 			doctorId: parseInt(doctorId),
