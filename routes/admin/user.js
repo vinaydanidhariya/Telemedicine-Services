@@ -91,6 +91,7 @@ router.post("/", loginLimiter, function (req, res, next) {
 router.get("/verify-otp", function (req, res, next) {
 	res.render("login/auth-otp", {
 		layout: false,
+		email: req.user.email,
 		title: "Verify Otp",
 	});
 });
