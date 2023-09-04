@@ -153,7 +153,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 		if (
 			time.isBetween(
 				moment("5:59 AM", "h:mm A"),
-				moment("11:59 PM", "h:mm A")
+				moment("11:59 AM", "h:mm A")
 			)
 		) {
 			morningSlots.push(slot);
@@ -174,7 +174,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 		} else if (
 			time.isBetween(
 				moment("8:00 PM", "h:mm A"),
-				moment("11:59 AM", "h:mm A").add(1, "day")
+				moment("11:59 AM", "h:mm A")
 			)
 		) {
 			nightSlots.push(slot);
