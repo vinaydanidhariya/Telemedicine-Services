@@ -378,11 +378,11 @@ async function SendSlotMessages2(recipientNumber, type) {
 	const [fromHours, fromMinutes] = onlineConsultationTimeFrom.split(":");
 	const [toHours, toMinutes] = onlineConsultationTimeTo.split(":");
 
-	const from = new Date(userAppointmentDate);
-	from.setHours(parseInt(fromHours), parseInt(fromMinutes));
+	const from = moment(userAppointmentDate);
+	from.setHours(parseInt(fromHours), parseInt(fromMinutes)).utc();
 
-	const to = new Date(userAppointmentDate);
-	to.setHours(parseInt(toHours), parseInt(toMinutes));
+	const to = moment(userAppointmentDate);
+	to.setHours(parseInt(toHours), parseInt(toMinutes)).utc();
 	console.log("============================================================");
 	console.log(from, to);
 	console.log("============================================================");
