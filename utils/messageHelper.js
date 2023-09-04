@@ -37,23 +37,15 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	console.log(from);
 	console.log(to);
 
-	// Convert 'from' and 'to' to UTC
-	const fromUtc = moment.utc(from);
-	const toUtc = moment.utc(to);
-
-	console.log("=============FROM (UTC)===========");
-	console.log(fromUtc);
-	console.log(toUtc);
-
 	const events = await db.Schedule.findAll({
 		where: {
 			doctorId: parseInt(doctorId),
 			// Apply filtering based on start_date and end_date in UTC
 			start_date: {
-				[Op.gte]: fromUtc,
+				[Op.gte]: from,
 			},
 			end_date: {
-				[Op.lte]: toUtc,
+				[Op.lte]: to,
 			},
 		},
 		attributes: ["start_date", "end_date"],
@@ -228,15 +220,20 @@ async function SendSlotMessages(recipientNumber, res) {
 	const [toHours, toMinutes] = onlineConsultationTimeTo.split(":");
 
 
-	const from = new Date(userAppointmentDate);
-	from.setHours(parseInt(fromHours), parseInt(fromMinutes));
+	// Convert onlineConsultationTimeFrom from IST to UTC
+	const fromUtc = moment(userAppointmentDate)
+		.utcOffset(0)
+		.set({ hour: parseInt(fromHours), minute: parseInt(fromMinutes) });
 
-	const to = new Date(userAppointmentDate);
-	to.setHours(parseInt(toHours), parseInt(toMinutes));
+	// Convert onlineConsultationTimeTo from IST to UTC
+	const toUtc = moment(userAppointmentDate)
+		.utcOffset(0)
+		.set({ hour: parseInt(toHours), minute: parseInt(toMinutes) });
+
 	console.log("============================================================");
-	console.log(from, to);
+	console.log(fromUtc, toUtc);
 	console.log("============================================================");
-	const timeSlots = await findAvailableTimeSlots(from, to, userId, user);
+	const timeSlots = await findAvailableTimeSlots(fromUtc, toUtc, userId, user);
 	// if (true) {
 	// 	await sendDoctorDepartmentList2(recipientNumber, [
 	// 		{
@@ -827,6 +824,7 @@ const sendDoctorDepartmentList = (recipient, listOfDoctorDepartment) => {
 		console.log(error);
 	}
 };
+
 const sendDoctorDepartmentList2 = (recipient, listOfDoctorDepartment) => {
 	try {
 		let newMessageObject = messageObject(recipient);
