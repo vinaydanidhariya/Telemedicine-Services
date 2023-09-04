@@ -1064,7 +1064,7 @@ const tocBlock = {
 		text: "ChildDR 🏥",
 	},
 	body: {
-		text: `As per govenment rules and policies we are bound to read and follow certain regulation and policies we insist you to read it first. link http://google.com`,
+		text: `As per govenment rules and policies we are bound to read and follow certain regulation and policies we insist you to read it first. link https://vinaydanidhariya.github.io/CHILD_DR-FrontEnd/terms-of-service.html`,
 	},
 	footer: {
 		text: "Please read Term & Conditions above.",

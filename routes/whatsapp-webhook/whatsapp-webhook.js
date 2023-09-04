@@ -60,7 +60,7 @@ router.post("/", async (req, res) => {
 			switch (messageType) {
 				case "text":
 					let textMessage = message.text.body;
-					if (message.text.body === "Removed") {
+					if (message.text.body === "Hello") {
 						await db.WhatsappUser.update(
 							{
 								userStat: "TERM-CONDITIONS",
