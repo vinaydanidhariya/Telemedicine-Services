@@ -43,12 +43,12 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 		where: {
 			doctorId: parseInt(doctorId),
 			// Apply filtering based on start_date and end_date
-			start_date: {
-				[Op.between]: [startDate, endDate],
-			},
-			end_date: {
-				[Op.between]: [startDate, endDate],
-			},
+			// start_date: {
+			// 	[Op.between]: [startDate, endDate],
+			// },
+			// end_date: {
+			// 	[Op.between]: [startDate, endDate],
+			// },
 		},
 		attributes: ["start_date", "end_date"],
 		raw: true,
@@ -234,7 +234,7 @@ async function SendSlotMessages(recipientNumber) {
 		await sendRegistrationMessage(
 			recipientNumber,
 			"🙁 Sorry, but we couldn't find any available slots for this doctor on the selected date.\n\n" +
-				"Please choose a different date or try again."
+			"Please choose a different date or try again."
 		);
 		await db.WhatsappUser.update(
 			{ userStat: "DATE-SELECTION" },
