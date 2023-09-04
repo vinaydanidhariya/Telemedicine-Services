@@ -48,10 +48,10 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 			doctorId: parseInt(doctorId),
 			// Apply filtering based on start_date and end_date
 			start_date: {
-				[Op.gte]: from,
+				[Op.gte]: moment(from).utcOffset("+05:30"),
 			},
 			end_date: {
-				[Op.lte]: to,
+				[Op.lte]: moment(to).utcOffset("+05:30"),
 			},
 		},
 		attributes: ["start_date", "end_date"],
@@ -223,8 +223,6 @@ async function SendSlotMessages(recipientNumber, res) {
 	const [fromHours, fromMinutes] = onlineConsultationTimeFrom.split(":");
 	const [toHours, toMinutes] = onlineConsultationTimeTo.split(":");
 
-	fromHours = fromHours + 6;
-	toHours = toHours + 6;
 
 	const from = new Date(userAppointmentDate);
 	from.setHours(parseInt(fromHours), parseInt(fromMinutes));
