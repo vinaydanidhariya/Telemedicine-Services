@@ -39,17 +39,17 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	from = moment(from).format('DD-MM-YYYY')
 	to = moment(to).format('DD-MM-YYYY')
 	console.log("=============FROM===========");
-	console.log(moment(x + "18:30"));
-	console.log(moment(y + "18:30").add(1, "days"));
+	console.log(moment(from + "18:30"));
+	console.log(moment(to + "18:30").add(1, "days"));
 	const events = await db.Schedule.findAll({
 		where: {
 			doctorId: parseInt(doctorId),
 			// Apply filtering based on start_date and end_date
 			start_date: {
-				[Op.gte]: moment(x + "18:30"),
+				[Op.gte]: moment(from + "18:30"),
 			},
 			end_date: {
-				[Op.lte]: moment(y + "18:30").add(1, "days"),
+				[Op.lte]: moment(to + "18:30").add(1, "days"),
 			},
 		},
 		attributes: ["start_date", "end_date"],
