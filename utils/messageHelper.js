@@ -139,49 +139,33 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	const afternoonSlots = [];
 	const eveningSlots = [];
 	const nightSlots = [];
+	const midnight = [];
 	timeSlots.forEach((slot) => {
 		const time = moment(slot, "h:mm A"); // Parse the time slot using Moment.js
 
-		if (
-			time.isBetween(
-				moment("8:00 AM", "h:mm A"),
-				moment("12:00 PM", "h:mm A")
-			)
-		) {
+		if (time.isBetween(moment("8:00 AM", "h:mm A"), moment("12:00 PM", "h:mm A"))) {
 			morningSlots.push(slot);
-		} else if (
-			time.isBetween(
-				moment("1:00 PM", "h:mm A"),
-				moment("5:00 PM", "h:mm A")
-			)
-		) {
+		} else if (time.isBetween(moment("12:00 PM", "h:mm A"), moment("5:00 PM", "h:mm A"))) {
 			afternoonSlots.push(slot);
-		} else if (
-			time.isBetween(
-				moment("5:00 PM", "h:mm A"),
-				moment("8:00 PM", "h:mm A")
-			)
-		) {
+		} else if (time.isBetween(moment("5:00 PM", "h:mm A"), moment("8:00 PM", "h:mm A"))) {
 			eveningSlots.push(slot);
-		} else if (
-			time.isBetween(
-				moment("8:00 PM", "h:mm A"),
-				moment("12:00 AM", "h:mm A").add(1, "day")
-			)
-		) {
+		} else if (time.isBetween(moment("8:00 PM", "h:mm A"), moment("12:00 AM", "h:mm A").add(1, "day"))) {
 			nightSlots.push(slot);
+		} else if (time.isBetween(moment("8:00 AM", "h:mm A"), moment("12:00 AM", "h:mm A"))) {
+			midnight.push(slot);
 		}
 	});
 	console.log("morningSlots", morningSlots);
 	console.log("afternoonSlots", afternoonSlots);
 	console.log("eveningSlots", eveningSlots);
 	console.log("nightSlots", nightSlots);
-
+	console.log("midnight", midnight);
 	return {
 		morningSlots: morningSlots,
 		afternoonSlots: afternoonSlots,
 		eveningSlots: eveningSlots,
 		nightSlots: nightSlots,
+		midnight: midnight
 	};
 }
 
@@ -224,12 +208,7 @@ async function SendSlotMessages(recipientNumber) {
 			title: `${timePeriod}Time: ${time}`,
 			description: "Duration: 15 minutes",
 		}));
-	if (
-		!timeSlots.morningSlots.length &&
-		!timeSlots.afternoonSlots.length &&
-		!timeSlots.eveningSlots.length &&
-		!timeSlots.nightSlots.length
-	) {
+	if (!timeSlots.morningSlots.length && !timeSlots.afternoonSlots.length && !timeSlots.eveningSlots.length && !timeSlots.nightSlots.length && !timeSlots.midnight.length) {
 		// Inform the user that the doctor is not available
 		await sendRegistrationMessage(
 			recipientNumber,
@@ -243,25 +222,18 @@ async function SendSlotMessages(recipientNumber) {
 		sendAppointmentDateReplyButton(recipientNumber);
 		return;
 	}
-	const convertedMorningSlots = timeSlotConvert(
-		timeSlots.morningSlots,
-		"Morning"
-	);
-	const convertedAfternoonSlots = timeSlotConvert(
-		timeSlots.afternoonSlots,
-		"Afternoon"
-	);
-	const convertedEveningSlots = timeSlotConvert(
-		timeSlots.eveningSlots,
-		"Evening"
-	);
+	const convertedMorningSlots = timeSlotConvert(timeSlots.morningSlots, "Morning");
+	const convertedAfternoonSlots = timeSlotConvert(timeSlots.afternoonSlots, "Afternoon");
+	const convertedEveningSlots = timeSlotConvert(timeSlots.eveningSlots, "Evening");
 	const convertedNightSlots = timeSlotConvert(timeSlots.nightSlots, "Night");
+	const convertedMidNightSlots = timeSlotConvert(timeSlots.midnight, "MidNight");
 	console.log(
 		"message",
 		convertedMorningSlots,
 		convertedAfternoonSlots,
 		convertedEveningSlots,
-		convertedNightSlots
+		convertedNightSlots,
+		convertedMidNightSlots
 	);
 
 	const sendTimeSlotsChunks = async (recipientNumber, slots, timePeriod) => {
@@ -276,22 +248,11 @@ async function SendSlotMessages(recipientNumber) {
 		}
 	};
 
-	await sendTimeSlotsChunks(
-		recipientNumber,
-		convertedMorningSlots,
-		"Morning"
-	);
-	await sendTimeSlotsChunks(
-		recipientNumber,
-		convertedAfternoonSlots,
-		"Afternoon"
-	);
-	await sendTimeSlotsChunks(
-		recipientNumber,
-		convertedEveningSlots,
-		"Evening"
-	);
+	await sendTimeSlotsChunks(recipientNumber, convertedMorningSlots, "Morning");
+	await sendTimeSlotsChunks(recipientNumber, convertedAfternoonSlots, "Afternoon");
+	await sendTimeSlotsChunks(recipientNumber, convertedEveningSlots, "Evening");
 	await sendTimeSlotsChunks(recipientNumber, convertedNightSlots, "Night");
+	await sendTimeSlotsChunks(recipientNumber, convertedMidNightSlots, "MidNight");
 }
 
 let messageObject = (recipient) => {

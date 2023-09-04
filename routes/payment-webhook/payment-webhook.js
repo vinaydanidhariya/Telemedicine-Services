@@ -7,7 +7,14 @@ const Config = require('../../config/config.json')[process.env.NODE_ENV];
 const db = require('../../models')
 const { sendRegistrationMessage, getPaymentTemplatedMessageInput, sendMessage, transactionMessage } = require('../../utils/messageHelper');
 const { appointmentMessage } = require('../../utils/messages');
-
+const nodeMailer = require('nodemailer')
+const transporter = nodeMailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: Config.nodemailer.auth.user,
+        pass: Config.nodemailer.auth.pass
+    }
+});
 router.post("/create-payment", async function (req, res, next) {
     try {
         let { userId, fullName, price, email, phone } = req.body
@@ -169,6 +176,18 @@ router.post("/payment-callback1", async function (req, res, next) {
                             data1 = appointmentMessage(userInfo.fullName, formattedDate, userInfo.appointmentTime, "FAILED CASE LINK")
                         }
                         await sendRegistrationMessage(mobile, data1);
+                        await sendRegistrationMessage(`91` + doctorInfo.phone, `Hello Doctor, You have new appointment at ${meetFormattedDate} from ${slotsStart} - to ${slotsEnd} with ${userInfo.fullName}, Link to join ${result.link}`);
+                        const mailOptions = {
+                            from: nodemailer.auth.user,
+                            to: email,
+                            subject: 'Online Consultation Booked',
+                            text: `Hello, You have appointment at ${meetFormattedDate} from ${slotsStart} - to ${slotsEnd} with ${userInfo.fullName}. Link to join ${result.link}`
+                        };
+
+                        await transporter.sendMail(mailOptions);
+                        /**
+                         * SEND A MESSAGE TO DOCTOR AS WELL
+                         */
                         res.status(200).send('RECEIVED')
                     } catch (error) {
                         console.error("❌ Appointment scheduling failed:", error);
