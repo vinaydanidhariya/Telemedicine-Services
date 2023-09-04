@@ -179,7 +179,7 @@ router.post("/payment-callback1", async function (req, res, next) {
                         await sendRegistrationMessage(`91` + doctorInfo.phone, `Hello Doctor, You have new appointment at ${meetFormattedDate} from ${slotsStart} - to ${slotsEnd} with ${userInfo.fullName}, Link to join ${result.link}`);
                         const mailOptions = {
                             from: nodemailer.auth.user,
-                            to: email,
+                            to: [userInfo.email, doctorInfo.email],
                             subject: 'Online Consultation Booked',
                             text: `Hello, You have appointment at ${meetFormattedDate} from ${slotsStart} - to ${slotsEnd} with ${userInfo.fullName}. Link to join ${result.link}`
                         };

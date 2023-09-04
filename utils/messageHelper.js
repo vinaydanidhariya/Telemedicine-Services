@@ -33,8 +33,12 @@ const getTextMessageInput = (recipient, text) => {
 };
 
 async function findAvailableTimeSlots(from, to, doctorId, user) {
-	let startDate = moment(from, "YYYY-MM-DD HH:mm");
-	let endDate = moment(to, "YYYY-MM-DD HH:mm");
+	console.log("=============FROM===========");
+	console.log(from);
+	console.log(to);
+	console.log("=============FROM===========");
+	let startDate = moment(from, "YYYY-MM-DD HH:mm").utc();
+	let endDate = moment(to, "YYYY-MM-DD HH:mm").utc();
 
 	console.log(startDate, "utcTIME");
 	console.log(endDate, "utcTIME");
@@ -43,12 +47,12 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 		where: {
 			doctorId: parseInt(doctorId),
 			// Apply filtering based on start_date and end_date
-			// start_date: {
-			// 	[Op.between]: [startDate, endDate],
-			// },
-			// end_date: {
-			// 	[Op.between]: [startDate, endDate],
-			// },
+			start_date: {
+				[Op.gte]: from,
+			},
+			end_date: {
+				[Op.lte]: to,
+			},
 		},
 		attributes: ["start_date", "end_date"],
 		raw: true,
@@ -142,16 +146,40 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	const midnight = [];
 	timeSlots.forEach((slot) => {
 		const time = moment(slot, "h:mm A"); // Parse the time slot using Moment.js
-
-		if (time.isBetween(moment("8:00 AM", "h:mm A"), moment("12:00 PM", "h:mm A"))) {
+		if (
+			time.isBetween(
+				moment("5:59 AM", "h:mm A"),
+				moment("11:59 PM", "h:mm A")
+			)
+		) {
 			morningSlots.push(slot);
-		} else if (time.isBetween(moment("12:00 PM", "h:mm A"), moment("5:00 PM", "h:mm A"))) {
+		} else if (
+			time.isBetween(
+				moment("12:00 PM", "h:mm A"),
+				moment("4:59 PM", "h:mm A")
+			)
+		) {
 			afternoonSlots.push(slot);
-		} else if (time.isBetween(moment("5:00 PM", "h:mm A"), moment("8:00 PM", "h:mm A"))) {
+		} else if (
+			time.isBetween(
+				moment("5:00 PM", "h:mm A"),
+				moment("7:59 PM", "h:mm A")
+			)
+		) {
 			eveningSlots.push(slot);
-		} else if (time.isBetween(moment("8:00 PM", "h:mm A"), moment("12:00 AM", "h:mm A").add(1, "day"))) {
+		} else if (
+			time.isBetween(
+				moment("8:00 PM", "h:mm A"),
+				moment("11:59 AM", "h:mm A").add(1, "day")
+			)
+		) {
 			nightSlots.push(slot);
-		} else if (time.isBetween(moment("8:00 AM", "h:mm A"), moment("12:00 AM", "h:mm A"))) {
+		} else if (
+			time.isBetween(
+				moment("12:00 AM", "h:mm A"),
+				moment("5:59 AM", "h:mm A")
+			)
+		) {
 			midnight.push(slot);
 		}
 	});
@@ -165,11 +193,12 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 		afternoonSlots: afternoonSlots,
 		eveningSlots: eveningSlots,
 		nightSlots: nightSlots,
-		midnight: midnight
+		midnight: midnight,
+		// totalLength: numberOf,
 	};
 }
 
-async function SendSlotMessages(recipientNumber) {
+async function SendSlotMessages(recipientNumber, res) {
 	const user = await db.WhatsappUser.findOne({
 		where: { phone: recipientNumber },
 		attributes: ["selectedDoctor", "appointmentDate", "appointmentTime"],
@@ -199,16 +228,57 @@ async function SendSlotMessages(recipientNumber) {
 
 	const to = new Date(userAppointmentDate);
 	to.setHours(parseInt(toHours), parseInt(toMinutes));
-
+	console.log("============================================================");
+	console.log(from, to);
+	console.log("============================================================");
 	const timeSlots = await findAvailableTimeSlots(from, to, userId, user);
-
+	// if (true) {
+	// 	await sendDoctorDepartmentList2(recipientNumber, [
+	// 		{
+	// 			id: "morning",
+	// 			title: "Morning",
+	// 			description: "Morning of the day",
+	// 		},
+	// 		{
+	// 			id: "afternoon",
+	// 			title: "Afternoon",
+	// 			description: "Afternoon of the day",
+	// 		},
+	// 		{
+	// 			id: "evening",
+	// 			title: "Evening",
+	// 			description: "Evening of the day",
+	// 		},
+	// 		{
+	// 			id: "night",
+	// 			title: "Night",
+	// 			description: "Night of the day",
+	// 		},
+	// 		{
+	// 			id: "midnight",
+	// 			title: "Midnight",
+	// 			description: "Midnight of the day",
+	// 		},
+	// 	]);
+	// 	await db.WhatsappUser.update(
+	// 		{ userStat: "PARTOFDAY" },
+	// 		{ where: { phone: recipientNumber } }
+	// 	);
+	// 	return;
+	// }
 	const timeSlotConvert = (slots, timePeriod) =>
 		slots.map((time, index) => ({
 			id: (index + 1).toString(),
 			title: `${timePeriod}Time: ${time}`,
 			description: "Duration: 15 minutes",
 		}));
-	if (!timeSlots.morningSlots.length && !timeSlots.afternoonSlots.length && !timeSlots.eveningSlots.length && !timeSlots.nightSlots.length && !timeSlots.midnight.length) {
+	if (
+		!timeSlots.morningSlots.length &&
+		!timeSlots.afternoonSlots.length &&
+		!timeSlots.eveningSlots.length &&
+		!timeSlots.nightSlots.length &&
+		!timeSlots.midnight.length
+	) {
 		// Inform the user that the doctor is not available
 		await sendRegistrationMessage(
 			recipientNumber,
@@ -222,11 +292,23 @@ async function SendSlotMessages(recipientNumber) {
 		sendAppointmentDateReplyButton(recipientNumber);
 		return;
 	}
-	const convertedMorningSlots = timeSlotConvert(timeSlots.morningSlots, "Morning");
-	const convertedAfternoonSlots = timeSlotConvert(timeSlots.afternoonSlots, "Afternoon");
-	const convertedEveningSlots = timeSlotConvert(timeSlots.eveningSlots, "Evening");
+	const convertedMorningSlots = timeSlotConvert(
+		timeSlots.morningSlots,
+		"Morning"
+	);
+	const convertedAfternoonSlots = timeSlotConvert(
+		timeSlots.afternoonSlots,
+		"Afternoon"
+	);
+	const convertedEveningSlots = timeSlotConvert(
+		timeSlots.eveningSlots,
+		"Evening"
+	);
 	const convertedNightSlots = timeSlotConvert(timeSlots.nightSlots, "Night");
-	const convertedMidNightSlots = timeSlotConvert(timeSlots.midnight, "MidNight");
+	const convertedMidNightSlots = timeSlotConvert(
+		timeSlots.midnight,
+		"MidNight"
+	);
 	console.log(
 		"message",
 		convertedMorningSlots,
@@ -248,11 +330,157 @@ async function SendSlotMessages(recipientNumber) {
 		}
 	};
 
-	await sendTimeSlotsChunks(recipientNumber, convertedMorningSlots, "Morning");
-	await sendTimeSlotsChunks(recipientNumber, convertedAfternoonSlots, "Afternoon");
-	await sendTimeSlotsChunks(recipientNumber, convertedEveningSlots, "Evening");
+	await sendTimeSlotsChunks(
+		recipientNumber,
+		convertedMorningSlots,
+		"Morning"
+	);
+	await sendTimeSlotsChunks(
+		recipientNumber,
+		convertedAfternoonSlots,
+		"Afternoon"
+	);
+	await sendTimeSlotsChunks(
+		recipientNumber,
+		convertedEveningSlots,
+		"Evening"
+	);
 	await sendTimeSlotsChunks(recipientNumber, convertedNightSlots, "Night");
-	await sendTimeSlotsChunks(recipientNumber, convertedMidNightSlots, "MidNight");
+	await sendTimeSlotsChunks(
+		recipientNumber,
+		convertedMidNightSlots,
+		"MidNight"
+	);
+}
+
+async function SendSlotMessages2(recipientNumber, type) {
+	const user = await db.WhatsappUser.findOne({
+		where: { phone: recipientNumber },
+		attributes: ["selectedDoctor", "appointmentDate", "appointmentTime"],
+		raw: true,
+	});
+	console.log(user);
+	const user_selected_doctor = user.selectedDoctor;
+	const doctor = await db.User.findOne({
+		where: { userId: user_selected_doctor },
+		attributes: [
+			"onlineConsultationTimeFrom",
+			"onlineConsultationTimeTo",
+			"userId",
+		],
+		raw: true,
+	});
+
+	const userAppointmentDate = new Date(user.appointmentDate);
+	const { onlineConsultationTimeFrom, onlineConsultationTimeTo, userId } =
+		doctor;
+
+	const [fromHours, fromMinutes] = onlineConsultationTimeFrom.split(":");
+	const [toHours, toMinutes] = onlineConsultationTimeTo.split(":");
+
+	const from = new Date(userAppointmentDate);
+	from.setHours(parseInt(fromHours), parseInt(fromMinutes));
+
+	const to = new Date(userAppointmentDate);
+	to.setHours(parseInt(toHours), parseInt(toMinutes));
+	console.log("============================================================");
+	console.log(from, to);
+	console.log("============================================================");
+	const timeSlots = await findAvailableTimeSlots(from, to, userId, user);
+	const timeSlotConvert = (slots, timePeriod) =>
+		slots.map((time, index) => ({
+			id: (index + 1).toString(),
+			title: `${timePeriod}Time: ${time}`,
+			description: "Duration: 15 minutes",
+		}));
+	if (
+		!timeSlots.morningSlots.length &&
+		!timeSlots.afternoonSlots.length &&
+		!timeSlots.eveningSlots.length &&
+		!timeSlots.nightSlots.length &&
+		!timeSlots.midnight.length
+	) {
+		// Inform the user that the doctor is not available
+		await sendRegistrationMessage(
+			recipientNumber,
+			"🙁 Sorry, but we couldn't find any available slots for this doctor on the selected date.\n\n" +
+			"Please choose a different date or try again."
+		);
+		await db.WhatsappUser.update(
+			{ userStat: "DATE-SELECTION" },
+			{ where: { phone: recipientNumber } }
+		);
+		sendAppointmentDateReplyButton(recipientNumber);
+		return;
+	}
+	const convertedMorningSlots = timeSlotConvert(
+		timeSlots.morningSlots,
+		"Morning"
+	);
+	const convertedAfternoonSlots = timeSlotConvert(
+		timeSlots.afternoonSlots,
+		"Afternoon"
+	);
+	const convertedEveningSlots = timeSlotConvert(
+		timeSlots.eveningSlots,
+		"Evening"
+	);
+	const convertedNightSlots = timeSlotConvert(timeSlots.nightSlots, "Night");
+	const convertedMidNightSlots = timeSlotConvert(
+		timeSlots.midnight,
+		"MidNight"
+	);
+	console.log(
+		"message",
+		convertedMorningSlots,
+		convertedAfternoonSlots,
+		convertedEveningSlots,
+		convertedNightSlots,
+		convertedMidNightSlots
+	);
+
+	const sendTimeSlotsChunks = async (recipientNumber, slots, timePeriod) => {
+		const chunkSize = 10;
+		for (let i = 0; i < slots.length; i += chunkSize) {
+			const chunk = slots.slice(i, i + chunkSize);
+			await sendTimeListAppointmentMessage(
+				recipientNumber,
+				chunk,
+				timePeriod
+			);
+		}
+	};
+	if (type == "morning") {
+		await sendTimeSlotsChunks(
+			recipientNumber,
+			convertedMorningSlots,
+			"Morning"
+		);
+	} else if (type == "afternoon") {
+		await sendTimeSlotsChunks(
+			recipientNumber,
+			convertedAfternoonSlots,
+			"Afternoon"
+		);
+	} else if (type == "evening") {
+		await sendTimeSlotsChunks(
+			recipientNumber,
+			convertedEveningSlots,
+			"Evening"
+		);
+	} else if (type == "night") {
+		await sendTimeSlotsChunks(
+			recipientNumber,
+			convertedNightSlots,
+			"Night"
+		);
+	} else if (type == "midnight") {
+		await sendTimeSlotsChunks(
+			recipientNumber,
+			convertedMidNightSlots,
+			"MidNight"
+		);
+	}
 }
 
 let messageObject = (recipient) => {
@@ -581,7 +809,27 @@ const sendDoctorDepartmentList = (recipient, listOfDoctorDepartment) => {
 			listOfDoctorDepartment
 		);
 		newMessageObject.interactive = newDrListInteractiveObject;
+		axios.post(
+			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+			newMessageObject,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
+	} catch (error) {
+		console.log(error);
+	}
+};
+const sendDoctorDepartmentList2 = (recipient, listOfDoctorDepartment) => {
+	try {
+		let newMessageObject = messageObject(recipient);
 
+		let newDrListInteractiveObject = DoctorDepartmentListInteractiveObject2(
+			listOfDoctorDepartment
+		);
+		newMessageObject.interactive = newDrListInteractiveObject;
 		axios.post(
 			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
 			newMessageObject,
@@ -642,6 +890,31 @@ const sendTimeListAppointmentMessage = async (
 	}
 };
 
+const DoctorDepartmentListInteractiveObject2 = (listOfDepartment) => {
+	return {
+		type: "list",
+		header: {
+			type: "text",
+			text: "Please choose part of day",
+		},
+		body: {
+			text: "Please choose part of day",
+		},
+		footer: {
+			text: "ChildDr",
+		},
+		action: {
+			button: "Choose",
+			sections: [
+				{
+					title: "timesOfDay",
+					rows: listOfDepartment,
+				},
+			],
+		},
+	};
+};
+
 const DoctorDepartmentListInteractiveObject = (listOfDepartment) => {
 	return {
 		type: "list",
@@ -691,6 +964,7 @@ const drListInteractiveObject = (listOfDoctor) => {
 		},
 	};
 };
+
 const appointmentTimeListInteractiveObject = (listOfAppointment, slotType) => {
 	return {
 		type: "list",
@@ -856,4 +1130,6 @@ module.exports = {
 	validatePhoneNumber,
 	transactionMessage,
 	getPaymentTemplatedMessageInput,
+	sendDoctorDepartmentList2,
+	SendSlotMessages2,
 };
