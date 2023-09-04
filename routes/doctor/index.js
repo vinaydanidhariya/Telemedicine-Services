@@ -190,12 +190,13 @@ router.get(
 
 router.get("/prescription-pdf/:id", async function (req, res, next) {
 	console.log(req.params);
+	console.log("req.user");
+	console.log(req.user);
 	try {
 		const prescriptionId = req.params.id;
 		const prescription = await db.Prescription.findOne({
 			where: {
-				prescriptionId: prescriptionId,
-				doctorId: "2",
+				prescriptionId: prescriptionId
 			},
 			attributes: [
 				"prescriptionId",
@@ -255,12 +256,13 @@ router.get("/prescription-pdf/:id", async function (req, res, next) {
 			],
 		});
 
-		console.log(prescription.toJSON());
+		console.log("pppppppppppppppppp");
+		console.log(prescription);
 
 		res.render("doctor/pdf-prescription", {
 			title: "Prescription",
 			layout: false,
-			prescription: prescription.toJSON(),
+			prescription: prescription,
 		});
 	} catch (error) {
 		console.error("Error fetching prescription:", error);
