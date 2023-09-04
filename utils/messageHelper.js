@@ -223,6 +223,9 @@ async function SendSlotMessages(recipientNumber, res) {
 	const [fromHours, fromMinutes] = onlineConsultationTimeFrom.split(":");
 	const [toHours, toMinutes] = onlineConsultationTimeTo.split(":");
 
+	fromHours+6;
+	toHours+6;
+
 	const from = new Date(userAppointmentDate);
 	from.setHours(parseInt(fromHours), parseInt(fromMinutes));
 
