@@ -37,27 +37,31 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	console.log(from);
 	console.log(to);
 
-	from = moment(from + " 18:30", 'DD-MM-YYYY HH:mm').format('YYYY-MM-DD HH:mm');
-	to = moment(to + " 18:30", 'DD-MM-YYYY HH:mm').format('YYYY-MM-DD HH:mm');
+	// Convert 'from' and 'to' to UTC
+	const fromUtc = moment.utc(moment(from + " 00:00", 'DD-MM-YYYY HH:mm'), 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
+	const toUtc = moment.utc(moment(to + " 22:00", 'DD-MM-YYYY HH:mm'), 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
 
-	console.log("=============FROM===========");
-	console.log(from);
-	console.log(to);
+	console.log("=============FROM (UTC)===========");
+	console.log(fromUtc);
+	console.log(toUtc);
 
 	const events = await db.Schedule.findAll({
 		where: {
 			doctorId: parseInt(doctorId),
-			// Apply filtering based on start_date and end_date
+			// Apply filtering based on start_date and end_date in UTC
 			start_date: {
-				[Op.gte]: from,
+				[Op.gte]: fromUtc,
 			},
 			end_date: {
-				[Op.lte]: moment(to).add(1, "days").format('YYYY-MM-DD HH:mm'),
+				[Op.lte]: moment.utc(moment(toUtc).add(1, "days"), 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm'),
 			},
 		},
 		attributes: ["start_date", "end_date"],
 		raw: true,
 	});
+
+	console.log("events===================>");
+	console.log(events);
 
 	console.log("events===================>");
 	console.log(events);
