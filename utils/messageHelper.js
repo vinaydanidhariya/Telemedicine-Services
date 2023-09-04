@@ -37,8 +37,8 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	console.log(from);
 	console.log(to);
 	console.log("=============FROM===========");
-	let startDate = moment(from, "YYYY-MM-DD HH:mm").utc();
-	let endDate = moment(to, "YYYY-MM-DD HH:mm").utc();
+	let startDate = moment(from, "YYYY-MM-DD HH:mm");
+	let endDate = moment(to, "YYYY-MM-DD HH:mm");
 
 	console.log(startDate, "utcTIME");
 	console.log(endDate, "utcTIME");
