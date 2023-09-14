@@ -147,13 +147,13 @@ router.post("/doctor-list", async function (req, res, next) {
 });
 
 router.post("/doctor-member-list", async function (req, res, next) {
-	console.log(req.body);
 	try {
 		const { code, department } = req.body;
 		if (code === "778899") {
 			const USER = await db.User.findAll({
 				where: {
-					delete: false
+					delete: false,
+					type: "DOCTOR"
 				},
 				attributes: [
 					"userId",
@@ -164,9 +164,8 @@ router.post("/doctor-member-list", async function (req, res, next) {
 					"photo_url",
 					"price",
 				],
-				raw : true
+				raw: true
 			});
-			console.log(USER);
 			res.send(USER);
 		} else {
 			res.send("error");
