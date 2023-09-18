@@ -346,7 +346,13 @@ router.post("/", async (req, res) => {
 						//find doctor categories wise user selected
 						const listOfDoctor = await findDrList(listReply.title);
 
-						if (listOfDoctor.length > 0) {
+						if (listOfDoctor.length > 10) {
+							const chunkSize = 10;
+							for (let i = 0; i < listOfDoctor.length; i += chunkSize) {
+								const chunk = listOfDoctor.slice(i, i + chunkSize);
+								await sendListDoctorMessage(recipientNumber, chunk);
+							}
+						} else if (listOfDoctor.length > 0) {
 							sendListDoctorMessage(recipientNumber, listOfDoctor);
 						} else {
 							await db.WhatsappUser.update(
@@ -354,20 +360,15 @@ router.post("/", async (req, res) => {
 								{ where: { phone: recipientNumber } }
 							);
 							sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DOCTOR AVAILABLE FOR THIS DEPARTMENT");
-							const listOfDepartment =
-								await findDoctorDepartmentList();
+							const listOfDepartment = await findDoctorDepartmentList();
+
 							if (listOfDepartment.length > 0) {
-								sendDoctorDepartmentList(
-									recipientNumber,
-									listOfDepartment
-								);
+								sendDoctorDepartmentList(recipientNumber, listOfDepartment);
 							} else {
-								sendRegistrationMessage(
-									recipientNumber,
-									"AT THIS TIME NO DEPARTMENT AVAILABLE"
-								);
+								sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DEPARTMENT AVAILABLE");
 							}
 						}
+
 					}
 
 					if (interactiveType === "list_reply" && user.userStat === "DOCTOR-SELECTION") {

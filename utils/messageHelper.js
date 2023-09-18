@@ -855,14 +855,14 @@ const sendDoctorDepartmentList2 = (recipient, listOfDoctorDepartment) => {
 	}
 };
 
-const sendListDoctorMessage = (recipient, listOfDoctor) => {
+const sendListDoctorMessage = async (recipient, listOfDoctor) => {
 	try {
 		let newMessageObject = messageObject(recipient);
 
 		let newDrListInteractiveObject = drListInteractiveObject(listOfDoctor);
 		newMessageObject.interactive = newDrListInteractiveObject;
 
-		axios.post(
+		await axios.post(
 			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
 			newMessageObject,
 			{
@@ -1015,7 +1015,6 @@ const findDrList = async (department) => {
 			],
 		],
 		raw: true,
-		limit: 10,
 		tableName: "user",
 	});
 	return listOfDoctor;
