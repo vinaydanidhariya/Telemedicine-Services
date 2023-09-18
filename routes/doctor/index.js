@@ -254,6 +254,7 @@ router.get("/prescription-pdf/:id", async function (req, res, next) {
 					],
 				},
 			],
+			raw: true
 		});
 
 		console.log("pppppppppppppppppp");
@@ -306,19 +307,18 @@ router.post("/download-pdf", async (req, res) => {
 				},
 			],
 			attributes: ["appointment_id", "prescription_id", "status"],
+			raw: true
 		});
 
-		console.log(appointment.toJSON());
-		const response = appointment.toJSON();
+		const response = appointment;
 		const userInfo = {
-			patientName: response.patient.full_name,
+			patientName: response['patient.full_name'],
 			patientEmail: patientEmail,
-			doctorName: `${response.doctor.first_name} ${response.doctor.last_name}`,
+			doctorName: `${response['doctor.first_name']} ${response['doctor.last_name']}`,
 			dynamicMessage: message, // You didn't specify where the email message comes from in the response
 			subject: subject,
 		};
-		console.log(userInfo);
-		const recipientNumber = response.patient.user_enter_number;
+		const recipientNumber = response['patient.user_enter_number'];
 		const pdfBuffer = await generatePDF(req, prescriptionId);
 		const emailResponse = await sendEmail(pdfBuffer, userInfo);
 		const facebookResponse = await sendToFacebookAPI(
@@ -328,11 +328,11 @@ router.post("/download-pdf", async (req, res) => {
 			"91" + recipientNumber
 		);
 
-		res.status(200).send({
+		return res.send({
 			message:
 				"Success: PDF generated, emailed, and sent to Facebook API.",
 			emailResponse: emailResponse,
-			facebookResponse: facebookResponse,
+			// facebookResponse: facebookResponse,
 		});
 	} catch (error) {
 		console.error("Error:", error);

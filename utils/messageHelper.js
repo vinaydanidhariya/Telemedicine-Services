@@ -41,7 +41,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	x = x.slice(0, 10)
 	y = y.slice(0, 10)
 	x = moment(x + " 18:30")
-	y = moment(y + " 18:30").add(1,"day")
+	y = moment(y + " 18:30").add(1, "day")
 	console.log("------------------------------------aaaaaaaaaaaaa");
 	console.log(x);
 	console.log(y);
@@ -1075,7 +1075,7 @@ const tocBlock = {
 		text: "ChildDR 🏥",
 	},
 	body: {
-		text: `As per govenment rules and policies we are bound to read and follow certain regulation and policies we insist you to read it first. link https://vinaydanidhariya.github.io/CHILD_DR-FrontEnd/terms-of-service.html`,
+		text: `As per govenment rules and policies we are bound to read and follow certain regulation and policies we insist you to read it first. link https://www.childdrofficial.com/terms-of-service.html`,
 	},
 	footer: {
 		text: "Please read Term & Conditions above.",
