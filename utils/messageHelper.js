@@ -41,7 +41,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	x = x.slice(0, 10)
 	y = y.slice(0, 10)
 	x = moment(x + " 18:30")
-	y = moment(y + " 18:30").add(1,"day")
+	y = moment(y + " 18:30").add(1, "day")
 	console.log("------------------------------------aaaaaaaaaaaaa");
 	console.log(x);
 	console.log(y);
@@ -855,14 +855,14 @@ const sendDoctorDepartmentList2 = (recipient, listOfDoctorDepartment) => {
 	}
 };
 
-const sendListDoctorMessage = (recipient, listOfDoctor) => {
+const sendListDoctorMessage = async (recipient, listOfDoctor) => {
 	try {
 		let newMessageObject = messageObject(recipient);
 
 		let newDrListInteractiveObject = drListInteractiveObject(listOfDoctor);
 		newMessageObject.interactive = newDrListInteractiveObject;
 
-		axios.post(
+		await axios.post(
 			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
 			newMessageObject,
 			{
@@ -1015,7 +1015,6 @@ const findDrList = async (department) => {
 			],
 		],
 		raw: true,
-		limit: 10,
 		tableName: "user",
 	});
 	return listOfDoctor;
