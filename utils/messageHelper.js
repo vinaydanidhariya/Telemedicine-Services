@@ -220,15 +220,15 @@ async function SendSlotMessages(recipientNumber, res) {
 	const [toHours, toMinutes] = onlineConsultationTimeTo.split(":");
 
 	// Convert onlineConsultationTimeFrom from IST to UTC
-	const fromUtc = moment(userAppointmentDate).set({ hour: parseInt(fromHours), minute: parseInt(fromMinutes) });
+	let fromUtc = moment(userAppointmentDate).set({ hour: parseInt(fromHours), minute: parseInt(fromMinutes) });
 
 	// Convert onlineConsultationTimeTo from IST to UTC
-	const toUtc = moment(userAppointmentDate).set({ hour: parseInt(toHours), minute: parseInt(toMinutes) });
+	let toUtc = moment(userAppointmentDate).set({ hour: parseInt(toHours), minute: parseInt(toMinutes) });
 	console.log("============================================================a");
 	console.log(fromUtc, toUtc);
 	console.log("============================================================a");
-	fromUtc = fromUtc.utc();
-	toUtc = toUtc.utc();
+	fromUtc = fromUtc.subtract(5, 'hours').subtract(30, "minutes");
+	toUtc = toUtc.subtract(5, 'hours').subtract(30, "minutes");
 	console.log("============================================================");
 	console.log(fromUtc, toUtc);
 	console.log("============================================================");
