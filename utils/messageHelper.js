@@ -49,9 +49,6 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 		raw: true,
 	});
 
-	console.log("events===================>");
-	console.log(events);
-
 	// Extract start and end times from events
 	const eventTimeRanges = events.map((event) => {
 		return {
@@ -140,40 +137,15 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	const midnight = [];
 	timeSlots.forEach((slot) => {
 		const time = moment(slot, "h:mm A"); // Parse the time slot using Moment.js
-		if (
-			time.isBetween(
-				moment("5:59 AM", "h:mm A"),
-				moment("11:59 AM", "h:mm A")
-			)
-		) {
+		if (time.isBetween(moment("6:00 AM", "h:mm A"), moment("11:59 AM", "h:mm A"))) {
 			morningSlots.push(slot);
-		} else if (
-			time.isBetween(
-				moment("12:00 PM", "h:mm A"),
-				moment("4:59 PM", "h:mm A")
-			)
-		) {
+		} else if (time.isBetween(moment("12:00 PM", "h:mm A"), moment("4:59 PM", "h:mm A"))) {
 			afternoonSlots.push(slot);
-		} else if (
-			time.isBetween(
-				moment("5:00 PM", "h:mm A"),
-				moment("7:59 PM", "h:mm A")
-			)
-		) {
+		} else if (time.isBetween(moment("5:00 PM", "h:mm A"), moment("7:59 PM", "h:mm A"))) {
 			eveningSlots.push(slot);
-		} else if (
-			time.isBetween(
-				moment("8:00 PM", "h:mm A"),
-				moment("11:59 AM", "h:mm A")
-			)
-		) {
+		} else if (time.isBetween(moment("8:00 PM", "h:mm A"), moment("11:59 PM", "h:mm A"))) {
 			nightSlots.push(slot);
-		} else if (
-			time.isBetween(
-				moment("12:00 AM", "h:mm A"),
-				moment("5:59 AM", "h:mm A")
-			)
-		) {
+		} else if (time.isBetween(moment("12:00 AM", "h:mm A"), moment("5:59 AM", "h:mm A"))) {
 			midnight.push(slot);
 		}
 	});
@@ -224,14 +196,10 @@ async function SendSlotMessages(recipientNumber, res) {
 
 	// Convert onlineConsultationTimeTo from IST to UTC
 	let toUtc = moment(userAppointmentDate).set({ hour: parseInt(toHours), minute: parseInt(toMinutes), second: '00', milliseconds: '000' });
-	console.log("============================================================a");
-	console.log(fromUtc, toUtc);
-	console.log("============================================================a");
+
 	fromUtc = fromUtc.subtract(5, 'hours').subtract(30, "minutes");
 	toUtc = toUtc.subtract(5, 'hours').subtract(30, "minutes");
-	console.log("============================================================");
-	console.log(fromUtc, toUtc);
-	console.log("============================================================");
+
 	const timeSlots = await findAvailableTimeSlots(fromUtc, toUtc, userId, user);
 	// if (true) {
 	// 	await sendDoctorDepartmentList2(recipientNumber, [
