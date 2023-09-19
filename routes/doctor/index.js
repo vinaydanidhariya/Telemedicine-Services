@@ -721,8 +721,8 @@ router.post("/events/", async (req, res) => {
 			title = eventData.text,
 			eventId = eventData.id;
 		console.log(eventData);
-		const startDate = moment(eventData.start_date).add(5, "hours").add(30, "minutes").format("YYYY-MM-DD HH:mm");
-		const endDate = moment(eventData.end_date).add(5, "hours").add(30, "minutes").format("YYYY-MM-DD HH:mm");
+		const startDate = moment.utc(eventData.start_date, "YYYY-MM-DD HH:mm");
+		const endDate = moment.utc(eventData.end_date, "YYYY-MM-DD HH:mm");
 		console.log(startDate);
 		console.log(endDate);
 		var data = req.body;
