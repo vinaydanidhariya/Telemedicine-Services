@@ -33,27 +33,16 @@ const getTextMessageInput = (recipient, text) => {
 };
 
 async function findAvailableTimeSlots(from, to, doctorId, user) {
-	console.log("=============FROM===========");
-	console.log(from.toISOString());
-	console.log(to.toISOString());
-	let x = from.toISOString()
-	let y = to.toISOString()
-	x = x.slice(0, 10)
-	y = y.slice(0, 10)
-	x = moment(x + " 18:30")
-	y = moment(y + " 18:30").add(1, "day")
-	console.log("------------------------------------aaaaaaaaaaaaa");
-	console.log(x);
-	console.log(y);
+
 	const events = await db.Schedule.findAll({
 		where: {
 			doctorId: parseInt(doctorId),
 			// Apply filtering based on start_date and end_date in UTC
 			start_date: {
-				[Op.gte]: x,
+				[Op.gte]: from,
 			},
 			end_date: {
-				[Op.lte]: y,
+				[Op.lte]: to,
 			},
 		},
 		attributes: ["start_date", "end_date"],
@@ -66,10 +55,11 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	// Extract start and end times from events
 	const eventTimeRanges = events.map((event) => {
 		return {
-			start: moment(event.start_date).utcOffset("+05:30").format(),
-			end: moment(event.end_date).utcOffset("+05:30").format(),
+			start: moment(event.start_date),
+			end: moment(event.end_date),
 		};
 	});
+	console.log("==================+>eventTimeRanges");
 	console.log(eventTimeRanges);
 	function generateTimeSlotsFromEventRanges(eventTimeRanges) {
 		const timeSlots = [];
@@ -208,7 +198,7 @@ async function SendSlotMessages(recipientNumber, res) {
 		attributes: ["selectedDoctor", "appointmentDate", "appointmentTime"],
 		raw: true,
 	});
-	console.log(user);
+
 	const user_selected_doctor = user.selectedDoctor;
 	const doctor = await db.User.findOne({
 		where: { userId: user_selected_doctor },
