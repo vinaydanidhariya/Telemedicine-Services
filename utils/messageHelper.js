@@ -55,8 +55,8 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	// Extract start and end times from events
 	const eventTimeRanges = events.map((event) => {
 		return {
-			start: moment(event.start_date),
-			end: moment(event.end_date),
+			start: moment(event.start_date).utcOffset("+05:30").format(),
+			end: moment(event.end_date).utcOffset("+05:30").format(),
 		};
 	});
 	console.log("==================+>eventTimeRanges");
