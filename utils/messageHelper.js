@@ -193,6 +193,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 }
 
 async function SendSlotMessages(recipientNumber, res) {
+
 	const user = await db.WhatsappUser.findOne({
 		where: { phone: recipientNumber },
 		attributes: ["selectedDoctor", "appointmentDate", "appointmentTime"],
@@ -200,6 +201,7 @@ async function SendSlotMessages(recipientNumber, res) {
 	});
 
 	const user_selected_doctor = user.selectedDoctor;
+
 	const doctor = await db.User.findOne({
 		where: { userId: user_selected_doctor },
 		attributes: [
@@ -217,17 +219,11 @@ async function SendSlotMessages(recipientNumber, res) {
 	const [fromHours, fromMinutes] = onlineConsultationTimeFrom.split(":");
 	const [toHours, toMinutes] = onlineConsultationTimeTo.split(":");
 
-
 	// Convert onlineConsultationTimeFrom from IST to UTC
-	const fromUtc = moment(userAppointmentDate)
-		.utcOffset(0)
-		.set({ hour: parseInt(fromHours), minute: parseInt(fromMinutes) });
+	const fromUtc = moment(userAppointmentDate).utc().set({ hour: parseInt(fromHours), minute: parseInt(fromMinutes) });
 
 	// Convert onlineConsultationTimeTo from IST to UTC
-	const toUtc = moment(userAppointmentDate)
-		.utcOffset(0)
-		.set({ hour: parseInt(toHours), minute: parseInt(toMinutes) });
-
+	const toUtc = moment(userAppointmentDate).utc().set({ hour: parseInt(toHours), minute: parseInt(toMinutes) });
 	console.log("============================================================");
 	console.log(fromUtc, toUtc);
 	console.log("============================================================");

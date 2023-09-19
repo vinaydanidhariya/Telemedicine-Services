@@ -383,8 +383,7 @@ router.post("/", async (req, res) => {
 						sendAppointmentDateReplyButton(recipientNumber);
 					} else if (interactiveType === "button_reply" && user.userStat === "DATE-SELECTION" && reply.id === "todayButton") {
 						const today = moment.utc();
-						console.log("-----------------------------------ssssssssssssssssssssss");
-						console.log(today);
+
 						await db.WhatsappUser.update(
 							{
 								userStat: "TIME-SELECTION",

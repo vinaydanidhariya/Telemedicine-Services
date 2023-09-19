@@ -720,11 +720,10 @@ router.post("/events/", async (req, res) => {
 		const eventData = req.body,
 			title = eventData.text,
 			eventId = eventData.id;
-		console.log(eventData);
+
 		const startDate = moment.utc(eventData.start_date, "YYYY-MM-DD HH:mm");
 		const endDate = moment.utc(eventData.end_date, "YYYY-MM-DD HH:mm");
-		console.log(startDate);
-		console.log(endDate);
+
 		var data = req.body;
 		var mode = data["!nativeeditor_status"];
 		var sid = data.id;
