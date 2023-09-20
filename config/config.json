@@ -11,7 +11,10 @@
 		"dialect": "postgres",
 		"logging": true,
 		"dialectOptions": {
-			"ssl": true
+			"ssl": {
+				"require": true,
+				"rejectUnauthorized": false
+			}
 		},
 		"port": 5432,
 		"nodemailer": {
@@ -58,13 +61,16 @@
 		"project": "Shree Hari Clinic",
 		"secret": "SHC#100&ShreeHariClinic@333",
 		"serverUrl": "https://childdr-nodejs1.onrender.com",
-		"database": "child_dr",
-		"username": "nirav2565",
+		"database": "tinywings",
+		"username": "postgres",
 		"schema": "CHILD_DR_DEV",
 		"dialect": "postgres",
 		"logging": true,
 		"dialectOptions": {
-			"ssl": true
+			"ssl": {
+				"require": true,
+				"rejectUnauthorized": false
+			}
 		},
 		"port": 5432,
 		"nodemailer": {
@@ -79,14 +85,14 @@
 		"replication": {
 			"read": [
 				{
-					"host": "dpg-cjgfsrc1ja0c73clp4h0-a.oregon-postgres.render.com",
-					"username": "nirav2565",
+					"host": "tinywings.coonqjiiu9zw.ap-south-1.rds.amazonaws.com",
+					"username": "postgres",
 					"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
 				}
 			],
 			"write": {
-				"host": "dpg-cjgfsrc1ja0c73clp4h0-a.oregon-postgres.render.com",
-				"username": "nirav2565",
+				"host": "tinywings.coonqjiiu9zw.ap-south-1.rds.amazonaws.com",
+				"username": "postgres",
 				"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
 			}
 		},

@@ -380,7 +380,7 @@ router.post("/edit-doctor", authentication, checkAccess("admin/doctor/edit-docto
 					)
 						.then(createdUser => {
 							updateData = {}; // Assigning an empty object to clear the data
-							let message = `${firstName + " " + lastName} Added Doctor successfully`
+							let message = `${firstName + " " + lastName} Updated Doctor successfully`
 							res.send({
 								status: 200,
 								message,
