@@ -49,14 +49,11 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 		raw: true,
 	});
 
-	console.log("events===================>");
-	console.log(events);
-
 	// Extract start and end times from events
 	const eventTimeRanges = events.map((event) => {
 		return {
-			start: moment(event.start_date),
-			end: moment(event.end_date),
+			start: moment(event.start_date).utcOffset("+05:30").format(),
+			end: moment(event.end_date).utcOffset("+05:30").format(),
 		};
 	});
 	console.log("==================+>eventTimeRanges");
@@ -140,40 +137,15 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	const midnight = [];
 	timeSlots.forEach((slot) => {
 		const time = moment(slot, "h:mm A"); // Parse the time slot using Moment.js
-		if (
-			time.isBetween(
-				moment("5:59 AM", "h:mm A"),
-				moment("11:59 AM", "h:mm A")
-			)
-		) {
+		if (time.isBetween(moment("6:00 AM", "h:mm A"), moment("11:59 AM", "h:mm A"))) {
 			morningSlots.push(slot);
-		} else if (
-			time.isBetween(
-				moment("12:00 PM", "h:mm A"),
-				moment("4:59 PM", "h:mm A")
-			)
-		) {
+		} else if (time.isBetween(moment("12:00 PM", "h:mm A"), moment("4:59 PM", "h:mm A"))) {
 			afternoonSlots.push(slot);
-		} else if (
-			time.isBetween(
-				moment("5:00 PM", "h:mm A"),
-				moment("7:59 PM", "h:mm A")
-			)
-		) {
+		} else if (time.isBetween(moment("5:00 PM", "h:mm A"), moment("7:59 PM", "h:mm A"))) {
 			eveningSlots.push(slot);
-		} else if (
-			time.isBetween(
-				moment("8:00 PM", "h:mm A"),
-				moment("11:59 AM", "h:mm A")
-			)
-		) {
+		} else if (time.isBetween(moment("8:00 PM", "h:mm A"), moment("11:59 PM", "h:mm A"))) {
 			nightSlots.push(slot);
-		} else if (
-			time.isBetween(
-				moment("12:00 AM", "h:mm A"),
-				moment("5:59 AM", "h:mm A")
-			)
-		) {
+		} else if (time.isBetween(moment("12:00 AM", "h:mm A"), moment("5:59 AM", "h:mm A"))) {
 			midnight.push(slot);
 		}
 	});
@@ -193,6 +165,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 }
 
 async function SendSlotMessages(recipientNumber, res) {
+
 	const user = await db.WhatsappUser.findOne({
 		where: { phone: recipientNumber },
 		attributes: ["selectedDoctor", "appointmentDate", "appointmentTime"],
@@ -200,6 +173,7 @@ async function SendSlotMessages(recipientNumber, res) {
 	});
 
 	const user_selected_doctor = user.selectedDoctor;
+
 	const doctor = await db.User.findOne({
 		where: { userId: user_selected_doctor },
 		attributes: [
@@ -217,20 +191,15 @@ async function SendSlotMessages(recipientNumber, res) {
 	const [fromHours, fromMinutes] = onlineConsultationTimeFrom.split(":");
 	const [toHours, toMinutes] = onlineConsultationTimeTo.split(":");
 
-
 	// Convert onlineConsultationTimeFrom from IST to UTC
-	const fromUtc = moment(userAppointmentDate)
-		.utcOffset(0)
-		.set({ hour: parseInt(fromHours), minute: parseInt(fromMinutes) });
+	let fromUtc = moment(userAppointmentDate).set({ hour: parseInt(fromHours), minute: parseInt(fromMinutes), second: '00', milliseconds: '000' });
 
 	// Convert onlineConsultationTimeTo from IST to UTC
-	const toUtc = moment(userAppointmentDate)
-		.utcOffset(0)
-		.set({ hour: parseInt(toHours), minute: parseInt(toMinutes) });
+	let toUtc = moment(userAppointmentDate).set({ hour: parseInt(toHours), minute: parseInt(toMinutes), second: '00', milliseconds: '000' });
 
-	console.log("============================================================");
-	console.log(fromUtc, toUtc);
-	console.log("============================================================");
+	fromUtc = fromUtc.subtract(5, 'hours').subtract(30, "minutes");
+	toUtc = toUtc.subtract(5, 'hours').subtract(30, "minutes");
+
 	const timeSlots = await findAvailableTimeSlots(fromUtc, toUtc, userId, user);
 	// if (true) {
 	// 	await sendDoctorDepartmentList2(recipientNumber, [
