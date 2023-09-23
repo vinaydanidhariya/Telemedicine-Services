@@ -169,7 +169,7 @@ router.post("/", async (req, res) => {
 									sendGenderSelectionMessage(recipientNumber);
 									return res.sendStatus(200);
 								} else {
-									console.log(JSON.stringify(body, null, 4));
+
 									await sendRegistrationMessage(
 										recipientNumber,
 										"Enter Proper Date Of Birth ❌"
@@ -194,7 +194,7 @@ router.post("/", async (req, res) => {
 									);
 									return res.sendStatus(200);
 								} else {
-									console.log(JSON.stringify(body, null, 4));
+
 									await sendRegistrationMessage(
 										recipientNumber,
 										"Enter Proper Email Address ❌"
@@ -222,7 +222,7 @@ router.post("/", async (req, res) => {
 									);
 									return res.sendStatus(200);
 								} else {
-									console.log(JSON.stringify(body, null, 4));
+
 									await sendRegistrationMessage(
 										recipientNumber,
 										"Enter Proper Phone Number ❌"
@@ -424,12 +424,6 @@ router.post("/", async (req, res) => {
 						sendRegistrationMessage(recipientNumber, "What's your child's/patient's Full Name?");
 					}
 
-					// if (interactiveType === "button_reply" && user.userStat === "PARTOFDAY") {
-					// 	console.log(reply.id);
-					// 	console.log("reply.id----------------------------------------");
-					// 	SendSlotMessages2(recipientNumber, reply.id);
-					// }
-
 					if (interactiveType === "button_reply" && user.userStat === "GENDER") {
 						await db.WhatsappUser.update(
 							{ userStat: "EMAIL", gender: reply.id },
@@ -500,7 +494,6 @@ router.get("/", (req, res) => {
 			// Check the mode and token sent are correct
 			if (mode === "subscribe" && token === verify_token) {
 				// Respond with 200 OK and challenge token from the request
-				console.log("WEBHOOK_VERIFIED");
 				res.status(200).send(challenge);
 			} else {
 				// Responds with '403 Forbidden' if verify tokens do not match

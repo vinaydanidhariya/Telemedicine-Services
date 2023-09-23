@@ -49,14 +49,11 @@ router.post("/payment-callback1", async function (req, res, next) {
         const receivedSignature = req.headers['x-razorpay-signature']
         const expectedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_WEBHOOK_SECRET).update(requestedBody).digest('hex')
         if (receivedSignature === expectedSignature) {
-            console.log(req.body);
             const event = req.body.event
             if (event === 'order.paid') {
                 const status = req.body.payload.order.entity.status
                 if (status === 'paid') {
                     const userinfo = req.body.payload.payment.notes
-                    console.log(req.body.payload.payment, "Payment Response")
-
                     const data = req.body.payload.payment
                     const userId = data.entity.notes.id;
                     const name = data.entity.notes.name;
@@ -91,8 +88,7 @@ router.post("/payment-callback1", async function (req, res, next) {
                         {
                             where: { phone: mobile }
                         });
-                    console.log("userInfo");
-                    console.log(userInfo);
+
                     const prescription = await db.Prescription.create({
                         patientId: userInfo.userId,
                         doctorId: userInfo.selectedDoctor
@@ -101,8 +97,7 @@ router.post("/payment-callback1", async function (req, res, next) {
                         {
                             where: { userId: userInfo.selectedDoctor }
                         });
-                    console.log("doctorInfo");
-                    console.log(doctorInfo);
+
                     const appointment = await db.Appointment.create({
                         patientId: userInfo.userId,
                         doctorId: userInfo.selectedDoctor,
@@ -127,8 +122,7 @@ router.post("/payment-callback1", async function (req, res, next) {
                     const slotsStart = moment(time12Hour, 'h:mm a').format('HH:mm');
 
                     const slotsEnd = moment(slotsStart, 'HH:mm').add(15, 'minutes').format('HH:mm');
-                    console.log("slotsStart", slotsStart);
-                    console.log("slotsEnd", slotsEnd);
+
                     try {
                         const meetOptions = {
                             clientId: Config.GoogleCred.clientId,
@@ -195,7 +189,7 @@ router.post("/payment-callback1", async function (req, res, next) {
                 }
             }
             else if (event === "payment.captured") {
-                console.log(req.body);
+
                 res.status(200).send('received')
             }
         } else {
@@ -236,6 +230,7 @@ router.get('/oauth2callback', async (req, res) => {
 
 router.get('/google-redirect', async (req, res) => {
     const { tokens } = await oauth2Client.getToken(req.query.code);
+    console.log("---------------------------------GOOGLE TOKEN------------------------------------------");
     console.log(tokens);
     oauth2Client.setCredentials(tokens);
 
