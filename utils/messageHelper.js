@@ -188,40 +188,7 @@ async function SendSlotMessages(recipientNumber, res) {
 	toUtc = toUtc.subtract(5, 'hours').subtract(30, "minutes");
 
 	const timeSlots = await findAvailableTimeSlots(fromUtc, toUtc, userId, user);
-	// if (true) {
-	// 	await sendDoctorDepartmentList2(recipientNumber, [
-	// 		{
-	// 			id: "morning",
-	// 			title: "Morning",
-	// 			description: "Morning of the day",
-	// 		},
-	// 		{
-	// 			id: "afternoon",
-	// 			title: "Afternoon",
-	// 			description: "Afternoon of the day",
-	// 		},
-	// 		{
-	// 			id: "evening",
-	// 			title: "Evening",
-	// 			description: "Evening of the day",
-	// 		},
-	// 		{
-	// 			id: "night",
-	// 			title: "Night",
-	// 			description: "Night of the day",
-	// 		},
-	// 		{
-	// 			id: "midnight",
-	// 			title: "Midnight",
-	// 			description: "Midnight of the day",
-	// 		},
-	// 	]);
-	// 	await db.WhatsappUser.update(
-	// 		{ userStat: "PARTOFDAY" },
-	// 		{ where: { phone: recipientNumber } }
-	// 	);
-	// 	return;
-	// }
+
 	const timeSlotConvert = (slots, timePeriod) =>
 		slots.map((time, index) => ({
 			id: (index + 1).toString(),
@@ -279,27 +246,50 @@ async function SendSlotMessages(recipientNumber, res) {
 		}
 	};
 
-	await sendTimeSlotsChunks(
-		recipientNumber,
-		convertedMorningSlots,
-		"Morning"
-	);
-	await sendTimeSlotsChunks(
-		recipientNumber,
-		convertedAfternoonSlots,
-		"Afternoon"
-	);
-	await sendTimeSlotsChunks(
-		recipientNumber,
-		convertedEveningSlots,
-		"Evening"
-	);
+	await sendTimeSlotsChunks(recipientNumber, convertedMorningSlots, "Morning");
+	await sendTimeSlotsChunks(recipientNumber, convertedAfternoonSlots, "Afternoon");
+	await sendTimeSlotsChunks(recipientNumber, convertedEveningSlots, "Evening");
 	await sendTimeSlotsChunks(recipientNumber, convertedNightSlots, "Night");
-	await sendTimeSlotsChunks(
-		recipientNumber,
-		convertedMidNightSlots,
-		"MidNight"
-	);
+	await sendTimeSlotsChunks(recipientNumber, convertedMidNightSlots, "MidNight");
+	const sendPartOfDay = []
+	if (convertedMorningSlots.length) {
+		sendPartOfDay.push({
+			id: "morning",
+			title: "Morning",
+			description: "Morning of the day",
+		});
+	}
+	if (convertedAfternoonSlots.length) {
+		sendPartOfDay.push({
+			id: "afternoon",
+			title: "Afternoon",
+			description: "Afternoon of the day",
+		});
+	}
+	if (convertedEveningSlots.length) {
+		sendPartOfDay.push({
+			id: "evening",
+			title: "Evening",
+			description: "Evening of the day",
+		});
+	}
+	if (convertedNightSlots.length) {
+		sendPartOfDay.push({
+			id: "night",
+			title: "Night",
+			description: "Night of the day",
+		});
+	}
+	if (convertedMidNightSlots.length) {
+		sendPartOfDay.push({
+			id: "midnight",
+			title: "Midnight",
+			description: "Midnight of the day",
+		});
+	}
+	await sendDoctorDepartmentList2(recipientNumber, sendPartOfDay);
+	return;
+
 }
 
 let messageObject = (recipient) => {
