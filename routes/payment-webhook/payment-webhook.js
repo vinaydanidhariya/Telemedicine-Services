@@ -81,8 +81,8 @@ router.post("/payment-callback1", async function (req, res, next) {
                         { useStat: "PAYMENT-DONE", paymentId: orderId },
                         { where: { phone: mobile } })
 
-                    // const message = await transactionMessage(name, amount / 100, orderId);
-                    // await sendRegistrationMessage(mobile, `${message}`);
+                    const message = await transactionMessage(name, amount / 100, orderId);
+                    await sendRegistrationMessage(mobile, `${message}`);
 
                     const userInfo = await db.WhatsappUser.findOne(
                         {
