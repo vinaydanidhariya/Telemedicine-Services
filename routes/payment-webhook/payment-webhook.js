@@ -126,7 +126,7 @@ router.post("/payment-callback1", async function (req, res, next) {
                     try {
                         const meetOptions = {
                             clientId: Config.GoogleCred.clientId,
-                            refreshToken: "1//0giYcRIolDtmKCgYIARAAGBASNwF-L9Irb8kmNj9f9mQRAq9tVn8BNtqZaEEc7ExHzkq2EqnaJWXTLkftBCY6Iy9MBbew0dirar0",
+                            refreshToken: `1//0gaWQixxAWuikCgYIARAAGBASNwF-L9IrAHO8qcSEK_QacNaIxZb-_rq0y1t_53qXjhbOlqZXr73lnayCH7BtN6rUBaDIZyh1W1Y`,
                             date: meetFormattedDate,
                             startTime: slotsStart,
                             endTime: slotsEnd,
