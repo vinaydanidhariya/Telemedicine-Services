@@ -60,7 +60,7 @@
 		"x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
 		"project": "Shree Hari Clinic",
 		"secret": "SHC#100&ShreeHariClinic@333",
-		"serverUrl": "https://childdr-nodejs1.onrender.com",
+		"serverUrl": "https://admins.childdrofficial.com/",
 		"database": "tinywings",
 		"username": "postgres",
 		"schema": "CHILD_DR_DEV",
@@ -83,6 +83,7 @@
 			}
 		},
 		"replication": {
+
 			"read": [
 				{
 					"host": "tinywings.coonqjiiu9zw.ap-south-1.rds.amazonaws.com",
