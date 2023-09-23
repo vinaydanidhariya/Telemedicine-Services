@@ -151,7 +151,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	};
 }
 
-async function SendSlotMessages(recipientNumber, res, type) {
+async function SendSlotMessages(recipientNumber, res, daySelection) {
 
 	const user = await db.WhatsappUser.findOne({
 		where: { phone: recipientNumber },
@@ -288,16 +288,16 @@ async function SendSlotMessages(recipientNumber, res, type) {
 		});
 	}
 
-	if (type) {
-		if (type == 'morning') {
+	if (daySelection) {
+		if (daySelection == 'morning') {
 			await sendTimeSlotsChunks(recipientNumber, convertedMorningSlots, "Morning");
-		} else if (type == 'afternoon') {
+		} else if (daySelection == 'afternoon') {
 			await sendTimeSlotsChunks(recipientNumber, convertedAfternoonSlots, "Afternoon");
-		} else if (type == 'evening') {
+		} else if (daySelection == 'evening') {
 			await sendTimeSlotsChunks(recipientNumber, convertedEveningSlots, "Evening");
-		} else if (type == 'night') {
+		} else if (daySelection == 'night') {
 			await sendTimeSlotsChunks(recipientNumber, convertedNightSlots, "Night");
-		} else if (type == 'midnight') {
+		} else if (daySelection == 'midnight') {
 			await sendTimeSlotsChunks(recipientNumber, convertedMidNightSlots, "MidNight");
 		}
 	} else {
