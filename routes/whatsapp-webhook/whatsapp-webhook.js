@@ -268,7 +268,8 @@ router.post("/", async (req, res) => {
 									);
 									await SendSlotMessages(
 										recipientNumber,
-										res
+										res,
+										null
 									);
 									return res.sendStatus(200);
 								} else {
@@ -391,7 +392,7 @@ router.post("/", async (req, res) => {
 							},
 							{ where: { phone: recipientNumber } }
 						);
-						await SendSlotMessages(recipientNumber, res);
+						await SendSlotMessages(recipientNumber, res, null);
 					} else if (interactiveType === "button_reply" && user.userStat === "DATE-SELECTION" && reply.id === "tomorrowButton") {
 						const today = moment.utc();
 						const tomorrow = moment.utc(today).add(1, "day");
@@ -402,13 +403,19 @@ router.post("/", async (req, res) => {
 							},
 							{ where: { phone: recipientNumber } }
 						);
-						await SendSlotMessages(recipientNumber, res);
+						await SendSlotMessages(recipientNumber, res, null);
 					} else if (interactiveType === "button_reply" && user.userStat === "DATE-SELECTION" && reply.id === "onSpecificDayButton") {
 						await db.WhatsappUser.update(
 							{ userStat: "ON-SPECIFIC-DAY" },
 							{ where: { phone: recipientNumber } }
 						);
 						sendRegistrationMessage(recipientNumber, "TYPE DATE 📅 \n Formate (DD/MM/YYYY) \nAppointment Available only for next 7 Day's Only");
+					} else if (interactiveType === "list_reply" && user.userStat === "TIME-SELECTION") {
+						if (reply.id == 'morning' || reply.id == 'afternoon' || reply.id == 'evening' || reply.id == 'night' || reply.id == 'midnight') {
+							await SendSlotMessages(recipientNumber, res, reply.id);
+						} else {
+							console.log('some issue is there');
+						}
 					}
 
 					if (interactiveType === "list_reply" && user.userStat === "TIME-SELECTION") {

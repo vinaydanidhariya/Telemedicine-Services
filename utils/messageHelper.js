@@ -151,7 +151,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	};
 }
 
-async function SendSlotMessages(recipientNumber, res) {
+async function SendSlotMessages(recipientNumber, res, type) {
 
 	const user = await db.WhatsappUser.findOne({
 		where: { phone: recipientNumber },
@@ -246,11 +246,11 @@ async function SendSlotMessages(recipientNumber, res) {
 		}
 	};
 
-	await sendTimeSlotsChunks(recipientNumber, convertedMorningSlots, "Morning");
-	await sendTimeSlotsChunks(recipientNumber, convertedAfternoonSlots, "Afternoon");
-	await sendTimeSlotsChunks(recipientNumber, convertedEveningSlots, "Evening");
-	await sendTimeSlotsChunks(recipientNumber, convertedNightSlots, "Night");
-	await sendTimeSlotsChunks(recipientNumber, convertedMidNightSlots, "MidNight");
+	// await sendTimeSlotsChunks(recipientNumber, convertedMorningSlots, "Morning");
+	// await sendTimeSlotsChunks(recipientNumber, convertedAfternoonSlots, "Afternoon");
+	// await sendTimeSlotsChunks(recipientNumber, convertedEveningSlots, "Evening");
+	// await sendTimeSlotsChunks(recipientNumber, convertedNightSlots, "Night");
+	// await sendTimeSlotsChunks(recipientNumber, convertedMidNightSlots, "MidNight");
 	const sendPartOfDay = []
 	if (convertedMorningSlots.length) {
 		sendPartOfDay.push({
@@ -287,7 +287,22 @@ async function SendSlotMessages(recipientNumber, res) {
 			description: "Midnight of the day",
 		});
 	}
-	await sendDoctorDepartmentList2(recipientNumber, sendPartOfDay);
+
+	if (type) {
+		if (reply.id == 'morning') {
+			await sendTimeSlotsChunks(recipientNumber, convertedMorningSlots, "Morning");
+		} else if (reply.id == 'afternoon') {
+			await sendTimeSlotsChunks(recipientNumber, convertedAfternoonSlots, "Afternoon");
+		} else if (reply.id == 'evening') {
+			await sendTimeSlotsChunks(recipientNumber, convertedEveningSlots, "Evening");
+		} else if (reply.id == 'night') {
+			await sendTimeSlotsChunks(recipientNumber, convertedNightSlots, "Night");
+		} else if (reply.id == 'midnight') {
+			await sendTimeSlotsChunks(recipientNumber, convertedMidNightSlots, "MidNight");
+		}
+	} else {
+		await sendDoctorDepartmentList2(recipientNumber, sendPartOfDay);
+	}
 	return;
 
 }
