@@ -241,7 +241,7 @@ router.get('/google-redirect', async (req, res) => {
 
     let result = await meet({
         clientId: Config.GoogleCred.clientId,
-        refreshToken: "1//0gR-aOkH6Lg0ZCgYIARAAGBASNwF-L9IrOB0pTheVKO5IomFEKgUdu2oJ6vWa9DdvSN6ckQhKNFw9f882LfXzfyv5pUPUjqbXPdA",
+        refreshToken: "1//0gAexpWNGjWqDCgYIARAAGBASNwF-L9IrkbGZ9tbyWhzYQO52Yg68dmH8XRu2rOTrP2fd0pjCkwkUB07MnUf44LalEkU93N-5YM8",
         date: "2023-08-21",
         startTime: "19:30",
         endTime: "22:00",
