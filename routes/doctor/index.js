@@ -341,7 +341,7 @@ router.post("/download-pdf", async (req, res) => {
 });
 
 async function generatePDF(req, prescriptionId) {
-	const browser = await puppeteer.launch();
+	const browser = await puppeteer.launch({ headless: true });
 	const page = await browser.newPage();
 
 	const response = await page.goto(
