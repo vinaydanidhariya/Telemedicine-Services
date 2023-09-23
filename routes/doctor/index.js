@@ -14,6 +14,7 @@ const readFileAsync = util.promisify(fs.readFile);
 const request = require("request");
 const { validateMediaSize, mediaLimits } = require("../../helpers/validations"); // Make sure to adjust the path accordingly
 const Config = require("../../config/config.json")[process.env.NODE_ENV];
+const myNumberId = process.env.PHONE_NUMBER_ID;
 
 router.get(
 	"/dashboard",
@@ -472,12 +473,11 @@ async function sendToFacebookAPI(pdfBuffer, req, res, recipientNumber) {
 		res.status(500).json({ error: "Facebook API Error" });
 	}
 }
-
 async function uploadPdfToFacebook(pdfBuffer) {
 	return new Promise((resolve, reject) => {
 		request.post(
 			{
-				url: `https://graph.facebook.com/v13.0/107565462372831/media`,
+				url: `https://graph.facebook.com/v13.0/${myNumberId}/media`,
 				formData: {
 					file: {
 						value: pdfBuffer,
