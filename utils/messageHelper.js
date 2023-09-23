@@ -289,15 +289,15 @@ async function SendSlotMessages(recipientNumber, res, type) {
 	}
 
 	if (type) {
-		if (reply.id == 'morning') {
+		if (type == 'morning') {
 			await sendTimeSlotsChunks(recipientNumber, convertedMorningSlots, "Morning");
-		} else if (reply.id == 'afternoon') {
+		} else if (type == 'afternoon') {
 			await sendTimeSlotsChunks(recipientNumber, convertedAfternoonSlots, "Afternoon");
-		} else if (reply.id == 'evening') {
+		} else if (type == 'evening') {
 			await sendTimeSlotsChunks(recipientNumber, convertedEveningSlots, "Evening");
-		} else if (reply.id == 'night') {
+		} else if (type == 'night') {
 			await sendTimeSlotsChunks(recipientNumber, convertedNightSlots, "Night");
-		} else if (reply.id == 'midnight') {
+		} else if (type == 'midnight') {
 			await sendTimeSlotsChunks(recipientNumber, convertedMidNightSlots, "MidNight");
 		}
 	} else {
