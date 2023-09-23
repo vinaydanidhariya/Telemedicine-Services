@@ -411,8 +411,9 @@ router.post("/", async (req, res) => {
 						);
 						sendRegistrationMessage(recipientNumber, "TYPE DATE 📅 \n Formate (DD/MM/YYYY) \nAppointment Available only for next 7 Day's Only");
 					} else if (interactiveType === "list_reply" && user.userStat === "TIME-SELECTION") {
-						if (reply.id == 'morning' || reply.id == 'afternoon' || reply.id == 'evening' || reply.id == 'night' || reply.id == 'midnight') {
-							await SendSlotMessages(recipientNumber, res, reply.id);
+						console.log(listReply)
+						if (listReply.id == 'morning' || listReply.id == 'afternoon' || listReply.id == 'evening' || listReply.id == 'night' || listReply.id == 'midnight') {
+							await SendSlotMessages(recipientNumber, res, listReply.id);
 						} else {
 							console.log('some issue is there');
 						}
