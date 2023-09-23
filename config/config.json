@@ -83,7 +83,6 @@
 			}
 		},
 		"replication": {
-
 			"read": [
 				{
 					"host": "tinywings.coonqjiiu9zw.ap-south-1.rds.amazonaws.com",
@@ -109,7 +108,7 @@
 		"GoogleCred": {
 			"clientId": "127925894032-scshjisrosrtn3jth8jm9knatvibhvoo.apps.googleusercontent.com",
 			"googleClientSecret": "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",
-			"callBackURL": "http://localhost:3000/whatsapp-payment/google-redirect"
+			"callBackURL": "https://admins.childdrofficial.com/whatsapp-payment/google-redirect"
 		}
 	}
 }
