@@ -110,7 +110,7 @@ $(function () {
                 title: "Write Prescription",
                 render: function (data, type, row, meta) {
                     return `
-                        <a href='/doctor/send-prescription/${rowData.prescription_id}' class="btn btn-sm btn-icon send-btn send-prescription">
+                        <a href='/doctor/send-prescription/${row.prescription_id}' class="btn btn-sm btn-icon send-btn send-prescription">
                             <i class="bx bxs-send"></i>
                         </a>`;
                 }
