@@ -109,7 +109,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	const chosenSlots = await db.WhatsappUser.findAll({
 		where: searchObject,
 		raw: true,
-		// appointment_confirmed: true
+		// appointmentConfirmed: true
 	});
 	let timeSlots = generateTimeSlotsFromEventRanges(eventTimeRanges);
 	if (chosenSlots && chosenSlots.length) {
@@ -155,7 +155,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 async function SendSlotMessages(recipientNumber, res, daySelection) {
 
 	const user = await db.WhatsappUser.findOne({
-		where: { phone: recipientNumber, appointment_confirmed: false },
+		where: { phone: recipientNumber, appointmentConfirmed: false },
 		attributes: ["selectedDoctor", "appointmentDate", "appointmentTime"],
 		raw: true,
 	});
@@ -211,7 +211,7 @@ async function SendSlotMessages(recipientNumber, res, daySelection) {
 		);
 		await db.WhatsappUser.update(
 			{ userStat: "DATE-SELECTION" },
-			{ where: { phone: recipientNumber, appointment_confirmed: false } }
+			{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 		);
 		sendAppointmentDateReplyButton(recipientNumber);
 		return;
@@ -470,27 +470,27 @@ const sendGenderSelectionMessage = (recipient) => {
 // Function to handle different chatbot states
 const handleMessage = async (message, recipientNumber) => {
 	const user = await db.WhatsappUser.findOne({
-		where: { phone: recipientNumber, appointment_confirmed: false },
+		where: { phone: recipientNumber, appointmentConfirmed: false },
 	});
 	switch (user.userStat) {
 		case "PAYMENT_DONE":
 			await db.WhatsappUser.update(
 				{ userStat: "END", paymentDone: message },
-				{ where: { phone: recipientNumber, appointment_confirmed: false } }
+				{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 			);
 			return "Kindly note that it's an online consultation. If your symptoms worsen or in an emergency, please visit a nearby doctor. Thank you!";
 
 		case "END":
 			await db.WhatsappUser.update(
 				{ userStat: "COMPLETE", paymentDone: message },
-				{ where: { phone: recipientNumber, appointment_confirmed: false } }
+				{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 			);
 			return "Your Appointment Booked!!!!!!!";
 
 		default:
 			await db.WhatsappUser.update(
 				{ userStat: "START" },
-				{ where: { phone: recipientNumber, appointment_confirmed: false } }
+				{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 			);
 			// Handle additional userStats or conditions
 			return "Something went Wrong";
@@ -854,7 +854,7 @@ const findDoctorDepartmentList = async () => {
 
 const GetPaymentUrl = async (wa_id) => {
 	try {
-		const user = await db.WhatsappUser.findOne({ where: { wa_id, appointment_confirmed: false } });
+		const user = await db.WhatsappUser.findOne({ where: { wa_id, appointmentConfirmed: false } });
 		let url = Config.serverUrl + "/whatsapp-payment/create-payment";
 		const response = await axios(url, {
 			method: "POST",

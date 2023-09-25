@@ -47,7 +47,7 @@ router.post("/", async (req, res) => {
 					wa_id: wa_id,
 					phone: recipientNumber,
 					userStat: "TERM-CONDITIONS",
-					appointment_confirmed: false
+					appointmentConfirmed: false
 				});
 
 				sendTOCBlock(recipientNumber);
@@ -55,7 +55,7 @@ router.post("/", async (req, res) => {
 			}
 
 			const user = await db.WhatsappUser.findOne({
-				where: { wa_id: wa_id, appointment_confirmed: false },
+				where: { wa_id: wa_id, appointmentConfirmed: false },
 			});
 
 			switch (messageType) {
@@ -69,7 +69,7 @@ router.post("/", async (req, res) => {
 							{
 								where: {
 									wa_id: wa_id,
-									appointment_confirmed: false
+									appointmentConfirmed: false
 								},
 							}
 						);
@@ -114,7 +114,7 @@ router.post("/", async (req, res) => {
 									{
 										where: {
 											wa_id: wa_id,
-											appointment_confirmed: false
+											appointmentConfirmed: false
 										},
 									}
 								);
@@ -141,7 +141,7 @@ router.post("/", async (req, res) => {
 											userStat: "DATE-OF-BIRTH",
 											fullName: textMessage,
 										},
-										{ where: { phone: recipientNumber, appointment_confirmed: false } }
+										{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 									);
 									sendRegistrationMessage(
 										recipientNumber,
@@ -167,7 +167,7 @@ router.post("/", async (req, res) => {
 									).toDate();
 									await db.WhatsappUser.update(
 										{ userStat: "GENDER", dateOfBirth },
-										{ where: { phone: recipientNumber, appointment_confirmed: false } }
+										{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 									);
 									sendGenderSelectionMessage(recipientNumber);
 									return res.sendStatus(200);
@@ -189,7 +189,7 @@ router.post("/", async (req, res) => {
 											userStat: "PHONE-NUMBER",
 											email: textMessage,
 										},
-										{ where: { phone: recipientNumber, appointment_confirmed: false } }
+										{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 									);
 									sendRegistrationMessage(
 										recipientNumber,
@@ -214,7 +214,7 @@ router.post("/", async (req, res) => {
 											userStat: "PAYMENT-GATEWAY",
 											userEnterNumber: textMessage,
 										},
-										{ where: { phone: recipientNumber, appointment_confirmed: false } }
+										{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 									);
 									const RespondUrl = await GetPaymentUrl(
 										wa_id
@@ -267,7 +267,7 @@ router.post("/", async (req, res) => {
 											userStat: "TIME-SELECTION",
 											appointmentDate: inputDate,
 										},
-										{ where: { phone: recipientNumber, appointment_confirmed: false } }
+										{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 									);
 									await SendSlotMessages(
 										recipientNumber,
@@ -295,12 +295,12 @@ router.post("/", async (req, res) => {
 									{
 										where: {
 											phone: recipientNumber,
-											appointment_confirmed: false
+											appointmentConfirmed: false
 										},
 									}
 								);
 								const userinfo = await db.WhatsappUser.findOne({
-									where: { phone: recipientNumber, appointment_confirmed: false },
+									where: { phone: recipientNumber, appointmentConfirmed: false },
 								});
 								const data = appointmentMessage(
 									userinfo.fullName,
@@ -345,7 +345,7 @@ router.post("/", async (req, res) => {
 							userStat: "DOCTOR-SELECTION",
 							department: listReply.title,
 						}, {
-							where: { phone: recipientNumber, appointment_confirmed: false }
+							where: { phone: recipientNumber, appointmentConfirmed: false }
 						}
 						);
 						//find doctor categories wise user selected
@@ -362,7 +362,7 @@ router.post("/", async (req, res) => {
 						} else {
 							await db.WhatsappUser.update(
 								{ userStat: "DEPARTMENT-SELECTION" },
-								{ where: { phone: recipientNumber, appointment_confirmed: false } }
+								{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 							);
 							sendRegistrationMessage(recipientNumber, "AT THIS TIME NO DOCTOR AVAILABLE FOR THIS DEPARTMENT");
 							const listOfDepartment = await findDoctorDepartmentList();
@@ -383,7 +383,7 @@ router.post("/", async (req, res) => {
 								selectedDoctor: listReply.id,
 								price: listReply.description.split("Price ")[1],
 							},
-							{ where: { phone: recipientNumber, appointment_confirmed: false } }
+							{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 						);
 						sendAppointmentDateReplyButton(recipientNumber);
 					} else if (interactiveType === "button_reply" && user.userStat === "DATE-SELECTION" && reply.id === "todayButton") {
@@ -394,7 +394,7 @@ router.post("/", async (req, res) => {
 								userStat: "DAY-PART-SELECTION",
 								appointmentDate: today,
 							},
-							{ where: { phone: recipientNumber, appointment_confirmed: false } }
+							{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 						);
 						await SendSlotMessages(recipientNumber, res, null);
 					} else if (interactiveType === "button_reply" && user.userStat === "DATE-SELECTION" && reply.id === "tomorrowButton") {
@@ -405,13 +405,13 @@ router.post("/", async (req, res) => {
 								userStat: "DAY-PART-SELECTION",
 								appointmentDate: tomorrow,
 							},
-							{ where: { phone: recipientNumber, appointment_confirmed: false } }
+							{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 						);
 						await SendSlotMessages(recipientNumber, res, null);
 					} else if (interactiveType === "button_reply" && user.userStat === "DATE-SELECTION" && reply.id === "onSpecificDayButton") {
 						await db.WhatsappUser.update(
 							{ userStat: "ON-SPECIFIC-DAY" },
-							{ where: { phone: recipientNumber, appointment_confirmed: false } }
+							{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 						);
 						sendRegistrationMessage(recipientNumber, "TYPE DATE 📅 \n Formate (DD/MM/YYYY) \nAppointment Available only for next 7 Day's Only");
 					} else if (interactiveType === "list_reply" && user.userStat === "DAY-PART-SELECTION") {
@@ -420,7 +420,7 @@ router.post("/", async (req, res) => {
 							await SendSlotMessages(recipientNumber, res, listReply.id);
 							await db.WhatsappUser.update(
 								{ userStat: "TIME-SELECTION" },
-								{ where: { phone: recipientNumber, appointment_confirmed: false } }
+								{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 							);
 						} else {
 							console.log('some issue is there');
@@ -431,7 +431,7 @@ router.post("/", async (req, res) => {
 						const time = listReply.title.split(": ")[1];
 						await db.WhatsappUser.update(
 							{ userStat: "FULL-NAME", appointmentTime: time },
-							{ where: { phone: recipientNumber, appointment_confirmed: false } }
+							{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 						);
 						// await db.Schedule.update(
 						// 	{ userStat: "FULL-NAME", appointmentTime: time },
@@ -443,7 +443,7 @@ router.post("/", async (req, res) => {
 					if (interactiveType === "button_reply" && user.userStat === "GENDER") {
 						await db.WhatsappUser.update(
 							{ userStat: "EMAIL", gender: reply.id },
-							{ where: { phone: recipientNumber, appointment_confirmed: false } }
+							{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 						);
 						await sendRegistrationMessage(
 							recipientNumber,
@@ -459,7 +459,7 @@ router.post("/", async (req, res) => {
 							// );
 							await db.WhatsappUser.update(
 								{ userStat: "DEPARTMENT-SELECTION" },
-								{ where: { phone: recipientNumber, appointment_confirmed: false } }
+								{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 							);
 							const listOfDepartment =
 								await findDoctorDepartmentList();

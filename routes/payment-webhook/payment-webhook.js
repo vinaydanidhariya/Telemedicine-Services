@@ -79,14 +79,14 @@ router.post("/payment-callback1", async function (req, res, next) {
 
                     await db.WhatsappUser.update(
                         { useStat: "PAYMENT-DONE", paymentId: orderId },
-                        { where: { phone: mobile, appointment_confirmed: false } })
+                        { where: { phone: mobile, appointmentConfirmed: false } })
 
                     const message = await transactionMessage(name, amount / 100, orderId);
                     await sendRegistrationMessage(mobile, `${message}`);
 
                     const userInfo = await db.WhatsappUser.findOne(
                         {
-                            where: { phone: mobile, appointment_confirmed: false }
+                            where: { phone: mobile, appointmentConfirmed: false }
                         });
 
                     const prescription = await db.Prescription.create({
@@ -107,12 +107,12 @@ router.post("/payment-callback1", async function (req, res, next) {
                     await db.WhatsappUser.update(
                         {
                             userStat: "SEND-APPOINTMENT",
-                            appointment_confirmed: true
+                            appointmentConfirmed: true
                         },
                         {
                             where: {
                                 phone: mobile,
-                                appointment_confirmed: false
+                                appointmentConfirmed: false
                             },
                         }
                     );
