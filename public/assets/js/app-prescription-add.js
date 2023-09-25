@@ -19,14 +19,12 @@ $(function () {
 		t = $(".source-item"),
 		c = {
 			"Probable-Diagnosis": "Probable Diagnosis.",
-			"briefMedicalHistory": "Brief Medical History.",
-			"prescribedMedicine": "Prescribed Medicine.",
-			"requiredInvestigation": "Required Investigation.",
-			"followUpInstructions": "Follow-Up Instructions.",
-			"extraAdvice": "Extra Advice.",
+			"brief-Medical-History": "Brief Medical History.",
+			"prescribed-Medicine": "Prescribed Medicine.",
+			"required-Investigation": "Required Investigation.",
+			"follow-Up-Instructions": "Follow-Up Instructions.",
+			"extra-Advice": "Extra Advice.",
 		};
-
-
 
 	function updateText(element, text) {
 		element.closest(".repeater-wrapper").find(".tax-1").text(text);

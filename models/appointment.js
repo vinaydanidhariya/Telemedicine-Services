@@ -42,8 +42,8 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
             },
             prescriptionId: {
-                type: DataTypes.INTEGER, // Adjust the data type as needed
-                field: "prescription_id", // Adjust the field name
+                type: DataTypes.INTEGER, 
+                field: "prescription_id",
                 allowNull: true,
             },
             status: {
