@@ -36,7 +36,7 @@ router.post("/", async (req, res) => {
 			const message = messages[0];
 			const messageType = message.type;
 			const ExitsUser = await db.WhatsappUser.findOne({
-				where: { wa_id: wa_id, appointment_confirmed: false },
+				where: { wa_id: wa_id },
 			});
 			if (!ExitsUser) {
 				const name =
