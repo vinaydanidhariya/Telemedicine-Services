@@ -154,7 +154,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 async function SendSlotMessages(recipientNumber, res, daySelection) {
 
 	const user = await db.WhatsappUser.findOne({
-		where: { phone: recipientNumber },
+		where: { phone: recipientNumber, appointment_confirmed: false },
 		attributes: ["selectedDoctor", "appointmentDate", "appointmentTime"],
 		raw: true,
 	});
@@ -469,27 +469,27 @@ const sendGenderSelectionMessage = (recipient) => {
 // Function to handle different chatbot states
 const handleMessage = async (message, recipientNumber) => {
 	const user = await db.WhatsappUser.findOne({
-		where: { phone: recipientNumber },
+		where: { phone: recipientNumber, appointment_confirmed: false },
 	});
 	switch (user.userStat) {
 		case "PAYMENT_DONE":
 			await db.WhatsappUser.update(
 				{ userStat: "END", paymentDone: message },
-				{ where: { phone: recipientNumber } }
+				{ where: { phone: recipientNumber, appointment_confirmed: false } }
 			);
 			return "Kindly note that it's an online consultation. If your symptoms worsen or in an emergency, please visit a nearby doctor. Thank you!";
 
 		case "END":
 			await db.WhatsappUser.update(
 				{ userStat: "COMPLETE", paymentDone: message },
-				{ where: { phone: recipientNumber } }
+				{ where: { phone: recipientNumber, appointment_confirmed: false } }
 			);
 			return "Your Appointment Booked!!!!!!!";
 
 		default:
 			await db.WhatsappUser.update(
 				{ userStat: "START" },
-				{ where: { phone: recipientNumber } }
+				{ where: { phone: recipientNumber, appointment_confirmed: false } }
 			);
 			// Handle additional userStats or conditions
 			return "Something went Wrong";
@@ -853,7 +853,7 @@ const findDoctorDepartmentList = async () => {
 
 const GetPaymentUrl = async (wa_id) => {
 	try {
-		const user = await db.WhatsappUser.findOne({ where: { wa_id } });
+		const user = await db.WhatsappUser.findOne({ where: { wa_id, appointment_confirmed: false } });
 		let url = Config.serverUrl + "/whatsapp-payment/create-payment";
 		const response = await axios(url, {
 			method: "POST",
