@@ -300,7 +300,7 @@ router.post("/", async (req, res) => {
 									}
 								);
 								const userinfo = await db.WhatsappUser.findOne({
-									where: { phone: recipientNumber, appointment_confirmed: true },
+									where: { phone: recipientNumber, appointment_confirmed: false },
 								});
 								const data = appointmentMessage(
 									userinfo.fullName,
