@@ -109,6 +109,7 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 	const chosenSlots = await db.WhatsappUser.findAll({
 		where: searchObject,
 		raw: true,
+		// appointment_confirmed: true
 	});
 	let timeSlots = generateTimeSlotsFromEventRanges(eventTimeRanges);
 	if (chosenSlots && chosenSlots.length) {
@@ -210,7 +211,7 @@ async function SendSlotMessages(recipientNumber, res, daySelection) {
 		);
 		await db.WhatsappUser.update(
 			{ userStat: "DATE-SELECTION" },
-			{ where: { phone: recipientNumber } }
+			{ where: { phone: recipientNumber, appointment_confirmed: false } }
 		);
 		sendAppointmentDateReplyButton(recipientNumber);
 		return;

@@ -36,7 +36,7 @@ router.post("/", async (req, res) => {
 			const message = messages[0];
 			const messageType = message.type;
 			const ExitsUser = await db.WhatsappUser.findOne({
-				where: { wa_id: wa_id },
+				where: { wa_id: wa_id, appointment_confirmed: false },
 			});
 			if (!ExitsUser) {
 				const name =
@@ -290,8 +290,7 @@ router.post("/", async (req, res) => {
 							case "PAYMENT-DONE":
 								await db.WhatsappUser.update(
 									{
-										userStat: "SEND-APPOINTMENT",
-										appointment_confirmed: true
+										userStat: "SEND-APPOINTMENT"
 									},
 									{
 										where: {
@@ -412,7 +411,7 @@ router.post("/", async (req, res) => {
 					} else if (interactiveType === "button_reply" && user.userStat === "DATE-SELECTION" && reply.id === "onSpecificDayButton") {
 						await db.WhatsappUser.update(
 							{ userStat: "ON-SPECIFIC-DAY" },
-							{ where: { phone: recipientNumber } }
+							{ where: { phone: recipientNumber, appointment_confirmed: false } }
 						);
 						sendRegistrationMessage(recipientNumber, "TYPE DATE 📅 \n Formate (DD/MM/YYYY) \nAppointment Available only for next 7 Day's Only");
 					} else if (interactiveType === "list_reply" && user.userStat === "DAY-PART-SELECTION") {
