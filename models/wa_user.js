@@ -135,7 +135,6 @@ module.exports = (sequelize, DataTypes) => {
       appointmentConfirmed: {
         type: DataTypes.BOOLEAN,
         field: "appointment_confirmed",
-        defaultValue: false,
         allowNull: true,
       }
     },
