@@ -1,7 +1,7 @@
 {
 	"admin/dashboard": {
 		"ADMIN": true,
-		"DOCTOR": true
+		"DOCTOR": false
 	},
 	"admin/report": {
 		"ADMIN": true,

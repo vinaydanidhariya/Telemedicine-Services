@@ -129,11 +129,6 @@ module.exports = {
 				where: { userId: req.user.userId },
 			});
 			if (user.isOTP) {
-				const dashboardPath =
-					req.user.type === "ADMIN"
-						? "/admin/dashboard"
-						: "/doctor/dashboard";
-
 				res.locals.userSession = req.user;
 				if (req.user.logout != undefined && req.user.logout == true) {
 					req.logout(); //passport logout method
@@ -144,9 +139,7 @@ module.exports = {
 						type: "error",
 					});
 				}
-				console.log("asd");
 				next();
-				// return res.redirect(dashboardPath);
 			} else {
 				return res.redirect("/admin/verify-otp");
 			}
