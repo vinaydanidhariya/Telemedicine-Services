@@ -3,6 +3,10 @@
 		"ADMIN": true,
 		"DOCTOR": false
 	},
+	"chart/doctor": {
+		"ADMIN": true,
+		"DOCTOR": true
+	},
 	"admin/report": {
 		"ADMIN": true,
 		"DOCTOR": false

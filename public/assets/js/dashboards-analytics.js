@@ -4,7 +4,7 @@ let isDarkStyle = function () {
 }
 !function () {
     let o, r, e, t, s, i;
-    i = (isDarkStyle ? (o = config.colors_dark.cardColor,
+    i = (false ? (o = config.colors_dark.cardColor,
         r = config.colors_dark.headingColor,
         e = config.colors_dark.bodyColor,
         t = config.colors_dark.textMuted,
@@ -467,60 +467,60 @@ let isDarkStyle = function () {
                 }
             }
         }
-        , a = (null !== a && new ApexCharts(a, n).render(),
-            document.querySelector("#profileReportChart"))
-        , n = {
-            chart: {
-                height: 80,
-                type: "line",
-                toolbar: {
-                    show: !1
-                },
-                dropShadow: {
-                    enabled: !0,
-                    top: 10,
-                    left: 5,
-                    blur: 3,
-                    color: config.colors.warning,
-                    opacity: .15
-                },
-                sparkline: {
-                    enabled: !0
-                }
-            },
-            grid: {
-                show: !1,
-                padding: {
-                    right: 8
-                }
-            },
-            colors: [config.colors.warning],
-            dataLabels: {
-                enabled: !1
-            },
-            stroke: {
-                width: 5,
-                curve: "smooth"
-            },
-            series: [{
-                data: [110, 270, 145, 245, 205, 285]
-            }],
-            xaxis: {
-                show: !1,
-                lines: {
-                    show: !1
-                },
-                labels: {
-                    show: !1
-                },
-                axisBorder: {
-                    show: !1
-                }
-            },
-            yaxis: {
-                show: !1
-            }
-        }
+        // , a = (null !== a && new ApexCharts(a, n).render(),
+        //     document.querySelector("#profileReportChart"))
+        // , n = {
+        //     chart: {
+        //         height: 80,
+        //         type: "line",
+        //         toolbar: {
+        //             show: !1
+        //         },
+        //         dropShadow: {
+        //             enabled: !0,
+        //             top: 10,
+        //             left: 5,
+        //             blur: 3,
+        //             color: config.colors.warning,
+        //             opacity: .15
+        //         },
+        //         sparkline: {
+        //             enabled: !0
+        //         }
+        //     },
+        //     grid: {
+        //         show: !1,
+        //         padding: {
+        //             right: 8
+        //         }
+        //     },
+        //     colors: [config.colors.warning],
+        //     dataLabels: {
+        //         enabled: !1
+        //     },
+        //     stroke: {
+        //         width: 5,
+        //         curve: "smooth"
+        //     },
+        //     series: [{
+        //         data: [110, 270, 145, 245, 205, 285]
+        //     }],
+        //     xaxis: {
+        //         show: !1,
+        //         lines: {
+        //             show: !1
+        //         },
+        //         labels: {
+        //             show: !1
+        //         },
+        //         axisBorder: {
+        //             show: !1
+        //         }
+        //     },
+        //     yaxis: {
+        //         show: !1
+        //     }
+        // }
         , a = (null !== a && new ApexCharts(a, n).render(),
             document.querySelector("#orderStatisticsChart"))
         , n = {
@@ -592,7 +592,7 @@ let isDarkStyle = function () {
                 data: [24, 21, 30, 22, 42, 26, 35, 29]
             }],
             chart: {
-                height: 215,
+                height: 350,
                 parentHeightOffset: 0,
                 parentWidthOffset: 0,
                 toolbar: {
@@ -742,4 +742,91 @@ let isDarkStyle = function () {
             }
         };
     null !== a && new ApexCharts(a, n).render()
+
+    // Define the URL of your API endpoint.
+    const apiUrl = '/doctor-analytics/month-revenue';
+    const monthAmount =document.querySelector(".month-revenue-amount");
+    const presentMonthYear =document.querySelector(".present_month_year");
+
+    // Fetch data from the API.
+    fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+            monthAmount.textContent = data.totalPaymentAmount;
+            presentMonthYear.textContent = data.currentMonth;
+            const chartConfig = {
+                chart: {
+                    height: 80,
+                    type: "line",
+                    toolbar: {
+                        show: !1
+                    },
+                    dropShadow: {
+                        enabled: !0,
+                        top: 10,
+                        left: 5,
+                        blur: 3,
+                        color: config.colors.warning,
+                        opacity: .15
+                    },
+                    sparkline: {    
+                        enabled: !0
+                    }
+                },
+                grid: {
+                    show: !1,
+                    padding: {
+                        right: 8
+                    }
+                },
+                colors: [config.colors.warning],
+                dataLabels: {
+                    enabled: !1
+                },
+                stroke: {
+                    width: 5,
+                    curve: "smooth"
+                },
+                series: [{
+                    data: data.transactionCounts 
+                }],
+                xaxis: {
+                    show: !1,
+                    lines: {
+                        show: !1
+                    },
+                    labels: {
+                        show: !1
+                    },
+                    axisBorder: {
+                        show: !1
+                    }
+                },
+                yaxis: {
+                    show: !1
+                }
+            };
+
+            // Render the chart with the dynamic configuration.
+            const profileReportChart = document.querySelector("#profileReportChart");
+            if (profileReportChart) {
+                new ApexCharts(profileReportChart, chartConfig).render();
+            }
+        })
+        .catch((error) => {
+            console.error('Error fetching data:', error);
+        });
+
 }();
+
+
+
+
+
+
+
+
+
+
+
+
