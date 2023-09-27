@@ -102,7 +102,7 @@ $(function () {
                 targets: 10,
                 responsivePriority: 1
             },
-            
+
             {
                 targets: 11,
                 orderable: false,
@@ -110,7 +110,7 @@ $(function () {
                 title: "Write Prescription",
                 render: function (data, type, row, meta) {
                     return `
-                        <a href="javascript:;" class="btn btn-sm btn-icon send-btn">
+                        <a href='/doctor/send-prescription/${row.prescription_id}' class="btn btn-sm btn-icon send-btn send-prescription">
                             <i class="bx bxs-send"></i>
                         </a>`;
                 }
@@ -216,6 +216,7 @@ $(function () {
                 }),
                 type: "column",
                 renderer: function (e, t, a) {
+                    console.log(e)
                     a = $.map(a, function (e, t) {
                         return "" !== e.title ? '<tr data-dt-row="' + e.rowIndex + '" data-dt-column="' + e.columnIndex + '"><td>' + e.title + ":</td> <td>" + e.data + "</td></tr>" : ""
                     }).join("");
@@ -229,88 +230,7 @@ $(function () {
         l.row($(this).parents("tr")).remove().draw()
     }), setTimeout(() => {
         $(".dataTables_filter .form-control").removeClass("form-control-sm"), $(".dataTables_length .form-select").removeClass("form-select-sm")
-    }, 300)
-
-    $(".datatable-doctor-upcoming-appointment-list tbody").on("click", ".item-edit", function () {
-        // Retrieve the data associated with the row
-        var rowData = l.row($(this).parents("tr")).data();
-        // Assuming your modal content has an element with the ID "modalContent"
-        var modalContent = $(".modal-body");
-
-        // Clear previous content in the modal (if any)
-        modalContent.empty();
-
-        // Close the tableHTML
-        var HTML = `
-        <div class="container mt-5">
-            <form id="prescription-form">
-                <h3 class="mb-4">Patient Information</h3>
-        
-                <!-- Patient Details -->
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="patient-weight" class="form-label">Weight (kg):</label>
-                        <input type="text" id="patient-weight" name="patientWeight" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="patient-age" class="form-label">Age:</label>
-                        <input type="number" id="patient-age" name="patientAge" class="form-control" required>
-                    </div>
-                </div>
-        
-                <h3 class="mb-4">Medical Information</h3>
-                <!-- Medical Information -->
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="probable-diagnosis" class="form-label">Probable Diagnosis:</label>
-                        <textarea id="probable-diagnosis" name="probableDiagnosis" class="form-control" required></textarea>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="medical-history" class="form-label">Brief Medical History:</label>
-                        <textarea id="medical-history" name="medicalHistory" class="form-control" required></textarea>
-                    </div>
-                </div>
-        
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="prescribed-medicine" class="form-label">Prescribed Medicine:</label>
-                        <textarea id="prescribed-medicine" name="prescribedMedicine" class="form-control" required></textarea>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="extra-advice" class="form-label">Extra Advice:</label>
-                        <textarea id="extra-advice" name="extraAdvice" class="form-control"></textarea>
-                    </div>
-                </div>
-        
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="required-investigation" class="form-label">Required Investigation:</label>
-                        <textarea id="required-investigation" name="requiredInvestigation" class="form-control"></textarea>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="follow-up-instructions" class="form-label">Follow-up Instructions:</label>
-                        <textarea id="follow-up-instructions" name="followUpInstructions" class="form-control"></textarea>
-                    </div>
-                </div>
-        
-                <!-- Buttons -->
-                <div class="text-center">
-                <button type="submit" class="btn btn-primary">
-                <i class='bx bx-envelope'></i> Send Email Prescription
-            </button>
-            <button type="submit" class="btn btn-primary">
-                <i class='bx bxl-whatsapp'></i> Send to WhatsApp Prescription
-            </button>
-                </div>
-            </form>
-        </div>
-    `
-        // Append the table to the modal content
-        modalContent.append(HTML);
-
-        // Show the modal manually
-        $('#modalCenter').modal('show');
-    });
+    }, 300);
 
     $('.datatable-doctor-upcoming-appointment-list tbody').on('click', '.send-btn', function () {
         var rowData = l.row($(this).parents("tr")).data();

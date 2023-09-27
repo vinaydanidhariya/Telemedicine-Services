@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
 				success: function (response) {
 					if (response.type === "success") {
 						showAlert("success", response.message);
-						window.location.href = "/admin/dashboard";
+						window.location.href = "/admin";
 					} else {
 						showAlert("danger", response.message);
 					}

@@ -15,18 +15,12 @@
                             <div class="col-md-6 mb-md-0 mb-4">
                                 <div class="d-flex svg-illustration mb-4 gap-2">
                                     <span class="app-brand-logo demo">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"
-                                            viewBox="0 0 100 100">
-                                            <circle cx="50" cy="50" r="45" fill="#696CFF" />
-                                            <text x="50" y="58" font-family="Arial, sans-serif" font-size="36"
-                                                text-anchor="middle" fill="#FFFFFF">childDr</text>
-                                        </svg>
+                                        <img src="/assets/img/childdr-logo.png" width="5%" alt="ChildDR" >
                                     </span>
                                     <span class="app-brand-text demo text-body fw-bolder">ChildDr</span>
                                 </div>
-                                <p class="mb-1">Office 149, 450 South Brand Brooklyn</p>
-                                <p class="mb-1">San Diego County, CA 91905, USA</p>
-                                <p class="mb-0">+1 (123) 456 7891</p>
+                                <p class="mb-1">{{prescription.doctor.physicalPractice}}</p>
+                                <p class="mb-0">{{prescription.doctor.phone}}</p>
                             </div>
                             <div class="col-md-6">
                                 <dl class="row mb-2">
@@ -88,6 +82,10 @@
                                         <tr>
                                             <td class="pe-3">Phone No:</td>
                                             <td>{{prescription.doctor.phone}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pe-3">Email:</td>
+                                            <td>{{prescription.doctor.email}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -153,15 +151,15 @@
                                                             <option selected disabled>Select Item</option>
                                                             <option value="Probable-Diagnosis">Probable Diagnosis
                                                             </option>
-                                                            <option value="briefMedicalHistory">Brief Medical History
+                                                            <option value="brief-Medical-History">Brief Medical History
                                                             </option>
-                                                            <option value="prescribedMedicine">Prescribed Medicine
+                                                            <option value="prescribed-Medicine">Prescribed Medicine
                                                             </option>
-                                                            <option value="requiredInvestigation">Required Investigation
+                                                            <option value="required-Investigation">Required Investigation
                                                             </option>
-                                                            <option value="followUpInstructions">Follow-Up Instructions
+                                                            <option value="follow-Up-Instructions">Follow-Up Instructions
                                                             </option>
-                                                            <option value="extraAdvice">Extra Advice</option>
+                                                            <option value="extra-Advice">Extra Advice</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
@@ -306,7 +304,7 @@
     $(document).ready(function () {
         flatpickr(".datetime-picker", {
             dateFormat: "d/m/Y",
-            defaultDate: moment.utc()
+            defaultDate: new Date()
         });
 
         const sendButton = document.querySelector("#emailSendButton");
@@ -440,7 +438,7 @@
         const prescriptionId = document.getElementById('prescriptionId').value;
 
         // Construct the URL with the prescription ID
-        const url = `/doctor/generate-prescription/${prescriptionId}`;
+        const url = `/doctor/prescription-pdf/${prescriptionId}`;
 
         // Navigate to the URL
         window.location.href = url;

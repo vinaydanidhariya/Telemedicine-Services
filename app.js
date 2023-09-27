@@ -22,6 +22,7 @@ const webSettingsRouter = require("./routes/admin/web-setting")
 const departmentRouter = require("./routes/admin/department")
 const dashboardRouter = require("./routes/admin/dashboard")
 const uploadRouter = require("./routes/admin/upload")
+const doctorAnalytics = require("./routes/doctor/dashboard/dashboard-chart")
 const auth = require("./middleware/login_module");
 const config = require('./config/config.js')
 
@@ -84,6 +85,7 @@ app.use('/upload', uploadRouter);
 app.use('/doctor', doctorAccess);
 app.use('/web-setting', webSettingsRouter);
 app.use('/department', departmentRouter);
+app.use('/doctor-analytics', doctorAnalytics);
 
 app.use(function (req, res, next) {
 	next(createError(404));

@@ -17,7 +17,7 @@ const transporter = nodeMailer.createTransport({
 });
 router.post("/create-payment", async function (req, res, next) {
     try {
-        let { userId, fullName, price, email, phone } = req.body
+        let { userId, fullName, price, email, phone, selectedDoctor } = req.body
 
         var instance = new Razorpay({
             key_id: Config.Razorpay.key_id,
@@ -32,7 +32,8 @@ router.post("/create-payment", async function (req, res, next) {
                 id: userId,
                 name: fullName,
                 email: email,
-                mobile: phone
+                mobile: phone, 
+                selectedDoctor: selectedDoctor
             },
         });
         console.log(id)
@@ -59,6 +60,7 @@ router.post("/payment-callback1", async function (req, res, next) {
                     const name = data.entity.notes.name;
                     const email = data.entity.notes.email;
                     const mobile = data.entity.notes.mobile;
+                    const selectedDoctor = data.entity.notes.selectedDoctor;
                     const orderId = data.entity.order_id;
                     const status = data.entity.status;
                     const amount = data.entity.amount;
@@ -73,6 +75,7 @@ router.post("/payment-callback1", async function (req, res, next) {
                         payerEmail: email,
                         payerMobile: mobile,
                         paymentAmount: amount / 100,
+                        receiverUserId: selectedDoctor,
                         orderId,
                         paymentStatus: status
                     })

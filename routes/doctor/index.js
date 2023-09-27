@@ -14,6 +14,7 @@ const readFileAsync = util.promisify(fs.readFile);
 const request = require("request");
 const { validateMediaSize, mediaLimits } = require("../../helpers/validations"); // Make sure to adjust the path accordingly
 const Config = require("../../config/config.json")[process.env.NODE_ENV];
+const myNumberId = process.env.PHONE_NUMBER_ID;
 
 router.get(
 	"/dashboard",
@@ -47,94 +48,10 @@ router.get(
 );
 
 router.get(
-	"/generate-prescription/:id",
-	authentication,
-	checkAccess("doctor/appointments-list"),
-	async function (req, res, next) {
-		console.log(req.params);
-		try {
-			const prescriptionId = req.params.id;
-			const prescription = await db.Prescription.findOne({
-				where: {
-					prescriptionId: prescriptionId,
-					doctorId: req.user.userId,
-				},
-				attributes: [
-					"prescriptionId",
-					"patientId",
-					"doctorId",
-					"medicines",
-					"medicalInfo",
-					"prescriptionMsg",
-					"note",
-					// [
-					// 	db.sequelize.fn(
-					// 		"to_char",
-					// 		db.sequelize.col("createdAt"),
-					// 		"DD/MM/YYYY"
-					// 	),
-					// 	"createdAt",
-					// ],
-					// [
-					// 	db.sequelize.fn(
-					// 		"to_char",
-					// 		db.sequelize.col("updatedAt"),
-					// 		"DD/MM/YYYY"
-					// 	),
-					// 	"updatedAt",
-					// ],
-				],
-				include: [
-					{
-						model: db.User,
-						as: "doctor",
-						attributes: [
-							"userId",
-							"firstName",
-							"lastName",
-							"phone",
-							"email",
-							"department",
-						],
-					},
-					{
-						model: db.WhatsappUser,
-						as: "patient",
-						attributes: [
-							"userId",
-							"fullName",
-							"phone",
-							"email",
-							"gender",
-							[
-								db.sequelize.literal(
-									`EXTRACT(YEAR FROM age("patient"."date_of_birth"))`
-								),
-								"age",
-							],
-						],
-					},
-				],
-			});
-			console.log(prescription.toJSON());
-			res.render("doctor/pdf-prescription", {
-				title: "Prescription",
-				layout: "blank",
-				prescription: prescription.toJSON(),
-			});
-		} catch (error) {
-			console.error("Error fetching prescription:", error);
-			// Handle the error appropriately, e.g., redirect or render an error page
-		}
-	}
-);
-
-router.get(
 	"/send-prescription/:id",
 	authentication,
 	checkAccess("doctor/appointments-list"),
 	async function (req, res, next) {
-		console.log(req.params);
 		try {
 			const prescriptionId = req.params.id;
 			const prescription = await db.Prescription.findOne({
@@ -153,6 +70,7 @@ router.get(
 							"phone",
 							"email",
 							"department",
+							"physicalPractice"
 						], // Select specific doctor attributes you want
 					},
 					{
@@ -175,8 +93,6 @@ router.get(
 					},
 				],
 			});
-			console.log(prescription.toJSON());
-
 			res.render("doctor/send-prescription", {
 				title: "Prescription",
 				prescription: prescription.toJSON(),
@@ -189,14 +105,11 @@ router.get(
 );
 
 router.get("/prescription-pdf/:id", async function (req, res, next) {
-	console.log(req.params);
-	console.log("req.user");
-	console.log(req.user);
 	try {
 		const prescriptionId = req.params.id;
 		const prescription = await db.Prescription.findOne({
 			where: {
-				prescriptionId: prescriptionId
+				prescriptionId: prescriptionId,
 			},
 			attributes: [
 				"prescriptionId",
@@ -206,22 +119,14 @@ router.get("/prescription-pdf/:id", async function (req, res, next) {
 				"medicalInfo",
 				"prescriptionMsg",
 				"note",
-				// [
-				// 	db.sequelize.fn(
-				// 		"to_char",
-				// 		db.sequelize.col("createdAt"),
-				// 		"DD/MM/YYYY"
-				// 	),
-				// 	"createdAt",
-				// ],
-				// [
-				// 	db.sequelize.fn(
-				// 		"to_char",
-				// 		db.sequelize.col("updatedAt"),
-				// 		"DD/MM/YYYY"
-				// 	),
-				// 	"updatedAt",
-				// ],
+				[
+					db.sequelize.fn(
+						"to_char",
+						db.sequelize.col("Prescription.updatedAt"),
+						"DD/MM/YYYY"
+					),
+				"updatedAt",
+				],
 			],
 			include: [
 				{
@@ -234,6 +139,7 @@ router.get("/prescription-pdf/:id", async function (req, res, next) {
 						"phone",
 						"email",
 						"department",
+						"physicalPractice"
 					],
 				},
 				{
@@ -254,16 +160,12 @@ router.get("/prescription-pdf/:id", async function (req, res, next) {
 					],
 				},
 			],
-			raw: true
 		});
-
-		console.log("pppppppppppppppppp");
-		console.log(prescription);
 
 		res.render("doctor/pdf-prescription", {
 			title: "Prescription",
+			prescription: prescription.toJSON(),
 			layout: false,
-			prescription: prescription,
 		});
 	} catch (error) {
 		console.error("Error fetching prescription:", error);
@@ -273,9 +175,7 @@ router.get("/prescription-pdf/:id", async function (req, res, next) {
 
 router.post("/download-pdf", async (req, res) => {
 	try {
-		console.log(req.body);
 		const { prescriptionId, subject, message, patientEmail } = req.body;
-		console.log(patientEmail);
 		const appointment = await db.Appointment.findOne({
 			where: { prescriptionId }, // Change the condition as needed
 			include: [
@@ -341,7 +241,7 @@ router.post("/download-pdf", async (req, res) => {
 });
 
 async function generatePDF(req, prescriptionId) {
-	const browser = await puppeteer.launch();
+	const browser = await puppeteer.launch({ headless: true });
 	const page = await browser.newPage();
 
 	const response = await page.goto(
@@ -369,31 +269,6 @@ async function generatePDF(req, prescriptionId) {
 
 	return pdfBuffer;
 }
-
-// async function sendEmailWithRetry(pdfBuffer, req, res) {
-// 	const retryCount = 3;
-// 	const delay = 5000;
-// 	for (let attempt = 1; attempt <= retryCount; attempt++) {
-// 		try {
-// 			// Send email and break out of the loop if successful
-// 			if (await sendEmail(pdfBuffer)) {
-// 				console.log("Email sent successfully");
-// 				break; // Break the loop if both email and Facebook API succeed
-// 			}
-// 		} catch (error) {
-// 			console.error(`Attempt ${attempt} failed with error:`, error);
-// 			if (attempt < retryCount) {
-// 				console.log(`Retrying in ${delay / 1000} seconds...`);
-// 				await new Promise((resolve) => setTimeout(resolve, delay));
-// 			} else {
-// 				console.error(
-// 					"All retry attempts failed. Email could not be sent."
-// 				);
-// 				res.status(500).send("Email could not be sent.");
-// 			}
-// 		}
-// 	}
-// }
 
 async function sendEmail(pdfBuffer, userInfo) {
 	try {
@@ -477,7 +352,7 @@ async function uploadPdfToFacebook(pdfBuffer) {
 	return new Promise((resolve, reject) => {
 		request.post(
 			{
-				url: `https://graph.facebook.com/v13.0/107565462372831/media`,
+				url: `https://graph.facebook.com/v13.0/${myNumberId}/media`,
 				formData: {
 					file: {
 						value: pdfBuffer,
@@ -572,7 +447,6 @@ router.post(
 				req.body.medicalIn,
 				/medical-info\[(\d+)\]\[(\w+)\]/
 			);
-			console.log(extractedMedicalInfo);
 			const prescriptionMsg = req.body.prescriptionMsg;
 			const note = req.body.note;
 			const patientId = req.body.patientId;
@@ -587,7 +461,6 @@ router.post(
 				prescriptionMsg: prescriptionMsg,
 				note: note,
 			};
-			console.log(req.body);
 
 			// Create a new prescription record using the organized data
 			const createdPrescription = await db.Prescription.update(
@@ -599,8 +472,6 @@ router.post(
 					},
 				}
 			);
-			console.log("Prescription created:", createdPrescription);
-
 			// Respond to the client
 			res.status(200).json({
 				message: "Data received and processed successfully.",
@@ -660,16 +531,6 @@ router.get(
 			title: "doctor-schedule",
 			doctor: doctor.toJSON(),
 		});
-	}
-);
-
-router.post(
-	"/scheduler",
-	authentication,
-	checkAccess("doctor/schedule"),
-	function (req, res, next) {
-		console.log(req.body);
-		console.log(req.query);
 	}
 );
 
@@ -878,7 +739,7 @@ router.post(
 					attributes: ["user_id", "first_name", "last_name"],
 				},
 			],
-			attributes: ["appointment_id", "prescription", "status"],
+			attributes: ["appointment_id", "prescription_id", "status"],
 			// raw: true
 		});
 		res.status(200).json(appointment);

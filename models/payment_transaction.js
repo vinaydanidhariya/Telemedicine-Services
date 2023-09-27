@@ -27,9 +27,14 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             field: 'payer_user_id'
         },
+        receiverUserId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            field: 'receiver_user_id'
+        },
         PaymentTransactionId: {
             type: DataTypes.TEXT,
-            field: 'Payment_transaction_id',
+            field: 'payment_transaction_id',
             allowNull: true,
         },
         payerName: {
@@ -48,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
         },
         paymentAmount: {
-            type: DataTypes.TEXT,
+            type: DataTypes.INTEGER,
             field: 'payment_amount',
             allowNull: true,
         },
