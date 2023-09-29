@@ -3,36 +3,45 @@ const express = require("express");
 const router = express.Router();
 const authentication = require("../../../middleware/login_module").check_auth;
 const db = require("../../../models");
-const { sequelize, DataTypes, Op } = require('sequelize');
-const { response } = require("../../../app");
+const { Op } = require('sequelize');
 
 
-router.get("/total-revenue", authentication, checkAccess('chart/doctor'), async function (req, res, next) {
+router.get("/appointment-stat", authentication, checkAccess('chart/doctor'), async function (req, res, next) {
 	try {
-		const data = [110, 270, 145, 245, 205, 285]; // Replace with your data retrieval logic
 
-
-		const currentMonth = db.sequelize.literal("DATE_TRUNC('month', CURRENT_DATE)");
-		const currentYear = db.sequelize.literal("DATE_TRUNC('year', CURRENT_DATE)");
-
-		const results = await db.PaymentTransaction.findAll({
+		const results = await db.Appointment.findAll({
 			attributes: [
-				[db.sequelize.fn('DATE_TRUNC', 'day', db.sequelize.col('payment_date')), 'day'],
-				[db.sequelize.fn('COUNT', db.sequelize.col('*')), 'transaction_count'],
-				[db.sequelize.literal('CAST(SUM(payment_amount) AS INTEGER)'), 'total_paymentAmount'],
+				[db.sequelize.fn('COUNT', db.sequelize.col('*')), 'total_appointment'],
 			],
 			where: {
-				[Op.and]: [
-					db.sequelize.where(db.sequelize.fn('DATE_TRUNC', 'month', db.sequelize.col('payment_date')), currentMonth),
-					db.sequelize.where(db.sequelize.fn('DATE_TRUNC', 'year', db.sequelize.col('payment_date')), currentYear),
-				],
+				doctorId: req.user.userId
 			},
-			group: [db.sequelize.fn('DATE_TRUNC', 'day', db.sequelize.col('payment_date'))],
-			order: [db.sequelize.fn('DATE_TRUNC', 'day', db.sequelize.col('payment_date'))],
 			raw: true
 		});
-		console.log(results);
-		res.json(results);
+		const appointmentCount = results.map(result => parseInt(result.total_appointment));
+
+
+		const today = new Date();
+		const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+
+		const lastWeekAppointmentCount = await db.Appointment.findAll({
+			attributes: [
+				[db.sequelize.fn('COUNT', db.sequelize.col('*')), 'total_appointment'],
+			],
+			where: {
+				doctorId: req.user.userId,
+				'createdAt': {
+					[Op.gte]: lastWeek
+				}
+			},
+			raw: true
+		});
+		let response = {};
+		response.lastWeekAppointmentCount = lastWeekAppointmentCount[0].total_appointment;
+		response.appointmentCount = results[0].total_appointment;
+		console.log(response);
+
+		res.json(response);
 	} catch (error) {
 		console.log(error)
 	}
@@ -62,22 +71,27 @@ router.get("/month-revenue", authentication, checkAccess('chart/doctor'), async 
 						{ [Op.lte]: endDate },   // Less than or equal to the end of the month
 					],
 				},
+				receiverUserId: req.user.userId
 			},
 			group: [db.sequelize.fn('DATE_TRUNC', 'day', db.sequelize.col('payment_date'))],
 			order: [db.sequelize.fn('DATE_TRUNC', 'day', db.sequelize.col('payment_date'))],
 			raw: true,
 		});
-
-		// Extract transaction counts into a separate variable
+		const totalRevenue = await db.PaymentTransaction.findAll({
+			attributes: [
+				[db.sequelize.literal('CAST(SUM(payment_amount) AS INTEGER)'), 'total_paymentAmount'],
+			],
+			where: {
+				receiverUserId: req.user.userId
+			},
+			raw: true,
+		});
 		const transactionCounts = results.map(result => parseInt(result.transaction_count));
-
-		// Extract the total payment amount into a separate variable
-		const totalPaymentAmount = results.length > 0 ? parseInt(results[0].total_paymentAmount) : 0;
-
 		let response = {
 			transactionCounts: transactionCounts,
-			totalPaymentAmount: "₹ " + totalPaymentAmount,
-			currentMonth: currentMonth + "-" + currentYear
+			monthTotalPaymentAmount: "₹ " + results[0].total_paymentAmount,
+			currentMonth: currentMonth + "-" + currentYear,
+			totalRevenue: "₹ " + totalRevenue[0].total_paymentAmount
 		}
 
 		console.log(response);

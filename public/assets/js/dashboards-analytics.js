@@ -745,18 +745,20 @@ let isDarkStyle = function () {
 
     // Define the URL of your API endpoint.
     const apiUrl = '/doctor-analytics/month-revenue';
-    const monthAmount =document.querySelector(".month-revenue-amount");
-    const presentMonthYear =document.querySelector(".present_month_year");
+    const monthAmount = document.querySelector(".month-revenue-amount");
+    const totalRevenue = document.querySelector(".total-revenue-ana");
+    const presentMonthYear = document.querySelector(".present_month_year");
 
     // Fetch data from the API.
     fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
-            monthAmount.textContent = data.totalPaymentAmount;
+            monthAmount.textContent = data.monthTotalPaymentAmount;
+            totalRevenue.textContent = data.totalRevenue;
             presentMonthYear.textContent = data.currentMonth;
             const chartConfig = {
                 chart: {
-                    height: 80,
+                    height: 130,
                     type: "line",
                     toolbar: {
                         show: !1
@@ -769,7 +771,7 @@ let isDarkStyle = function () {
                         color: config.colors.warning,
                         opacity: .15
                     },
-                    sparkline: {    
+                    sparkline: {
                         enabled: !0
                     }
                 },
@@ -788,7 +790,7 @@ let isDarkStyle = function () {
                     curve: "smooth"
                 },
                 series: [{
-                    data: data.transactionCounts 
+                    data: data.transactionCounts
                 }],
                 xaxis: {
                     show: !1,
@@ -817,6 +819,77 @@ let isDarkStyle = function () {
             console.error('Error fetching data:', error);
         });
 
+
+
+    // Fetch data from the API.
+    fetch('/doctor-analytics/appointment-stat')
+        .then((response) => response.json())
+        .then((data) => {
+            const totalAppointmentCount = document.querySelector(".total-appointment-count");
+            const lastWeekAppointmentCount = document.querySelector(".last-week-appointment-count");
+            totalAppointmentCount.textContent = data.appointmentCount;
+            lastWeekAppointmentCount.textContent = data.lastWeekAppointmentCount;
+            const chartConfig = {
+                chart: {
+                    height: 150,
+                    type: "line",
+                    toolbar: {
+                        show: !1
+                    },
+                    dropShadow: {
+                        enabled: !0,
+                        top: 10,
+                        left: 5,
+                        blur: 3,
+                        color: config.colors.warning,
+                        opacity: .15
+                    },
+                    sparkline: {
+                        enabled: !0
+                    }
+                },
+                grid: {
+                    show: !1,
+                    padding: {
+                        right: 8
+                    }
+                },
+                colors: [config.colors.warning],
+                dataLabels: {
+                    enabled: !1
+                },
+                stroke: {
+                    width: 5,
+                    curve: "smooth"
+                },
+                series: [{
+                    data: [12,80,98,65]
+                }],
+                xaxis: {
+                    show: !1,
+                    lines: {
+                        show: !1
+                    },
+                    labels: {
+                        show: !1
+                    },
+                    axisBorder: {
+                        show: !1
+                    }
+                },
+                yaxis: {
+                    show: !1
+                }
+            };
+
+            const profileReportChart = document.querySelector("#appointmentStatisticsChart");
+            if (profileReportChart) {
+                new ApexCharts(profileReportChart, chartConfig).render();
+            }
+        })
+        .catch((error) => {
+            console.error('Error fetching data:', error);
+        });
 }();
 
 
