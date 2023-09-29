@@ -747,6 +747,8 @@ let isDarkStyle = function () {
     const apiUrl = '/doctor-analytics/month-revenue';
     const monthAmount = document.querySelector(".month-revenue-amount");
     const totalRevenue = document.querySelector(".total-revenue-ana");
+    const totalRevenueGraph = document.querySelector(".total-revenue-graph");
+    const todayRevenueResult = document.querySelector(".today-revenue-ana");
     const presentMonthYear = document.querySelector(".present_month_year");
 
     // Fetch data from the API.
@@ -755,7 +757,9 @@ let isDarkStyle = function () {
         .then((data) => {
             monthAmount.textContent = data.monthTotalPaymentAmount;
             totalRevenue.textContent = data.totalRevenue;
+            totalRevenueGraph.textContent = data.totalRevenue;
             presentMonthYear.textContent = data.currentMonth;
+            todayRevenueResult.textContent = data.todayRevenue;
             const chartConfig = {
                 chart: {
                     height: 130,
@@ -821,7 +825,7 @@ let isDarkStyle = function () {
 
 
 
-    // Fetch data from the API.
+    /// Fetch data from the API
     fetch('/doctor-analytics/appointment-stat')
         .then((response) => response.json())
         .then((data) => {
@@ -829,56 +833,57 @@ let isDarkStyle = function () {
             const lastWeekAppointmentCount = document.querySelector(".last-week-appointment-count");
             totalAppointmentCount.textContent = data.appointmentCount;
             lastWeekAppointmentCount.textContent = data.lastWeekAppointmentCount;
+
             const chartConfig = {
                 chart: {
                     height: 150,
                     type: "line",
                     toolbar: {
-                        show: !1
+                        show: false
                     },
                     dropShadow: {
-                        enabled: !0,
+                        enabled: true,
                         top: 10,
                         left: 5,
                         blur: 3,
                         color: config.colors.warning,
-                        opacity: .15
+                        opacity: 0.15
                     },
                     sparkline: {
-                        enabled: !0
+                        enabled: true
                     }
                 },
                 grid: {
-                    show: !1,
+                    show: false,
                     padding: {
                         right: 8
                     }
                 },
                 colors: [config.colors.warning],
                 dataLabels: {
-                    enabled: !1
+                    enabled: false
                 },
                 stroke: {
                     width: 5,
                     curve: "smooth"
                 },
                 series: [{
-                    data: [12,80,98,65]
+                    data: [12, 80, 98, 65] // Replace with your actual data
                 }],
                 xaxis: {
-                    show: !1,
+                    show: false,
                     lines: {
-                        show: !1
+                        show: false
                     },
                     labels: {
-                        show: !1
+                        show: false
                     },
                     axisBorder: {
-                        show: !1
+                        show: false
                     }
                 },
                 yaxis: {
-                    show: !1
+                    show: false
                 }
             };
 
@@ -890,6 +895,7 @@ let isDarkStyle = function () {
         .catch((error) => {
             console.error('Error fetching data:', error);
         });
+
 }();
 
 
