@@ -225,7 +225,7 @@ $(function () {
             }
         }
     }
-    ), $("div.head-label").html('<h5 class="card-title mb-0">Upcoming Appointment List</h5>')), 101);
+    ), $("div.head-label").html('<h5 class="card-title mb-0">Appointment List</h5>')), 101);
     $(".datatable-doctor-upcoming-appointment-list tbody").on("click", ".delete-record", function () {
         l.row($(this).parents("tr")).remove().draw()
     }), setTimeout(() => {
