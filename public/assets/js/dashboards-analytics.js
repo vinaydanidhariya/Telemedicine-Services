@@ -467,60 +467,6 @@ let isDarkStyle = function () {
                 }
             }
         }
-        // , a = (null !== a && new ApexCharts(a, n).render(),
-        //     document.querySelector("#profileReportChart"))
-        // , n = {
-        //     chart: {
-        //         height: 80,
-        //         type: "line",
-        //         toolbar: {
-        //             show: !1
-        //         },
-        //         dropShadow: {
-        //             enabled: !0,
-        //             top: 10,
-        //             left: 5,
-        //             blur: 3,
-        //             color: config.colors.warning,
-        //             opacity: .15
-        //         },
-        //         sparkline: {
-        //             enabled: !0
-        //         }
-        //     },
-        //     grid: {
-        //         show: !1,
-        //         padding: {
-        //             right: 8
-        //         }
-        //     },
-        //     colors: [config.colors.warning],
-        //     dataLabels: {
-        //         enabled: !1
-        //     },
-        //     stroke: {
-        //         width: 5,
-        //         curve: "smooth"
-        //     },
-        //     series: [{
-        //         data: [110, 270, 145, 245, 205, 285]
-        //     }],
-        //     xaxis: {
-        //         show: !1,
-        //         lines: {
-        //             show: !1
-        //         },
-        //         labels: {
-        //             show: !1
-        //         },
-        //         axisBorder: {
-        //             show: !1
-        //         }
-        //     },
-        //     yaxis: {
-        //         show: !1
-        //     }
-        // }
         , a = (null !== a && new ApexCharts(a, n).render(),
             document.querySelector("#orderStatisticsChart"))
         , n = {
@@ -586,94 +532,10 @@ let isDarkStyle = function () {
             }
         }
         , a = (null !== a && new ApexCharts(a, n).render(),
-            document.querySelector("#incomeChart"))
-        , n = {
-            series: [{
-                data: [24, 21, 30, 22, 42, 26, 35, 29]
-            }],
-            chart: {
-                height: 350,
-                parentHeightOffset: 0,
-                parentWidthOffset: 0,
-                toolbar: {
-                    show: !1
-                },
-                type: "area"
-            },
-            dataLabels: {
-                enabled: !1
-            },
-            stroke: {
-                width: 2,
-                curve: "smooth"
-            },
-            legend: {
-                show: !1
-            },
-            markers: {
-                size: 6,
-                colors: "transparent",
-                strokeColors: "transparent",
-                strokeWidth: 4,
-                discrete: [{
-                    fillColor: config.colors.white,
-                    seriesIndex: 0,
-                    dataPointIndex: 7,
-                    strokeColor: config.colors.primary,
-                    strokeWidth: 2,
-                    size: 6,
-                    radius: 8
-                }],
-                hover: {
-                    size: 7
-                }
-            },
-            colors: [config.colors.primary],
-            fill: {
-                type: "gradient",
-                gradient: {
-                    shade: s,
-                    shadeIntensity: .6,
-                    opacityFrom: .5,
-                    opacityTo: .25,
-                    stops: [0, 95, 100]
-                }
-            },
-            grid: {
-                borderColor: i,
-                strokeDashArray: 3,
-                padding: {
-                    top: -20,
-                    bottom: -8,
-                    left: -10,
-                    right: 8
-                }
-            },
-            xaxis: {
-                categories: ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-                axisBorder: {
-                    show: !1
-                },
-                axisTicks: {
-                    show: !1
-                },
-                labels: {
-                    show: !0,
-                    style: {
-                        fontSize: "13px",
-                        colors: t
-                    }
-                }
-            },
-            yaxis: {
-                labels: {
-                    show: !1
-                },
-                min: 10,
-                max: 50,
-                tickAmount: 4
-            }
-        }
+            document.querySelector("#orderStatisticsChart2"))
+
+
+    null !== a && new ApexCharts(a, n).render()
         , a = (null !== a && new ApexCharts(a, n).render(),
             document.querySelector("#expensesOfWeek"))
         , n = {
@@ -741,18 +603,102 @@ let isDarkStyle = function () {
                 }
             }
         };
-    null !== a && new ApexCharts(a, n).render()
 
-    // Define the URL of your API endpoint.
-    const apiUrl = '/doctor-analytics/month-revenue';
     const monthAmount = document.querySelector(".month-revenue-amount");
     const totalRevenue = document.querySelector(".total-revenue-ana");
     const totalRevenueGraph = document.querySelector(".total-revenue-graph");
     const todayRevenueResult = document.querySelector(".today-revenue-ana");
     const presentMonthYear = document.querySelector(".present_month_year");
 
-    // Fetch data from the API.
-    fetch(apiUrl)
+    fetch("/doctor-analytics/annual-revenue")
+        .then((response) => response.json())
+        .then((data) => {
+            const lineChartConfig = {
+                chart: {
+                    height: 400,
+                    type: 'line',
+                    parentHeightOffset: 0,
+                    zoom: {
+                        enabled: false
+                    },
+                    toolbar: {
+                        show: false
+                    }
+                },
+                series: [
+                    {
+                        data: data.transactionCounts
+                    }
+                ],
+                markers: {
+                    strokeWidth: 7,
+                    strokeOpacity: 1,
+                    strokeColors: [config.colors.white],
+                    colors: [config.colors.warning]
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth'
+                },
+                colors: [config.colors.warning],
+                grid: {
+                    borderColor: i,
+                    xaxis: {
+                        lines: {
+                            show: true
+                        }
+                    },
+                    padding: {
+                        top: -20
+                    }
+                },
+                tooltip: {
+                    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                        return '<div class="px-3 py-2">' + '<span>' + series[seriesIndex][dataPointIndex] + '%</span>' + '</div>';
+                    }
+                },
+                xaxis: {
+                    categories: data.monthYearLabels,
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    },
+                    labels: {
+                        style: {
+                            colors: t,
+                            fontSize: '13px'
+                        }
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            colors: t,
+                            fontSize: '13px'
+                        }
+                    }
+                },
+                title: {
+                    text: 'This Year Transaction Statistics',
+                    align: 'center',
+                    style: {
+                        color: '#444'
+                    }
+                }
+            };
+            // Render the chart with the dynamic configuration.
+            const incomeChart = new ApexCharts(document.querySelector("#incomeChart"), lineChartConfig);
+            incomeChart.render();
+        })
+        .catch((error) => {
+            console.error('Error fetching data:', error);
+        });
+
+    fetch('/doctor-analytics/month-revenue')
         .then((response) => response.json())
         .then((data) => {
             monthAmount.textContent = data.monthTotalPaymentAmount;
@@ -797,16 +743,10 @@ let isDarkStyle = function () {
                     data: data.transactionCounts
                 }],
                 xaxis: {
-                    show: !1,
-                    lines: {
-                        show: !1
-                    },
+                    categories: data.dayArrayForMonth, // Assuming you have an array of day labels in data.days
                     labels: {
-                        show: !1
+                        show: true, // Show x-axis labels
                     },
-                    axisBorder: {
-                        show: !1
-                    }
                 },
                 yaxis: {
                     show: !1
@@ -823,79 +763,112 @@ let isDarkStyle = function () {
             console.error('Error fetching data:', error);
         });
 
-
-
-    /// Fetch data from the API
     fetch('/doctor-analytics/appointment-stat')
         .then((response) => response.json())
         .then((data) => {
             const totalAppointmentCount = document.querySelector(".total-appointment-count");
-            const lastWeekAppointmentCount = document.querySelector(".last-week-appointment-count");
-            totalAppointmentCount.textContent = data.appointmentCount;
-            lastWeekAppointmentCount.textContent = data.lastWeekAppointmentCount;
+            // const lastWeekAppointmentCount = document.querySelector(".last-week-appointment-count");
+            totalAppointmentCount.textContent = data.totalAppointmentCount;
+            // lastWeekAppointmentCount.textContent = data.lastWeekAppointmentCount;
 
-            const chartConfig = {
+            const lineChartConfig = {
                 chart: {
-                    height: 150,
-                    type: "line",
+                    height: 400,
+                    type: 'bar',
+                    parentHeightOffset: 0,
+                    zoom: {
+                        enabled: false
+                    },
                     toolbar: {
                         show: false
-                    },
-                    dropShadow: {
-                        enabled: true,
-                        top: 10,
-                        left: 5,
-                        blur: 3,
-                        color: config.colors.warning,
-                        opacity: 0.15
-                    },
-                    sparkline: {
-                        enabled: true
                     }
                 },
-                grid: {
-                    show: false,
-                    padding: {
-                        right: 8
+                series: [
+
+                    {
+                        name: 'appointment count',
+                        data: data.appointmentCounts
                     }
+                ],
+                markers: {
+                    strokeWidth: 7,
+                    strokeOpacity: 1,
+                    strokeColors: [config.colors.white],
+                    colors: [config.colors.warning]
                 },
-                colors: [config.colors.warning],
                 dataLabels: {
-                    enabled: false
+                    enabled: true,
+                    formatter: function (val) {
+                        return val;
+                    },
+                    offsetY: -20,
+                    style: {
+                        fontSize: '12px',
+                        colors: ["#304758"]
+                    }
                 },
                 stroke: {
-                    width: 5,
-                    curve: "smooth"
+                    curve: 'smooth'
                 },
-                series: [{
-                    data: [12, 80, 98, 65] // Replace with your actual data
-                }],
+                colors: [config.colors.warning],
+                grid: {
+                    borderColor: i,
+                    xaxis: {
+                        lines: {
+                            show: true
+                        }
+                    },
+                    padding: {
+                        top: -20
+                    }
+                },
+                tooltip: {
+                    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                        return '<div class="px-3 py-2">' + '<span>' + series[seriesIndex][dataPointIndex] + '</span>' + '</div>';
+                    }
+                },
                 xaxis: {
-                    show: false,
-                    lines: {
+                    categories: data.dates,
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
                         show: false
                     },
                     labels: {
-                        show: false
-                    },
-                    axisBorder: {
-                        show: false
+                        style: {
+                            colors: t,
+                            fontSize: '13px'
+                        }
                     }
                 },
                 yaxis: {
-                    show: false
+                    labels: {
+                        style: {
+                            colors: t,
+                            fontSize: '13px'
+                        }
+                    }
+                },
+                title: {
+                    text: 'This Week Appointment Count',
+                    // floating: true,
+                    // offsetY: 390,
+                    align: 'center',
+                    style: {
+                        color: '#444'
+                    }
                 }
             };
 
             const profileReportChart = document.querySelector("#appointmentStatisticsChart");
             if (profileReportChart) {
-                new ApexCharts(profileReportChart, chartConfig).render();
+                new ApexCharts(profileReportChart, lineChartConfig).render();
             }
         })
         .catch((error) => {
             console.error('Error fetching data:', error);
         });
-
 }();
 
 

@@ -2,37 +2,50 @@
 const express = require("express");
 const router = express.Router();
 const authentication = require("../../../middleware/login_module").check_auth;
+const moment = require('moment');
 const db = require("../../../models");
 const { Op } = require('sequelize');
 
-
 router.get("/appointment-stat", authentication, checkAccess('chart/doctor'), async function (req, res, next) {
 	try {
-		const today = new Date();
-		const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+		const today = moment.utc(); // Get the current date in UTC using Moment.js
+		const lastWeek = moment.utc().subtract(7, 'days'); // Get the date of the same day last week in UTC
 
-		// Query total appointment count
-		const totalAppointmentCount = await db.Appointment.count({
-			where: {
-				doctorId: req.user.userId
-			}
-		});
+		const dates = []; // Array to store dates
+		const appointmentCounts = []; // Array to store appointment counts
 
-		// Query last week's appointment count
-		const lastWeekAppointmentCount = await db.Appointment.count({
-			where: {
-				doctorId: req.user.userId,
-				createdAt: {
-					[Op.gte]: lastWeek
+		let currentDate = lastWeek.clone(); // Initialize currentDate with the start of last week
+
+		// Loop through each day of last week
+		while (currentDate.isBefore(today)) {
+			const nextDate = currentDate.clone().add(1, 'day'); // Get the next day
+
+			// Query appointment count for the current day
+			const appointmentCount = await db.Appointment.count({
+				where: {
+					doctorId: req.user.userId,
+					createdAt: {
+						[Op.between]: [currentDate.toDate(), nextDate.toDate()] // Filter appointments for the current day
+					}
 				}
-			}
-		});
+			});
+
+			// Push date and appointment count to their respective arrays
+			dates.push(currentDate.format('YYYY-MM-DD'));
+			appointmentCounts.push(appointmentCount);
+
+			currentDate = nextDate; // Move to the next day
+		}
+
+		// Calculate the total appointment count
+		const totalAppointmentCount = appointmentCounts.reduce((total, count) => total + count, 0);
 
 		const response = {
-			lastWeekAppointmentCount,
-			appointmentCount: totalAppointmentCount
+			dates,
+			appointmentCounts,
+			totalAppointmentCount
 		};
-
+		console.log(response);
 		res.json(response);
 	} catch (error) {
 		console.error(error);
@@ -40,107 +53,150 @@ router.get("/appointment-stat", authentication, checkAccess('chart/doctor'), asy
 	}
 });
 
+
+
 router.get("/month-revenue", authentication, checkAccess('chart/doctor'), async function (req, res, next) {
 	try {
-		// Get the current year and month
-		const currentYear = new Date().getUTCFullYear();
-		const currentMonth = new Date().getUTCMonth() + 1; // Month is 0-based, so add 1
+		// Get the current UTC date
+		const currentUtcDate = moment.utc();
 
-		// Calculate the start date of the current month in UTC
-		const startDate = new Date(Date.UTC(currentYear, currentMonth - 1, 1)); // Start of the month in UTC
+		// Calculate the start date of the current month in UTC using Moment.js
+		const startDate = moment.utc().startOf('month');
 
-		// Calculate the end date of the current month in UTC
-		const endDate = new Date(Date.UTC(currentYear, currentMonth, 0)); // End of the month in UTC
+		// Calculate the end date of the current month in UTC using Moment.js
+		const endDate = moment.utc().endOf('month');
 
 		const results = await db.PaymentTransaction.findAll({
 			attributes: [
-				[db.sequelize.fn('DATE_TRUNC', 'day', db.sequelize.col('payment_date')), 'day'],
-				[db.sequelize.fn('COUNT', db.sequelize.col('*')), 'transaction_count'],
-				[db.sequelize.literal('CAST(SUM(payment_amount) AS INTEGER)'), 'total_paymentAmount'],
+				[db.sequelize.fn("to_char", db.sequelize.col("payment_date"), "DD"), 'day'],
+				[db.sequelize.literal('CAST(SUM(payment_amount) AS INTEGER)'), 'day_paymentAmount'],
 			],
 			where: {
 				payment_date: {
-					[Op.and]: [
-						{ [Op.gte]: startDate }, // Greater than or equal to the start of the month
-						{ [Op.lte]: endDate },   // Less than or equal to the end of the month
-					],
+					[Op.between]: [startDate, endDate], // Use Moment.js converted dates
 				},
 				receiverUserId: req.user.userId
 			},
-			group: [db.sequelize.fn('DATE_TRUNC', 'day', db.sequelize.col('payment_date'))],
-			order: [db.sequelize.fn('DATE_TRUNC', 'day', db.sequelize.col('payment_date'))],
+			group: [
+				db.sequelize.fn('to_char', db.sequelize.col('payment_date'), 'DD'), // Group by day of the month
+			],
+			order: [
+				db.sequelize.fn('to_char', db.sequelize.col('payment_date'), 'DD'), // Order by day of the month
+			],
 			raw: true,
 		});
 
-		const totalRevenue = await db.PaymentTransaction.findAll({
-			attributes: [
-				[db.sequelize.literal('CAST(SUM(payment_amount) AS INTEGER)'), 'total_paymentAmount'],
-			],
+		console.log(results);
+
+		const totalTransactionAmount = results.reduce((total, oneDay) => total + parseFloat(oneDay.day_paymentAmount), 0);
+
+		const totalRevenue = await db.PaymentTransaction.sum('payment_amount', {
 			where: {
 				receiverUserId: req.user.userId
 			},
-			raw: true,
 		});
-		const today = new Date();
-		today.setHours(0, 0, 0, 0); // Set the time to the beginning of the day
+
+		const today = moment.utc().startOf('day'); // Set the time to the beginning of the day
 
 		const todayRevenue = await db.PaymentTransaction.sum('payment_amount', {
 			where: {
 				receiverUserId: req.user.userId,
 				createdAt: {
-					[Op.gte]: today
-				}
-			}
+					[Op.gte]: today.toDate(),
+				},
+			},
 		});
 		const todayRevenueResult = todayRevenue !== null ? todayRevenue : 0;
 
-		// const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+		const dayArrayForMonth = results.map(result => result.day);
+		const transactionCounts = results.map(result => parseInt(result.day_paymentAmount));
 
-		// const weekRevenue = await db.PaymentTransaction.findAll({
-		// 	attributes: [
-		// 		[db.sequelize.fn('TO_CHAR', db.sequelize.col('createdAt'), 'Day'), 'dayName'], // Extract day name
-		// 		[db.sequelize.fn('COUNT', '*'), 'transactionCount'],
-		// 		[db.sequelize.fn('SUM', db.sequelize.col('payment_amount')), 'totalPaymentAmount']
-		// 	],
-		// 	where: {
-		// 		receiverUserId: req.user.userId,
-		// 		createdAt: {
-		// 			[Op.between]: [lastWeek, today] // Filter for the last seven days
-		// 		}
-		// 	},
-		// 	group: [db.sequelize.fn('TO_CHAR', db.sequelize.col('createdAt'), 'Day')],
-		// 	raw: true
-		// });
-
-		// console.log(weekRevenue);
-		// let totalTransactionCount = 0;
-		// let totalRevenue1 = 0;
-
-		// // Loop through the weekRevenue array to calculate the total transaction count and revenue
-		// weekRevenue.forEach((day) => {
-		// 	totalTransactionCount += parseInt(day.transactionCount);
-		// 	totalRevenue1 += parseFloat(day.totalPaymentAmount);
-		// });
-
-		// console.log("Total Transaction Count for Last Seven Days:", totalTransactionCount);
-		// console.log("Total Revenue for Last Seven Days:", totalRevenue);
-		// weekRevenue will contain an array of objects with 'dayName', 'totalPaymentAmount', and 'transactionCount' for each day of the week.
-
-
-		const transactionCounts = results.map(result => parseInt(result.transaction_count));
-		let response = {
-			todayRevenue: "₹ " + todayRevenueResult,
-			transactionCounts: transactionCounts,
-			monthTotalPaymentAmount: "₹ " + results[0].total_paymentAmount,
-			currentMonth: currentMonth + "-" + currentYear,
-			totalRevenue: "₹ " + totalRevenue[0].total_paymentAmount
-		}
+		const response = {
+			todayRevenue: `₹ ${todayRevenueResult}`,
+			transactionCounts,
+			monthTotalPaymentAmount: `₹ ${totalTransactionAmount}`,
+			dayArrayForMonth,
+			currentMonth: currentUtcDate.format('MM-YYYY'),
+			totalRevenue: `₹ ${totalRevenue}`,
+		};
 
 		console.log(response);
 		res.json(response);
 	} catch (error) {
-		console.log(error)
+		console.error(error);
+		res.status(500).json({ error: 'Internal server error' });
 	}
 });
+
+router.get("/annual-revenue", authentication, checkAccess('chart/doctor'), async function (req, res, next) {
+	try {
+		// Get the current UTC date
+		const currentUtcDate = moment.utc();
+
+		// Calculate the start date of the current year in UTC using Moment.js
+		const startDate = moment.utc().startOf('year');
+
+		// Calculate the end date of the current year in UTC using Moment.js
+		const endDate = moment.utc().endOf('year');
+
+		const results = await db.PaymentTransaction.findAll({
+			attributes: [
+				[db.sequelize.fn("to_char", db.sequelize.col("payment_date"), "MM/YYYY"), 'month_year'],
+				[db.sequelize.fn('COUNT', db.sequelize.col('*')), 'transaction_count'],
+				[db.sequelize.literal('CAST(SUM(payment_amount) AS INTEGER)'), 'month_paymentAmount'],
+			],
+			where: {
+				payment_date: {
+					[Op.between]: [startDate.toDate(), endDate.toDate()], // Use Moment.js converted dates
+				},
+				receiverUserId: req.user.userId
+			},
+			group: [
+				db.sequelize.fn('to_char', db.sequelize.col('payment_date'), 'MM/YYYY'), // Group by month and year
+			],
+			order: [
+				db.sequelize.fn('to_char', db.sequelize.col('payment_date'), 'MM/YYYY'), // Order by month and year
+			],
+			raw: true,
+		});
+
+		console.log(results);
+
+		// Create an array of months in MM/YYYY format for the x-axis labels
+		const monthYearLabels = moment.months().map((month, index) => `${index + 1}/${currentUtcDate.year()}`);
+
+		// Initialize an array to hold transaction counts for each month
+		const transactionCounts = new Array(12).fill(0);
+
+		// Populate transaction counts from the results
+		results.forEach((result) => {
+			const [month, year] = result.month_year.split('/');
+			const monthIndex = parseInt(month) - 1; // Adjust for 0-based index
+			transactionCounts[monthIndex] = parseInt(result.transaction_count);
+		});
+
+		const response = {
+			monthYearLabels,
+			transactionCounts,
+			yearTotalPaymentAmount: results.reduce((total, oneMonth) => total + parseFloat(oneMonth.month_paymentAmount), 0),
+			currentYear: currentUtcDate.year(),
+			totalRevenue: await db.PaymentTransaction.sum('payment_amount', {
+				where: {
+					receiverUserId: req.user.userId,
+				},
+			}),
+		};
+
+		console.log(response);
+		res.json(response);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: 'Internal server error' });
+	}
+});
+
+
+
+
 
 module.exports = router;
