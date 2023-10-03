@@ -25,7 +25,7 @@ $(function () {
                 }, {
                     data: "order_id"
                 }, {
-                    data: "Payment_transaction_id"
+                    data: "payment_transaction_id"
                 }, {
                     data: "payer_user_id"
                 }, {
@@ -102,7 +102,7 @@ $(function () {
                 responsivePriority: 1,
                 targets: 7,
                 render: function (e, t, a, s) {
-                    var n = a.Payment_transaction_id
+                    var n = a.payment_transaction_id
                     return n
                 }
             },

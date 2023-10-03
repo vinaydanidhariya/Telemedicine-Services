@@ -23,7 +23,7 @@ router.post("/payment-list", async function (req, res, next) {
 				"order_id",
 				"payer_user_id",
 				"payment_date",
-				"Payment_transaction_id",
+				"payment_transaction_id",
 				"payer_name",
 				"payer_email",
 				"payer_mobile",
