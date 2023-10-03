@@ -23,17 +23,15 @@ router.get("/appointment-stat", authentication, checkAccess('chart/doctor'), asy
 			// Query appointment count for the current day
 			const appointmentCount = await db.Appointment.count({
 				where: {
-					doctorId: req.user.userId,
+					// doctorId: req.user.userId,
 					createdAt: {
 						[Op.between]: [currentDate.toDate(), nextDate.toDate()] // Filter appointments for the current day
 					}
 				}
 			});
-
 			// Push date and appointment count to their respective arrays
 			dates.push(currentDate.format('YYYY-MM-DD'));
 			appointmentCounts.push(appointmentCount);
-
 			currentDate = nextDate; // Move to the next day
 		}
 
@@ -73,7 +71,7 @@ router.get("/month-revenue", authentication, checkAccess('chart/doctor'), async 
 				payment_date: {
 					[Op.between]: [startDate, endDate], // Use Moment.js converted dates
 				},
-				receiverUserId: req.user.userId
+				// receiverUserId: req.user.userId
 			},
 			group: [
 				db.sequelize.fn('to_char', db.sequelize.col('payment_date'), 'DD'), // Group by day of the month
@@ -89,16 +87,13 @@ router.get("/month-revenue", authentication, checkAccess('chart/doctor'), async 
 		const totalTransactionAmount = results.reduce((total, oneDay) => total + parseFloat(oneDay.day_paymentAmount), 0);
 
 		const totalRevenue = await db.PaymentTransaction.sum('payment_amount', {
-			where: {
-				receiverUserId: req.user.userId
-			},
 		});
 
 		const today = moment.utc().startOf('day'); // Set the time to the beginning of the day
 
 		const todayRevenue = await db.PaymentTransaction.sum('payment_amount', {
 			where: {
-				receiverUserId: req.user.userId,
+				// receiverUserId: req.user.userId,
 				createdAt: {
 					[Op.gte]: today.toDate(),
 				},
@@ -147,7 +142,7 @@ router.get("/annual-revenue", authentication, checkAccess('chart/doctor'), async
 				payment_date: {
 					[Op.between]: [startDate.toDate(), endDate.toDate()], // Use Moment.js converted dates
 				},
-				receiverUserId: req.user.userId
+				// receiverUserId: req.user.userId
 			},
 			group: [
 				db.sequelize.fn('to_char', db.sequelize.col('payment_date'), 'MM/YYYY'), // Group by month and year
@@ -180,7 +175,7 @@ router.get("/annual-revenue", authentication, checkAccess('chart/doctor'), async
 			currentYear: currentUtcDate.year(),
 			totalRevenue: await db.PaymentTransaction.sum('payment_amount', {
 				where: {
-					receiverUserId: req.user.userId,
+					// receiverUserId: req.user.userId,
 				},
 			}),
 		};

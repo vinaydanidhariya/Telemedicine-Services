@@ -1,9 +1,15 @@
+const session = require('express-session');
+const MemoryStore = require('memorystore')(session);
+
 module.exports = {
     cipher_key: "hBvw1pY9MmN0c9q6fG85J1q3bpxvr&39PtWdadsdaiZ4LdasdaeDuyras78s",
     session: {
         secret: "abhH4re5Uf4Rd0KndadasddS05sdff3Qdad",
         resave: false,
         saveUninitialized: false,
+        store: new MemoryStore({
+            checkPeriod: 86400000 // prune expired entries every 24h
+        }),
         maxAge: Date.now() + 30 * 86400 * 1000,
         cookie: { secure: false },
     },
