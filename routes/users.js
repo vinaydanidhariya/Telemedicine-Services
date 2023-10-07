@@ -150,9 +150,13 @@ router.post("/doctor-member-list", async function (req, res, next) {
 	try {
 		const { code, page } = req.body;
 		const doctorsPerPage = 4;
-
+		let offset = 0;
 		if (code === "778899") {
-			const offset = (page - 1) * doctorsPerPage; // Calculate the offset
+			if (page == 1) {
+				offset = 0;
+			} else {
+				offset = (page - 1) * doctorsPerPage;
+			}
 
 			const users = await db.User.findAndCountAll({
 				where: {
@@ -172,7 +176,7 @@ router.post("/doctor-member-list", async function (req, res, next) {
 				offset: offset, // Apply the offset
 				raw: true
 			});
-
+			console.log(users);
 			res.send(users);
 		} else {
 			res.send("error");
