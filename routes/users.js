@@ -148,9 +148,13 @@ router.post("/doctor-list", async function (req, res, next) {
 
 router.post("/doctor-member-list", async function (req, res, next) {
 	try {
-		const { code, department } = req.body;
+		const { code, page } = req.body;
+		const doctorsPerPage = 4;
+
 		if (code === "778899") {
-			const USER = await db.User.findAll({
+			const offset = (page - 1) * doctorsPerPage; // Calculate the offset
+
+			const users = await db.User.findAndCountAll({
 				where: {
 					delete: false,
 					type: "DOCTOR"
@@ -164,16 +168,21 @@ router.post("/doctor-member-list", async function (req, res, next) {
 					"photo_url",
 					"price",
 				],
+				limit: doctorsPerPage,
+				offset: offset, // Apply the offset
 				raw: true
 			});
-			res.send(USER);
+
+			res.send(users);
 		} else {
 			res.send("error");
 		}
 	} catch (error) {
 		console.log(error);
+		res.status(500).send("Internal Server Error"); // Handle errors with an appropriate response
 	}
 });
+
 
 router.post("/doctor-department", async function (req, res, next) {
 	try {
