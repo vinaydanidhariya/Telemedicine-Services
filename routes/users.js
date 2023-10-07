@@ -147,45 +147,51 @@ router.post("/doctor-list", async function (req, res, next) {
 });
 
 router.post("/doctor-member-list", async function (req, res, next) {
-	try {
-		const { code, page } = req.body;
-		const doctorsPerPage = 4;
-		let offset = 0;
-		if (code === "778899") {
-			if (page == 1) {
-				offset = 0;
-			} else {
-				offset = (page - 1) * doctorsPerPage;
-			}
+    try {
+        const { code, page } = req.body;
+        const doctorsPerPage = 4;
+        let offset = 0;
 
-			const users = await db.User.findAndCountAll({
-				where: {
-					delete: false,
-					type: "DOCTOR"
-				},
-				attributes: [
-					"userId",
-					"firstName",
-					"lastName",
-					"department",
-					"qualifications",
-					"photo_url",
-					"price",
-				],
-				limit: doctorsPerPage,
-				offset: offset, // Apply the offset
-				raw: true
-			});
-			console.log(users);
-			res.send(users);
-		} else {
-			res.send("error");
-		}
-	} catch (error) {
-		console.log(error);
-		res.status(500).send("Internal Server Error"); // Handle errors with an appropriate response
-	}
+        if (code === "778899") {
+            if (page == 1) {
+                offset = 0;
+            } else {
+                offset = (page - 1) * doctorsPerPage;
+            }
+
+            const users = await db.User.findAndCountAll({
+                where: {
+                    delete: false,
+                    type: "DOCTOR"
+                },
+                attributes: [
+                    "userId",
+                    "firstName",
+                    "lastName",
+                    "department",
+                    "qualifications",
+                    "photo_url",
+                    "price",
+                ],
+                limit: doctorsPerPage,
+                offset: offset,
+                raw: true
+            });
+
+            if (users.rows.length === 0) {
+                res.status(400).send("No more doctors available");
+            } else {
+                res.send(users);
+            }
+        } else {
+            res.send("error");
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Internal Server Error");
+    }
 });
+
 
 
 router.post("/doctor-department", async function (req, res, next) {
