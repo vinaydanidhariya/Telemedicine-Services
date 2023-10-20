@@ -147,7 +147,7 @@
 				</a>
 			</li>
 			<li class="menu-header small text-uppercase"><span class="menu-header-text">Misc</span></li>
-			{{!-- <li class="menu-item {{#compare title '==' 'Blogs'}}active{{/compare}}">
+			<li class="menu-item {{#compare title '==' 'BLOG'}}active{{/compare}}">
 				<a href="/blogs" class="menu-link menu-toggle">
 					<i class="menu-icon tf-icons bx bxl-blogger"></i>
 					<div data-i18n="Blogs">Blogs</div>
@@ -159,27 +159,27 @@
 							<div data-i18n="Add Blog">Add Blog</div>
 						</a>
 					</li>
-					<li class="menu-item {{#compare title '==' 'DOCTORS'}}active{{/compare}}">
+					<li class="menu-item">
 						<a href="/blogs/" class="menu-link">
 							<i class="menu-icon tf-icons bx bx-list-ol"></i>
 							<div data-i18n="Blogs list">Blogs List</div>
 						</a>
 					</li>
 				</ul>
-			</li> --}}
+			</li>
 			<li class="menu-item {{#compare title '==' 'Events'}}active{{/compare}}">
 				<a href="/events" class="menu-link menu-toggle">
 					<i class="menu-icon tf-icons bx bxs-calendar-event"></i>
 					<div data-i18n="Events">Events</div>
 				</a>
 				<ul class="menu-sub">
-					<li class="menu-item">
-						<a href="/events/add-event" class="menu-link">
+					<li class="menu-item {{#compare title '==' 'ChildDr | Add Event'}}active{{/compare}}">
+						<a href="/events/add-event" class="menu-link ">
 							<i class="menu-icon tf-icons bx bx-plus-circle"></i>
 							<div data-i18n="Add Events">Add Events</div>
 						</a>
 					</li>
-					<li class="menu-item {{#compare title '==' 'DOCTORS'}}active{{/compare}}">
+					<li class="menu-item {{#compare title '==' 'ChildDR | Events List'}}active{{/compare}}">
 						<a href="/events/" class="menu-link">
 							<i class="menu-icon tf-icons bx bx-list-ol"></i>
 							<div data-i18n="Events List">Events List</div>

@@ -115,7 +115,7 @@ router.get('/', authentication,checkAccess('/blogs/list'),async (req, res) => {
 		console.log('Blog posts retrieved:', blogPosts);
 
 		res.render("blogs/blogs", {
-			title: "ChildDR | Setting",
+			title: "BLOG",
 			blogPosts: blogPosts,
 			sessionUser: req.user,
 		});

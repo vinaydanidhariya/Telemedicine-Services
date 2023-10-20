@@ -5,6 +5,7 @@ const moment = require('moment');
 const authentication = require("../../middleware/login_module").check_auth;
 
 var multer = require("multer");
+const { logger } = require("handlebars/runtime");
 
 var storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -39,7 +40,7 @@ const uploadSourceLeadFile = multer({
 router.get("/add-event", authentication, checkAccess("event/add-event"), function (req, res, next) {
 	try {
 		res.render("events/add-event", {
-			title: "Add Event",
+			title: "ChildDr | Add Event",
 			sessionUser: req.user,
 		});
 	} catch (error) {
@@ -109,12 +110,21 @@ router.get('/', authentication, checkAccess("event/event-list"), async (req, res
 			attributes: ['event_id', 'title', 'date', 'photo', 'description', 'sort_description'], // You can directly specify the attribute without an alias
 			raw: true,// Get raw JSON data instead of Sequelize instances
 		});
-
-		res.render("events/events", {
-			title: "ChildDR | Setting",
-			eventPosts: eventPosts,
-			sessionUser: req.user,
-		});
+		console.log('eventPosts', eventPosts);
+		if (eventPosts.length === 0) {
+			res.render("events/events", {
+				title: "ChildDR | Events List",
+				errorMsg: 'No event posts found',
+				sessionUser: req.user,
+			});
+		}
+		else {
+			res.render("events/events", {
+				title: "ChildDR | Events List",
+				eventPosts: eventPosts,
+				sessionUser: req.user,
+			});
+		}
 	} catch (error) {
 		console.error('Error retrieving event posts:', error);
 		// Handle errors appropriately
@@ -149,5 +159,32 @@ router.get('/:id', authentication, checkAccess("event/event-detail"), async (req
 		res.status(500).send('Error retrieving event post');
 	}
 });
+
+router.get('/remove/:id', authentication, checkAccess("event/event-detail"), async (req, res) => {
+	try {
+		const { id } = req.params;
+		const event = await db.Event.destroy(
+			{
+				where: {
+					eventId: id
+				}
+			}
+		);
+
+		if (!event) {
+			// event post not found, handle error or redirect to an error page
+			res.status(404).send('event not found');
+			return;
+		}
+		else {
+			res.redirect('/events');
+		}
+	} catch (error) {
+		console.error('Error retrieving event post:', error);
+		// Handle errors appropriately
+		res.status(500).send('Error retrieving event post');
+	}
+});
+
 
 module.exports = router;
