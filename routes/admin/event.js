@@ -110,7 +110,6 @@ router.get('/', authentication, checkAccess("event/event-list"), async (req, res
 			attributes: ['event_id', 'title', 'date', 'photo', 'description', 'sort_description'], // You can directly specify the attribute without an alias
 			raw: true,// Get raw JSON data instead of Sequelize instances
 		});
-		console.log('eventPosts', eventPosts);
 		if (eventPosts.length === 0) {
 			res.render("events/events", {
 				title: "ChildDR | Events List",
@@ -160,7 +159,7 @@ router.get('/:id', authentication, checkAccess("event/event-detail"), async (req
 	}
 });
 
-router.get('/remove/:id', authentication, checkAccess("event/event-detail"), async (req, res) => {
+router.get('/remove/:id', authentication, checkAccess("event/remove"), async (req, res) => {
 	try {
 		const { id } = req.params;
 		const event = await db.Event.destroy(
@@ -170,9 +169,7 @@ router.get('/remove/:id', authentication, checkAccess("event/event-detail"), asy
 				}
 			}
 		);
-
 		if (!event) {
-			// event post not found, handle error or redirect to an error page
 			res.status(404).send('event not found');
 			return;
 		}

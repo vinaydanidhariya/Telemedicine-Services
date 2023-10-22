@@ -48,7 +48,7 @@ router.get("/add-blog", authentication, checkAccess('add-blog'), function (req, 
 });
 
 
-router.post("/add-blog", authentication,checkAccess('post/blogs/add-blog'),async function (req, res, next) {
+router.post("/add-blog", authentication, checkAccess('post/blogs/add-blog'), async function (req, res, next) {
 	try {
 		uploadSourceLeadFile(req, res, async function (err) {
 			// Check err while upload
@@ -69,8 +69,8 @@ router.post("/add-blog", authentication,checkAccess('post/blogs/add-blog'),async
 						description,
 						sortDescription: sort_description,
 						authorName: author_name,
-						date:  moment.utc(),
-						updatedDate:  moment.utc(),
+						date: moment.utc(),
+						updatedDate: moment.utc(),
 					})
 						.then(() => {
 							let message = `Blog Created successfully`;
@@ -104,15 +104,28 @@ router.post("/add-blog", authentication,checkAccess('post/blogs/add-blog'),async
 	}
 });
 
-router.get('/', authentication,checkAccess('/blogs/list'),async (req, res) => {
+router.get('/', authentication, checkAccess('/blogs/list'), async (req, res) => {
 	try {
-		// Retrieve all blog posts from the database using the Blog model
 		const blogPosts = await db.Blogs.findAll({
-			attributes: ['blog_id', 'title', 'date', 'author_name', 'photo', 'sort_description', 'description'], // You can directly specify the attribute without an alias
-			raw: true,// Get raw JSON data instead of Sequelize instances
+			attributes: ['blog_id', 'title', 'date', 'author_name', 'photo', 'sort_description', 'description'],
+			raw: true,
 		});
 
 		console.log('Blog posts retrieved:', blogPosts);
+		if (blogPosts.length === 0) {
+			res.render("blogs/blogs", {
+				title: "ChildDR | Blogs List",
+				errorMsg: 'No Blogs found',
+				sessionUser: req.user,
+			});
+		}
+		else {
+			res.render("blogs/blogs", {
+				title: "ChildDR | Blogs List",
+				blogPosts: blogPosts,
+				sessionUser: req.user,
+			});
+		}
 
 		res.render("blogs/blogs", {
 			title: "BLOG",
@@ -121,12 +134,11 @@ router.get('/', authentication,checkAccess('/blogs/list'),async (req, res) => {
 		});
 	} catch (error) {
 		console.error('Error retrieving blog posts:', error);
-		// Handle errors appropriately
 		res.status(500).send('Error retrieving blog posts'); // Return an error response to the client
 	}
 });
 
-router.get('/:id', authentication,checkAccess('/blogs/detail'),async (req, res) => {
+router.get('/:id', authentication, checkAccess('/blogs/detail'), async (req, res) => {
 	try {
 		const { id } = req.params;
 		const blog = await db.Blogs.findByPk(id);
@@ -153,6 +165,32 @@ router.get('/:id', authentication,checkAccess('/blogs/detail'),async (req, res) 
 		res.status(500).send('Error retrieving blog post');
 	}
 });
+router.get('/remove/:id', authentication, checkAccess('/blogs/remove'), async (req, res) => {
+	try {
+		const { id } = req.params;
 
+		const blog = await db.Blogs.destroy(
+			{
+				where: {
+					blogId: id
+				}
+			}
+		);
+
+		if (!blog) {
+			res.status(404).send('blog not found');
+			return;
+		}
+		else {
+			res.redirect('/blogs');
+		}
+
+
+	} catch (error) {
+		console.error('Error retrieving blog post:', error);
+		// Handle errors appropriately
+		res.status(500).send('Error retrieving blog post');
+	}
+});
 
 module.exports = router;

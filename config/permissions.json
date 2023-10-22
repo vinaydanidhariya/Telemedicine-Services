@@ -55,6 +55,10 @@
 		"ADMIN": true,
 		"DOCTOR": false
 	},
+	"/blogs/remove": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
 	"event/add-event": {
 		"ADMIN": true,
 		"DOCTOR": false
@@ -68,6 +72,10 @@
 		"DOCTOR": false
 	},
 	"event/event-detail": {
+		"ADMIN": true,
+		"DOCTOR": false
+	},
+	"event/remove": {
 		"ADMIN": true,
 		"DOCTOR": false
 	},

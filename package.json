@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "nodemon":"nodemon -e js,hbs, etc extensions"
   },
   "engines": {
     "node": "==16"
