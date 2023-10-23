@@ -147,49 +147,49 @@ router.post("/doctor-list", async function (req, res, next) {
 });
 
 router.post("/doctor-member-list", async function (req, res, next) {
-    try {
-        const { code, page } = req.body;
-        const doctorsPerPage = 4;
-        let offset = 0;
+	try {
+		const { code, page } = req.body;
+		const doctorsPerPage = 4;
+		let offset = 0;
 
-        if (code === "778899") {
-            if (page == 1) {
-                offset = 0;
-            } else {
-                offset = (page - 1) * doctorsPerPage;
-            }
+		if (code === "778899") {
+			if (page == 1) {
+				offset = 0;
+			} else {
+				offset = (page - 1) * doctorsPerPage;
+			}
 
-            const users = await db.User.findAndCountAll({
-                where: {
-                    delete: false,
-                    type: "DOCTOR"
-                },
-                attributes: [
-                    "userId",
-                    "firstName",
-                    "lastName",
-                    "department",
-                    "qualifications",
-                    "photo_url",
-                    "price",
-                ],
-                limit: doctorsPerPage,
-                offset: offset,
-                raw: true
-            });
+			const users = await db.User.findAndCountAll({
+				where: {
+					delete: false,
+					type: "DOCTOR"
+				},
+				attributes: [
+					"userId",
+					"firstName",
+					"lastName",
+					"department",
+					"qualifications",
+					"photo_url",
+					"price",
+				],
+				limit: doctorsPerPage,
+				offset: offset,
+				raw: true
+			});
 
-            if (users.rows.length === 0) {
-                res.status(400).send("No more doctors available");
-            } else {
-                res.send(users);
-            }
-        } else {
-            res.send("error");
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("Internal Server Error");
-    }
+			if (users.rows.length === 0) {
+				res.status(400).send("No more doctors available");
+			} else {
+				res.send(users);
+			}
+		} else {
+			res.send("error");
+		}
+	} catch (error) {
+		console.log(error);
+		res.status(500).send("Internal Server Error");
+	}
 });
 
 
@@ -280,30 +280,94 @@ router.post("/doctor-count", async function (req, res, next) {
 router.post("/blog-list", async (req, res) => {
 	try {
 		// Retrieve all blog posts from the database using the Blog model
-		const blogPosts = await db.Blogs.findAll({
-			attributes: [
-				"blog_id",
-				"title",
-				[sequelize.fn("to_char", sequelize.col("date"), "DD/MM/YYYY"), "date"],
-				"author_name",
-				"photo",
-				"sort_description",
-				"description",
-			],
-			raw: true,
-		});
+		const { code, page } = req.body;
+		const blogsPerPage = 4;
+		let offset = 0;
 
-		console.log("Blog posts retrieved:", blogPosts);
+		if (code === "778899") {
+			if (page == 1) {
+				offset = 0;
+			} else {
+				offset = (page - 1) * blogsPerPage;
+			}
 
-		res.send({
-			status: 200,
-			message: blogPosts,
-			type: "success",
-		});
+			const blogPosts = await db.Blogs.findAll({
+				attributes: [
+					"blog_id",
+					"title",
+					[sequelize.fn("to_char", sequelize.col("date"), "DD/MM/YYYY"), "date"],
+					"author_name",
+					"photo",
+					"sort_description",
+					"description",
+				],
+				limit: blogsPerPage,
+				offset: offset,
+				raw: true
+			});
+
+			console.log("Blog posts retrieved:", blogPosts);
+			if (blogPosts.rows.length === 0) {
+				res.status(400).send("No more doctors available");
+			} else {
+				res.send({
+					status: 200,
+					posts: blogPosts,
+					type: "success",
+				});
+			}
+		} else {
+			res.send("error");
+		}
+
 	} catch (error) {
 		console.error("Error retrieving blog posts:", error);
 		// Handle errors appropriately
 		res.status(500).send("Error retrieving blog posts"); // Return an error response to the client
+	}
+});
+
+router.post("/event-list", async (req, res) => {
+	try {
+		// Retrieve all blog posts from the database using the Blog model
+		const { code, page } = req.body;
+		const eventsPerPage = 4;
+		let offset = 0;
+
+		if (code === "778899") {
+			if (page == 1) {
+				offset = 0;
+			} else {
+				offset = (page - 1) * eventsPerPage;
+			}
+
+			const eventsPost = await db.Event.findAll({
+				attributes: ['event_id', 'title',
+					[sequelize.fn("to_char", sequelize.col("date"), "DD/MM/YYYY"), "date"],
+					'photo', 'description', 'sort_description'],
+				limit: eventsPerPage,
+				offset: offset,
+				raw: true
+			});
+
+			console.log("event posts retrieved:", eventsPost);
+			if (eventsPost.rows.length === 0) {
+				res.status(400).send("No more doctors available");
+			} else {
+				res.send({
+					status: 200,
+					posts: eventsPost,
+					type: "success",
+				});
+			}
+		} else {
+			res.send("error");
+		}
+
+	} catch (error) {
+		console.error("Error retrieving event posts:", error);
+		// Handle errors appropriately
+		res.status(500).send("Error retrieving event posts"); // Return an error response to the client
 	}
 });
 
