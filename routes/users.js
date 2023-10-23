@@ -307,7 +307,7 @@ router.post("/blog-list", async (req, res) => {
 			});
 
 			console.log("Blog posts retrieved:", blogPosts);
-			if (blogPosts.rows.length === 0) {
+			if (blogPosts.length === 0) {
 				res.status(400).send("No more doctors available");
 			} else {
 				res.send({
@@ -351,7 +351,7 @@ router.post("/event-list", async (req, res) => {
 			});
 
 			console.log("event posts retrieved:", eventsPost);
-			if (eventsPost.rows.length === 0) {
+			if (eventsPost.length === 0) {
 				res.status(400).send("No more doctors available");
 			} else {
 				res.send({
