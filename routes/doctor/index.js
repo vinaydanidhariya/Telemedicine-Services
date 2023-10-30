@@ -260,7 +260,7 @@ async function generatePDF(req, prescriptionId) {
 
 	console.log("Page loaded successfully");
 
-	const pdfBuffer = await page.pdf({ format: "a3" ,margin: 0});
+	const pdfBuffer = await page.pdf({ format: "A3", margin: 0 });
 
 	if (pdfBuffer.length === 0) {
 		throw new Error("Generated PDF buffer is empty");
