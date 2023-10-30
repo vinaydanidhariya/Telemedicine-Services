@@ -61,8 +61,8 @@ router.get(
 				},
 				include: [
 					{
-						model: db.User, // Assuming this is your doctor model
-						as: "doctor", // Alias for the association in the Prescription model
+						model: db.User,
+						as: "doctor",
 						attributes: [
 							"userId",
 							"firstName",
@@ -70,7 +70,8 @@ router.get(
 							"phone",
 							"email",
 							"department",
-							"physicalPractice"
+							"physicalPractice",
+							"doctorRegistrationNumber"
 						], // Select specific doctor attributes you want
 					},
 					{
@@ -118,6 +119,8 @@ router.get("/prescription-pdf/:id", async function (req, res, next) {
 				"medicines",
 				"medicalInfo",
 				"prescriptionMsg",
+				"patientHeight",
+				"patientWeight",
 				"note",
 				[
 					db.sequelize.fn(
@@ -125,7 +128,7 @@ router.get("/prescription-pdf/:id", async function (req, res, next) {
 						db.sequelize.col("Prescription.updatedAt"),
 						"DD/MM/YYYY"
 					),
-				"updatedAt",
+					"updatedAt",
 				],
 			],
 			include: [
@@ -139,7 +142,8 @@ router.get("/prescription-pdf/:id", async function (req, res, next) {
 						"phone",
 						"email",
 						"department",
-						"physicalPractice"
+						"physicalPractice",
+						"doctorRegistrationNumber"
 					],
 				},
 				{
@@ -209,7 +213,6 @@ router.post("/download-pdf", async (req, res) => {
 			attributes: ["appointment_id", "prescription_id", "status"],
 			raw: true
 		});
-
 		const response = appointment;
 		const userInfo = {
 			patientName: response['patient.full_name'],
@@ -244,10 +247,10 @@ async function generatePDF(req, prescriptionId) {
 	const browser = await puppeteer.launch({ headless: true });
 	const page = await browser.newPage();
 
+	await page.setViewport({ width: 1920, height: 1080 }); 
+
 	const response = await page.goto(
-		`${req.protocol}://${req.get(
-			"host"
-		)}/doctor/prescription-pdf/${prescriptionId}`,
+		`${req.protocol}://${req.get("host")}/doctor/prescription-pdf/${prescriptionId}`,
 		{ waitUntil: "networkidle0" }
 	);
 
@@ -460,6 +463,8 @@ router.post(
 				medicalInfo: extractedMedicalInfo,
 				prescriptionMsg: prescriptionMsg,
 				note: note,
+				prescriptionPatientHeight: req.body.prescriptionPatientHeight,
+				prescriptionPatientWeight: req.body.prescriptionPatientWeight
 			};
 
 			// Create a new prescription record using the organized data

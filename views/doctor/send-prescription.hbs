@@ -15,9 +15,9 @@
                             <div class="col-md-6 mb-md-0 mb-4">
                                 <div class="d-flex svg-illustration mb-4 gap-2">
                                     <span class="app-brand-logo demo">
-                                        <img src="/assets/img/childdr-logo.png" width="5%" alt="ChildDR" >
+                                        <img src="/assets/img/childdr-logo.png" class="img" alt="ChildDR" >
                                     </span>
-                                    <span class="app-brand-text demo text-body fw-bolder">ChildDr</span>
+                                    {{!-- <span class="app-brand-text demo text-body fw-bolder">ChildDr</span> --}}
                                 </div>
                                 <p class="mb-1">{{prescription.doctor.physicalPractice}}</p>
                                 <p class="mb-0">{{prescription.doctor.phone}}</p>
@@ -87,11 +87,31 @@
                                             <td class="pe-3">Email:</td>
                                             <td>{{prescription.doctor.email}}</td>
                                         </tr>
+                                        <tr>
+                                            <td class="pe-3">Doctor Registration Number:</td>
+                                            <td>{{prescription.doctor.doctorRegistrationNumber}}</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         <form id="prescriptionFormValidation">
+
+                            <hr class="my-4" />
+
+                            <div class="row py-sm-3">
+                                <div class="col-md-6 mb-md-0 mb-3">
+                                    <p class="mb-2 ">Patient Height</p>
+                                    <input type="text" class="form-control" id="prescriptionPatientHeight"
+                                        placeholder="Enter Patient weight" />
+                                </div>
+                                <div class="col-md-6 mb-md-0 mb-3">
+                                    <p class="mb-2 ">Patient weight</p>
+                                    <input type="text" class="form-control" id="prescriptionPatientWeight"
+                                        placeholder="Enter Patient weight" />
+                                </div>
+                            </div>
+
                             <hr class="mx-n4" />
                             <input type="hidden" value="{{prescription.prescriptionId}}" id="prescriptionId">
                             <div class="source-item py-sm-3" id="prescriptionForm">
@@ -234,6 +254,7 @@
             <!-- /prescription Actions -->
         </div>
         <!-- Offcanvas -->
+        
         <!-- Send prescription Sidebar -->
         <div class="offcanvas offcanvas-end" id="sendprescriptionOffcanvas" aria-hidden="true">
             <div class="offcanvas-header mb-3">
@@ -362,7 +383,9 @@
                 prescriptionId: $('#prescriptionId').val(),
                 prescriptionDate: $('#prescriptionDate').val(),
                 note: $('#note').val(),
-                prescriptionId: $('#prescriptionId').val()
+                prescriptionId: $('#prescriptionId').val(),
+                prescriptionPatientHeight : $('#prescriptionPatientHeight').val(),
+                prescriptionPatientWeight : $('#prescriptionPatientWeight').val()
             };
             console.log(formData)
             // Validate and populate data for medicine sections
