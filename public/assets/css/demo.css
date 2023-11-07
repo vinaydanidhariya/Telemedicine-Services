@@ -8,9 +8,9 @@
   margin-top: 12px;
 }
 
-.app-brand-logo.demo svg {
-  width: 22px;
-  height: 38px;
+.app-brand-logo.demo .img {
+  width: 150px;
+  height: 55px;
 }
 
 .app-brand-text.demo {

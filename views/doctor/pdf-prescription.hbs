@@ -49,8 +49,8 @@
 
 	<body>
 		<!-- Content wrapper -->
-		<div class="content-wrapper">
-			<div class="container">
+		{{!-- <div class="content-wrapper"> --}}
+			{{!-- <div class="container"> --}}
 				<!-- Content -->
 				<div class="invoice-print p-5">
 					{{!-- <div class="d-flex justify-content-between flex-row">
@@ -90,11 +90,10 @@
 					<div class="d-flex justify-content-between flex-row">
 						<div class="mb-4">
 							<div class="d-flex svg-illustration mb-3 gap-2">
-								<span class="app-brand-logo demo">
+								<span class="app-brand-logo demo ">
 
-									<img
+									<img class="img"
 										src="/assets/img/childdr-logo.png"
-										width="200px"
 										alt="ChildDR"
 									/>
 
@@ -146,6 +145,15 @@
 										>{{prescription.patient.age}}/{{prescription.patient.gender}}</td>
 									</tr>
 									<tr>
+										<td class="pe-3">Height:</td>
+										<td>{{prescription.patientHeight}}</td>
+										
+									</tr>
+									<tr>
+										<td class="pe-3">weight:</td>
+										<td>{{prescription.patientWeight}}</td>
+									</tr>
+									<tr>
 										<td class="pe-3">Phone Number:</td>
 										<td>{{prescription.patient.phone}}</td>
 									</tr>
@@ -153,6 +161,7 @@
 										<td class="pe-3">Email:</td>
 										<td>{{prescription.patient.email}}</td>
 									</tr>
+									
 								</tbody>
 							</table>
 						</div>
@@ -178,6 +187,10 @@
 									<tr>
 										<td class="pe-3">Email:</td>
 										<td>{{prescription.doctor.email}}</td>
+									</tr>
+									<tr>
+										<td class="pe-3">Doctor Registration Number:</td>
+										<td>{{prescription.doctor.doctorRegistrationNumber}}</td>
 									</tr>
 								</tbody>
 							</table>
@@ -240,10 +253,10 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			{{!-- </div> --}}
 			<!-- / Content -->
 			<div class="content-backdrop fade"></div>
-		</div>
+		{{!-- </div> --}}
 	</body>
 
 </html>

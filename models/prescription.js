@@ -40,6 +40,11 @@ module.exports = (sequelize, DataTypes) => {
                 field: "doctor_id",
                 allowNull: false,
             },
+            doctorRegistrationNumber: {
+                type: DataTypes.TEXT,
+                field: "doctor_registration_number",
+                allowNull: true,
+            },
             medicines: {
                 type: DataTypes.ARRAY(DataTypes.JSONB), // Store JSON data in an array
                 field: "medicines",
@@ -55,6 +60,16 @@ module.exports = (sequelize, DataTypes) => {
             prescriptionMsg: {
                 type: DataTypes.TEXT,
                 field: "prescription_msg",
+                allowNull: true,
+            },
+            patientWeight: {
+                type: DataTypes.TEXT,
+                field: "patient_weight",
+                allowNull: true,
+            },
+            patientHeight: {
+                type: DataTypes.TEXT,
+                field: "patient_height",
                 allowNull: true,
             },
             note: {
