@@ -68,7 +68,7 @@ router.post("/payment-callback1", async function (req, res, next) {
 					const checkExists = await db.PaymentTransaction.findOne({ where: { orderId } });
 					console.log(checkExists);
 					if (checkExists) {
-						res.status(200).send("Payment already received");
+						return res.status(200).send("Payment already received");
 					}
 					await db.PaymentTransaction.create({
 						payerUserId: userId,
