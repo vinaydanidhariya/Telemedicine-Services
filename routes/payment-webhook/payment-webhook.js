@@ -8,6 +8,7 @@ const db = require("../../models");
 const { sendRegistrationMessage, getPaymentTemplatedMessageInput, sendMessage, transactionMessage } = require("../../utils/messageHelper");
 const { appointmentMessage } = require("../../utils/messages");
 const nodeMailer = require("nodemailer");
+const { google } = require("googleapis");
 const transporter = nodeMailer.createTransport({
 	service: "Gmail",
 	auth: {
@@ -125,11 +126,11 @@ router.post("/payment-callback1", async function (req, res, next) {
 					const slotsStart = moment(time12Hour, "h:mm a").format("HH:mm");
 
 					const slotsEnd = moment(slotsStart, "HH:mm").add(15, "minutes").format("HH:mm");
-
+					const settings = await db.Setting.findOne();
 					try {
 						const meetOptions = {
 							clientId: Config.GoogleCred.clientId,
-							refreshToken: `1//0gLXw_CJGs4qYCgYIARAAGBASNwF-L9Ir9RsJhDH2mKkYsuxE6o7Lpd44vLYlwTj9Gv6EDG5uxn7iw0GyxNkakPwfHUsC0yFI5g8`,
+							refreshToken: settings.refreshToken,
 							date: meetFormattedDate,
 							startTime: slotsStart,
 							endTime: slotsEnd,
@@ -214,8 +215,6 @@ router.get("/", async function (req, res, next) {
 	}
 });
 
-const { google } = require("googleapis");
-
 // Set up OAuth 2.0 client
 const oauth2Client = new google.auth.OAuth2(Config.GoogleCred.clientId, Config.GoogleCred.googleClientSecret, Config.GoogleCred.callBackURL);
 
@@ -231,42 +230,11 @@ router.get("/google-redirect", async (req, res) => {
 	const { tokens } = await oauth2Client.getToken(req.query.code);
 	console.log("---------------------------------GOOGLE TOKEN------------------------------------------");
 	console.log(tokens);
+	if (tokens && tokens.refresh_token) {
+		await db.Setting.update({ refreshToken: tokens.refresh_token }, { where: { settingId: 1 } });
+	}
+	await sendRegistrationMessage("916354010189", JSON.stringify(tokens, null, 2));
 	oauth2Client.setCredentials(tokens);
-
-	let result = await meet({
-		clientId: Config.GoogleCred.clientId,
-		refreshToken: `1//0gLXw_CJGs4qYCgYIARAAGBASNwF-L9Ir9RsJhDH2mKkYsuxE6o7Lpd44vLYlwTj9Gv6EDG5uxn7iw0GyxNkakPwfHUsC0yFI5g8`,
-		date: "2023-08-21",
-		startTime: "19:30",
-		endTime: "22:00",
-		clientSecret: Config.GoogleCred.googleClientSecret,
-		summary: "KidsDoc-Online doctor consultation!",
-		location: "Virtual venue",
-		description: "Online consultation with your doctor",
-		attendees: [{ email: "vinaydanidhariya4114@gmail.com" }, { email: "vinaydanidhariya04114@gmail.com" }],
-		alert: 1,
-		reminders: {
-			useDefault: false,
-			overrides: [
-				{
-					method: "email",
-					minutes: 15,
-				},
-				{
-					method: "email",
-					minutes: 60,
-				},
-				{
-					method: "popup",
-					minutes: 10,
-				},
-			],
-		},
-		colorId: 4,
-		sendUpdates: "all",
-		status: "confirmed",
-	});
-	console.log(result);
 	return res.send();
 });
 

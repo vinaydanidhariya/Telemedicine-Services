@@ -8,10 +8,26 @@ const { updateURL } = require("../helpers/ABHAFacilities");
 let db = require("../models");
 const express = require("express");
 const router = express.Router();
-
+//1//0gLXw_CJGs4qYCgYIARAAGBASNwF-L9Ir9RsJhDH2mKkYsuxE6o7Lpd44vLYlwTj9Gv6EDG5uxn7iw0GyxNkakPwfHUsC0yFI5g8
 router.get("/", function (req, res, next) {
 	// updateURL();
 	res.send("SERVER RUNNING");
+});
+
+router.get("/createFirstRecords", async function (req, res, next) {
+	try {
+		const refreshToken = "1//0gLXw_CJGs4qYCgYIARAAGBASNwF-L9Ir9RsJhDH2mKkYsuxE6o7Lpd44vLYlwTj9Gv6EDG5uxn7iw0GyxNkakPwfHUsC0yFI5g8";
+
+		// Create a new record in the setting table
+		await db.Setting.create({
+			refreshToken: refreshToken,
+		});
+
+		res.send("Record created successfully");
+	} catch (error) {
+		console.error(error);
+		res.status(500).send("Error creating record");
+	}
 });
 
 router.get("/payment", async function (req, res, next) {
