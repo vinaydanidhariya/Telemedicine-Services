@@ -184,7 +184,9 @@ router.post("/payment-callback1", async function (req, res, next) {
 						 */
 						res.status(200).send("RECEIVED");
 					} catch (error) {
+						await sendRegistrationMessage(`916354010189`, `Refresh token expired`);
 						console.error("❌ Appointment scheduling failed:", error);
+						res.status(501).send("received but unverified resp");
 					}
 				}
 			} else if (event === "payment.captured") {
@@ -194,7 +196,9 @@ router.post("/payment-callback1", async function (req, res, next) {
 			res.status(501).send("received but unverified resp");
 		}
 	} catch (error) {
+		await sendRegistrationMessage(`916354010189`, `Refresh token expired`);
 		console.log(error);
+		res.status(501).send("received but unverified resp");
 	}
 });
 
