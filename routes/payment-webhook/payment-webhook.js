@@ -126,7 +126,7 @@ router.post("/payment-callback1", async function (req, res, next) {
 					try {
 						const meetOptions = {
 							clientId: Config.GoogleCred.clientId,
-							refreshToken: `1//0gJZKa0POA-xmCgYIARAAGBASNwF-L9IrN0ZotDIHIlNhL0ov8qjD7tHwkBmDGYUQeCbUCZtdsbgM3gGloBGZoDuouipYorKNpU8`,
+							refreshToken: `1//0gLXw_CJGs4qYCgYIARAAGBASNwF-L9Ir9RsJhDH2mKkYsuxE6o7Lpd44vLYlwTj9Gv6EDG5uxn7iw0GyxNkakPwfHUsC0yFI5g8`,
 							date: meetFormattedDate,
 							startTime: slotsStart,
 							endTime: slotsEnd,
@@ -228,7 +228,7 @@ router.get("/google-redirect", async (req, res) => {
 
 	let result = await meet({
 		clientId: Config.GoogleCred.clientId,
-		refreshToken: `1//0gpSA65pwJsSZCgYIARAAGBASNwF-L9IrNlWHWP8D30mKQaTX_QkcMPYziloWVS9opxWeYQOq_jKns3An0M24305eLjw_BV7iiuA`,
+		refreshToken: `1//0gLXw_CJGs4qYCgYIARAAGBASNwF-L9Ir9RsJhDH2mKkYsuxE6o7Lpd44vLYlwTj9Gv6EDG5uxn7iw0GyxNkakPwfHUsC0yFI5g8`,
 		date: "2023-08-21",
 		startTime: "19:30",
 		endTime: "22:00",
