@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../models");
 const authentication = require("../../middleware/login_module").check_auth;
-const moment = require('moment');
+const moment = require("moment");
 
 var multer = require("multer");
 var storage = multer.diskStorage({
@@ -22,11 +22,7 @@ const uploadSourceLeadFile = multer({
 	},
 	fileFilter: function (req, file, cb) {
 		// Filter the file based on the type.
-		if (
-			file.mimetype == "image/png" ||
-			file.mimetype == "image/jpg" ||
-			file.mimetype == "image/jpeg"
-		) {
+		if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
 			cb(null, true);
 		} else {
 			cb(null, false);
@@ -35,7 +31,7 @@ const uploadSourceLeadFile = multer({
 	},
 }).single("blog_photo");
 
-router.get("/add-blog", authentication, checkAccess('add-blog'), function (req, res, next) {
+router.get("/add-blog", authentication, checkAccess("add-blog"), function (req, res, next) {
 	try {
 		res.render("blogs/add-blog", {
 			title: "BLOG",
@@ -47,17 +43,16 @@ router.get("/add-blog", authentication, checkAccess('add-blog'), function (req, 
 	}
 });
 
-
-router.post("/add-blog", authentication, checkAccess('post/blogs/add-blog'), async function (req, res, next) {
+router.post("/add-blog", authentication, checkAccess("post/blogs/add-blog"), async function (req, res, next) {
 	try {
 		uploadSourceLeadFile(req, res, async function (err) {
 			// Check err while upload
 			if (err) {
-				console.log('Error while uploading image');
+				console.log("Error while uploading image");
 				console.log(err);
 				return res.send({
-					type: 'error',
-					message: err.message
+					type: "error",
+					message: err.message,
 				});
 			} else {
 				const { author_name, sort_description, description, title } = req.body;
@@ -96,7 +91,6 @@ router.post("/add-blog", authentication, checkAccess('post/blogs/add-blog'), asy
 						type: "error",
 					});
 				}
-
 			}
 		});
 	} catch (error) {
@@ -104,24 +98,23 @@ router.post("/add-blog", authentication, checkAccess('post/blogs/add-blog'), asy
 	}
 });
 
-router.get('/', authentication, checkAccess('/blogs/list'), async (req, res) => {
+router.get("/", authentication, checkAccess("/blogs/list"), async (req, res) => {
 	try {
 		const blogPosts = await db.Blogs.findAll({
-			attributes: ['blog_id', 'title', 'date', 'author_name', 'photo', 'sort_description', 'description'],
+			attributes: ["blog_id", "title", "date", "author_name", "photo", "sort_description", "description"],
 			raw: true,
 		});
 
-		console.log('Blog posts retrieved:', blogPosts);
+		console.log("Blog posts retrieved:", blogPosts);
 		if (blogPosts.length === 0) {
 			res.render("blogs/blogs", {
-				title: "ChildDR | Blogs List",
-				errorMsg: 'No Blogs found',
+				title: "KidsDoc | Blogs List",
+				errorMsg: "No Blogs found",
 				sessionUser: req.user,
 			});
-		}
-		else {
+		} else {
 			res.render("blogs/blogs", {
-				title: "ChildDR | Blogs List",
+				title: "KidsDoc | Blogs List",
 				blogPosts: blogPosts,
 				sessionUser: req.user,
 			});
@@ -133,12 +126,12 @@ router.get('/', authentication, checkAccess('/blogs/list'), async (req, res) => 
 			sessionUser: req.user,
 		});
 	} catch (error) {
-		console.error('Error retrieving blog posts:', error);
-		res.status(500).send('Error retrieving blog posts'); // Return an error response to the client
+		console.error("Error retrieving blog posts:", error);
+		res.status(500).send("Error retrieving blog posts"); // Return an error response to the client
 	}
 });
 
-router.get('/:id', authentication, checkAccess('/blogs/detail'), async (req, res) => {
+router.get("/:id", authentication, checkAccess("/blogs/detail"), async (req, res) => {
 	try {
 		const { id } = req.params;
 		const blog = await db.Blogs.findByPk(id);
@@ -146,50 +139,45 @@ router.get('/:id', authentication, checkAccess('/blogs/detail'), async (req, res
 
 		if (!blogPost) {
 			// Blog post not found, handle error or redirect to an error page
-			res.status(404).send('Blog not found');
+			res.status(404).send("Blog not found");
 			return;
 		}
 
-		res.render('blogs/blog-detail', {
+		res.render("blogs/blog-detail", {
 			title: blogPost.title,
 			description: blogPost.description,
 			date: blogPost.date,
 			authorName: blogPost.authorName,
 			photo: blogPost.photo,
-			layout: 'blank',
+			layout: "blank",
 			sessionUser: req.user,
 		});
 	} catch (error) {
-		console.error('Error retrieving blog post:', error);
+		console.error("Error retrieving blog post:", error);
 		// Handle errors appropriately
-		res.status(500).send('Error retrieving blog post');
+		res.status(500).send("Error retrieving blog post");
 	}
 });
-router.get('/remove/:id', authentication, checkAccess('/blogs/remove'), async (req, res) => {
+router.get("/remove/:id", authentication, checkAccess("/blogs/remove"), async (req, res) => {
 	try {
 		const { id } = req.params;
 
-		const blog = await db.Blogs.destroy(
-			{
-				where: {
-					blogId: id
-				}
-			}
-		);
+		const blog = await db.Blogs.destroy({
+			where: {
+				blogId: id,
+			},
+		});
 
 		if (!blog) {
-			res.status(404).send('blog not found');
+			res.status(404).send("blog not found");
 			return;
+		} else {
+			res.redirect("/blogs");
 		}
-		else {
-			res.redirect('/blogs');
-		}
-
-
 	} catch (error) {
-		console.error('Error retrieving blog post:', error);
+		console.error("Error retrieving blog post:", error);
 		// Handle errors appropriately
-		res.status(500).send('Error retrieving blog post');
+		res.status(500).send("Error retrieving blog post");
 	}
 });
 

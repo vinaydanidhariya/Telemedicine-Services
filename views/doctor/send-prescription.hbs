@@ -4,311 +4,282 @@
 <link rel="stylesheet" href="/assets/vendor/libs/sweetalert2/sweetalert2.css" />
 
 <div class="content-wrapper">
-    <!-- Content -->
-    <div class="container-xxl flex-grow-1 container-p-y">
-        <div class="row prescription-add">
-            <!-- prescription Add-->
-            <div class="col-lg-9 col-12 mb-lg-0 mb-4">
-                <div class="card prescription-preview-card">
-                    <div class="card-body">
-                        <div class="row p-sm-3 p-0">
-                            <div class="col-md-6 mb-md-0 mb-4">
-                                <div class="d-flex svg-illustration mb-4 gap-2">
-                                    <span class="app-brand-logo demo">
-                                        <img src="/assets/img/childdr-logo.png" class="img" alt="ChildDR" >
-                                    </span>
-                                    {{!-- <span class="app-brand-text demo text-body fw-bolder">ChildDr</span> --}}
-                                </div>
-                                <p class="mb-1">{{prescription.doctor.physicalPractice}}</p>
-                                <p class="mb-0">{{prescription.doctor.phone}}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <dl class="row mb-2">
-                                    <dt class="col-sm-6 mb-2 mb-sm-0 text-md-end">
-                                        <span class="fw-normal">Date:</span>
-                                    </dt>
-                                    <dd class="col-sm-6 d-flex justify-content-md-end">
-                                        <div class="w-px-150">
-                                            <input type="text" class="form-control datetime-picker"
-                                                id="prescriptionDate" placeholder="DD/MM/YYYY">
-                                        </div>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                        <script>
+	<!-- Content -->
+	<div class="container-xxl flex-grow-1 container-p-y">
+		<div class="row prescription-add">
+			<!-- prescription Add-->
+			<div class="col-lg-9 col-12 mb-lg-0 mb-4">
+				<div class="card prescription-preview-card">
+					<div class="card-body">
+						<div class="row p-sm-3 p-0">
+							<div class="col-md-6 mb-md-0 mb-4">
+								<div class="d-flex svg-illustration mb-4 gap-2">
+									<span class="app-brand-logo demo">
+										<img src="/assets/img/KidsDoc-logo.png" class="img" alt="KidsDoc" />
+									</span>
+									{{! <span class="app-brand-text demo text-body fw-bolder">KidsDoc</span> }}
+								</div>
+								<p class="mb-1">{{prescription.doctor.physicalPractice}}</p>
+								<p class="mb-0">{{prescription.doctor.phone}}</p>
+							</div>
+							<div class="col-md-6">
+								<dl class="row mb-2">
+									<dt class="col-sm-6 mb-2 mb-sm-0 text-md-end">
+										<span class="fw-normal">Date:</span>
+									</dt>
+									<dd class="col-sm-6 d-flex justify-content-md-end">
+										<div class="w-px-150">
+											<input type="text" class="form-control datetime-picker" id="prescriptionDate" placeholder="DD/MM/YYYY" />
+										</div>
+									</dd>
+								</dl>
+							</div>
+						</div>
+						<script>
 
-                        </script>
+						</script>
 
-                        <hr class="my-4 mx-n4" />
+						<hr class="my-4 mx-n4" />
 
-                        <div class="row p-sm-3 p-0">
-                            <div class="col-md-6 col-sm-5 col-12 mb-sm-0 mb-4">
-                                <h6 class="pb-2">Patient:</h6>
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td class="pe-3">Patient Name:</td>
-                                            <td> {{prescription.patient.fullName}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pe-3">Age/Gender:</td>
-                                            <td>{{prescription.patient.age}}/{{prescription.patient.gender}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pe-3">Phone Number:</td>
-                                            <td>{{prescription.patient.phone}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pe-3">Email:</td>
-                                            <td>{{prescription.patient.email}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col-md-6 col-sm-7">
-                                <h6 class="pb-2">Doctor:</h6>
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td class="pe-3">Name:</td>
-                                            <td>Dr. {{prescription.doctor.firstName}} {{prescription.doctor.lastName}}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pe-3">Department:</td>
-                                            <td>{{prescription.doctor.department}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pe-3">Phone No:</td>
-                                            <td>{{prescription.doctor.phone}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pe-3">Email:</td>
-                                            <td>{{prescription.doctor.email}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="pe-3">Doctor Registration Number:</td>
-                                            <td>{{prescription.doctor.doctorRegistrationNumber}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <form id="prescriptionFormValidation">
+						<div class="row p-sm-3 p-0">
+							<div class="col-md-6 col-sm-5 col-12 mb-sm-0 mb-4">
+								<h6 class="pb-2">Patient:</h6>
+								<table>
+									<tbody>
+										<tr>
+											<td class="pe-3">Patient Name:</td>
+											<td> {{prescription.patient.fullName}}</td>
+										</tr>
+										<tr>
+											<td class="pe-3">Age/Gender:</td>
+											<td>{{prescription.patient.age}}/{{prescription.patient.gender}}</td>
+										</tr>
+										<tr>
+											<td class="pe-3">Phone Number:</td>
+											<td>{{prescription.patient.phone}}</td>
+										</tr>
+										<tr>
+											<td class="pe-3">Email:</td>
+											<td>{{prescription.patient.email}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-md-6 col-sm-7">
+								<h6 class="pb-2">Doctor:</h6>
+								<table>
+									<tbody>
+										<tr>
+											<td class="pe-3">Name:</td>
+											<td>Dr.
+												{{prescription.doctor.firstName}}
+												{{prescription.doctor.lastName}}
+											</td>
+										</tr>
+										<tr>
+											<td class="pe-3">Department:</td>
+											<td>{{prescription.doctor.department}}</td>
+										</tr>
+										<tr>
+											<td class="pe-3">Phone No:</td>
+											<td>{{prescription.doctor.phone}}</td>
+										</tr>
+										<tr>
+											<td class="pe-3">Email:</td>
+											<td>{{prescription.doctor.email}}</td>
+										</tr>
+										<tr>
+											<td class="pe-3">Doctor Registration Number:</td>
+											<td>{{prescription.doctor.doctorRegistrationNumber}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<form id="prescriptionFormValidation">
 
-                            <hr class="my-4" />
+							<hr class="my-4" />
 
-                            <div class="row py-sm-3">
-                                <div class="col-md-6 mb-md-0 mb-3">
-                                    <p class="mb-2 ">Patient Height</p>
-                                    <input type="text" class="form-control" id="prescriptionPatientHeight"
-                                        placeholder="Enter Patient weight" />
-                                </div>
-                                <div class="col-md-6 mb-md-0 mb-3">
-                                    <p class="mb-2 ">Patient weight</p>
-                                    <input type="text" class="form-control" id="prescriptionPatientWeight"
-                                        placeholder="Enter Patient weight" />
-                                </div>
-                            </div>
+							<div class="row py-sm-3">
+								<div class="col-md-6 mb-md-0 mb-3">
+									<p class="mb-2">Patient Height</p>
+									<input type="text" class="form-control" id="prescriptionPatientHeight" placeholder="Enter Patient weight" />
+								</div>
+								<div class="col-md-6 mb-md-0 mb-3">
+									<p class="mb-2">Patient weight</p>
+									<input type="text" class="form-control" id="prescriptionPatientWeight" placeholder="Enter Patient weight" />
+								</div>
+							</div>
 
-                            <hr class="mx-n4" />
-                            <input type="hidden" value="{{prescription.prescriptionId}}" id="prescriptionId">
-                            <div class="source-item py-sm-3" id="prescriptionForm">
-                                <div class='repeater'>
-                                    <div class="mb-3 repeater-section" data-repeater-list="medicines">
-                                        <div class="repeater-wrapper pt-0 pt-md-4" data-repeater-item>
-                                            <!-- Medicine Section -->
-                                            <div class="d-flex border rounded position-relative pe-0">
-                                                <div class="row w-100 m-0 p-3">
-                                                    <p class="mb-2 repeater-title">Medicine Name</p>
+							<hr class="mx-n4" />
+							<input type="hidden" value="{{prescription.prescriptionId}}" id="prescriptionId" />
+							<div class="source-item py-sm-3" id="prescriptionForm">
+								<div class="repeater">
+									<div class="mb-3 repeater-section" data-repeater-list="medicines">
+										<div class="repeater-wrapper pt-0 pt-md-4" data-repeater-item>
+											<!-- Medicine Section -->
+											<div class="d-flex border rounded position-relative pe-0">
+												<div class="row w-100 m-0 p-3">
+													<p class="mb-2 repeater-title">Medicine Name</p>
 
-                                                    <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
-                                                        <p class="mb-2">Medicine</p>
-                                                        <textarea class="form-control" rows="1" name="medicineName"
-                                                            placeholder="TAB. DEMO MEDICINE 1"></textarea>
-                                                    </div>
-                                                    <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
-                                                        <p class="mb-2 ">Dosage</p>
-                                                        <textarea class="form-control" rows="2" name="dosage"
-                                                            placeholder="10 Days (Tot:40 Tab) 1 Morning, 1 Aft, 1 Eve, 1 Night (After Food)"></textarea>
-                                                    </div>
-                                                    <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
-                                                        <p class="mb-2">Duration</p>
-                                                        <textarea class="form-control" rows="1" name="duration"
-                                                            placeholder="10 Days (Tot:20 Tab)"></textarea>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="d-flex flex-column align-items-center justify-content-between border-start p-2">
-                                                    <i class="bx bx-x fs-4 text-muted cursor-pointer"
-                                                        data-repeater-delete></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div
-                                            class="col-12 d-flex flex-column align-items-center justify-content-between">
-                                            <button type="button" class="btn btn-primary" data-repeater-create
-                                                data-repeater-list="medicines">Add
-                                                Medicine</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="source-item py-sm-3" id="medicalInformationForm">
-                                <div class='repeater'>
-                                    <div class="mb-3 repeater-section" data-repeater-list="medical-info">
-                                        <div class="repeater-wrapper pt-0 pt-md-4" data-repeater-item>
-                                            <!-- Medical Information Section -->
-                                            <div class="d-flex border rounded position-relative pe-0">
-                                                <div class="row w-100 m-0 p-3">
-                                                    <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
-                                                        <p class="mb-2 repeater-title">Medical Information</p>
-                                                        <select class="form-select item-details mb-2"
-                                                            name="itemDetails">
-                                                            <option selected disabled>Select Item</option>
-                                                            <option value="Probable-Diagnosis">Probable Diagnosis
-                                                            </option>
-                                                            <option value="brief-Medical-History">Brief Medical History
-                                                            </option>
-                                                            <option value="prescribed-Medicine">Prescribed Medicine
-                                                            </option>
-                                                            <option value="required-Investigation">Required Investigation
-                                                            </option>
-                                                            <option value="follow-Up-Instructions">Follow-Up Instructions
-                                                            </option>
-                                                            <option value="extra-Advice">Extra Advice</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
-                                                        <textarea class="form-control" rows="2" name="itemInformation"
-                                                            placeholder="Section Description"></textarea>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="d-flex flex-column align-items-center justify-content-between border-start p-2">
-                                                    <i class="bx bx-x fs-4 text-muted cursor-pointer"
-                                                        data-repeater-delete></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div
-                                            class="col-12 d-flex flex-column align-items-center justify-content-between">
-                                            <button type="button" class="btn btn-primary" data-repeater-create
-                                                data-repeater-list="medicalInfo">Add Medical
-                                                Information</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr class="my-4 mx-n4" />
+													<div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
+														<p class="mb-2">Medicine</p>
+														<textarea class="form-control" rows="1" name="medicineName" placeholder="TAB. DEMO MEDICINE 1"></textarea>
+													</div>
+													<div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
+														<p class="mb-2">Dosage</p>
+														<textarea class="form-control" rows="2" name="dosage" placeholder="10 Days (Tot:40 Tab) 1 Morning, 1 Aft, 1 Eve, 1 Night (After Food)"></textarea>
+													</div>
+													<div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
+														<p class="mb-2">Duration</p>
+														<textarea class="form-control" rows="1" name="duration" placeholder="10 Days (Tot:20 Tab)"></textarea>
+													</div>
+												</div>
+												<div class="d-flex flex-column align-items-center justify-content-between border-start p-2">
+													<i class="bx bx-x fs-4 text-muted cursor-pointer" data-repeater-delete></i>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12 d-flex flex-column align-items-center justify-content-between">
+											<button type="button" class="btn btn-primary" data-repeater-create data-repeater-list="medicines">Add Medicine</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="source-item py-sm-3" id="medicalInformationForm">
+								<div class="repeater">
+									<div class="mb-3 repeater-section" data-repeater-list="medical-info">
+										<div class="repeater-wrapper pt-0 pt-md-4" data-repeater-item>
+											<!-- Medical Information Section -->
+											<div class="d-flex border rounded position-relative pe-0">
+												<div class="row w-100 m-0 p-3">
+													<div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
+														<p class="mb-2 repeater-title">Medical Information</p>
+														<select class="form-select item-details mb-2" name="itemDetails">
+															<option selected disabled>Select Item</option>
+															<option value="Probable-Diagnosis">Probable Diagnosis
+															</option>
+															<option value="brief-Medical-History">Brief Medical History
+															</option>
+															<option value="prescribed-Medicine">Prescribed Medicine
+															</option>
+															<option value="required-Investigation">Required Investigation
+															</option>
+															<option value="follow-Up-Instructions">Follow-Up Instructions
+															</option>
+															<option value="extra-Advice">Extra Advice</option>
+														</select>
+													</div>
+													<div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0">
+														<textarea class="form-control" rows="2" name="itemInformation" placeholder="Section Description"></textarea>
+													</div>
+												</div>
+												<div class="d-flex flex-column align-items-center justify-content-between border-start p-2">
+													<i class="bx bx-x fs-4 text-muted cursor-pointer" data-repeater-delete></i>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12 d-flex flex-column align-items-center justify-content-between">
+											<button type="button" class="btn btn-primary" data-repeater-create data-repeater-list="medicalInfo">Add Medical Information</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<hr class="my-4 mx-n4" />
 
-                            <div class="row py-sm-3">
-                                <div class="col-md-12 mb-md-0 mb-3">
-                                    <input type="text" class="form-control" id="prescriptionMsg"
-                                        placeholder="Thanks for your business" />
-                                </div>
-                            </div>
+							<div class="row py-sm-3">
+								<div class="col-md-12 mb-md-0 mb-3">
+									<input type="text" class="form-control" id="prescriptionMsg" placeholder="Thanks for your business" />
+								</div>
+							</div>
 
-                            <hr class="my-4" />
+							<hr class="my-4" />
 
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="mb-3">
-                                        <label for="note" class="form-label fw-semibold">Note:</label>
-                                        <textarea class="form-control" rows="2" id="note"
-                                            placeholder="prescription note"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <!-- /prescription Add-->
+							<div class="row">
+								<div class="col-12">
+									<div class="mb-3">
+										<label for="note" class="form-label fw-semibold">Note:</label>
+										<textarea class="form-control" rows="2" id="note" placeholder="prescription note"></textarea>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- /prescription Add-->
 
-            <!-- prescription Actions -->
-            <div class="col-lg-3 col-12 prescription-actions">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <button class="btn btn-primary d-grid w-100 mb-3" data-bs-toggle="offcanvas"
-                            data-bs-target="#sendprescriptionOffcanvas">
-                            <span class="d-flex align-items-center justify-content-center text-nowrap"><i
-                                    class="bx bx-paper-plane bx-xs me-1"></i>Send prescription</span>
-                        </button>
-                        <button id="generatePrescriptionButton" class="btn btn-primary d-grid w-100 mb-3">
-                            <span class="d-flex align-items-center justify-content-center text-nowrap">
-                                <i class="fa fa-eye bx-xs me-1" aria-hidden="true"></i>Preview prescription
-                            </span>
-                        </button>
-                        <button type="button" class="btn btn-label-secondary d-grid w-100" id="saveForm">Save</button>
-                    </div>
-                </div>
-                <div>
-                </div>
-            </div>
-            <!-- /prescription Actions -->
-        </div>
-        <!-- Offcanvas -->
-        
-        <!-- Send prescription Sidebar -->
-        <div class="offcanvas offcanvas-end" id="sendprescriptionOffcanvas" aria-hidden="true">
-            <div class="offcanvas-header mb-3">
-                <h5 class="offcanvas-title">Send prescription</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                    aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body flex-grow-1">
-                <form>
-                    <div class="mb-3">
-                        <label for="prescription-from" class="form-label">From</label>
-                        <input type="text" class="form-control" id="prescription-from" value="shelbyComapny@email.com"
-                            placeholder="Childdr@email.com" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="prescription-to" class="form-label">To</label>
-                        <input type="text" class="form-control" id="prescription-to"
-                            value="{{prescription.patient.email}}" placeholder="Enter Recipient Email" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="prescription-subject" class="form-label">Subject</label>
-                        <input type="text" class="form-control" id="prescription-subject" value="Your Prescription"
-                            placeholder="Email Subject" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="prescription-message" class="form-label">Message</label>
-                        <textarea class="form-control" name="prescription-message" id="prescription-message" cols="3"
-                            rows="8">ChildDr</textarea>
-                    </div>
-                    <div class="mb-4">
-                        <span class="badge bg-label-primary">
-                            <i class="bx bx-link bx-xs"></i>
-                            <span class="align-middle">prescription Attached</span>
-                        </span>
-                    </div>
-                    <div class="mb-3 d-flex flex-wrap">
-                        <button type="button" class="btn btn-primary me-3" id="emailSendButton"
-                            data-bs-dismiss="offcanvas">Send</button>
-                        <button type="button" class="btn btn-label-secondary"
-                            data-bs-dismiss="offcanvas">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- /Send prescription Sidebar -->
+			<!-- prescription Actions -->
+			<div class="col-lg-3 col-12 prescription-actions">
+				<div class="card mb-4">
+					<div class="card-body">
+						<button class="btn btn-primary d-grid w-100 mb-3" data-bs-toggle="offcanvas" data-bs-target="#sendprescriptionOffcanvas">
+							<span class="d-flex align-items-center justify-content-center text-nowrap"><i class="bx bx-paper-plane bx-xs me-1"></i>Send prescription</span>
+						</button>
+						<button id="generatePrescriptionButton" class="btn btn-primary d-grid w-100 mb-3">
+							<span class="d-flex align-items-center justify-content-center text-nowrap">
+								<i class="fa fa-eye bx-xs me-1" aria-hidden="true"></i>Preview prescription
+							</span>
+						</button>
+						<button type="button" class="btn btn-label-secondary d-grid w-100" id="saveForm">Save</button>
+					</div>
+				</div>
+				<div>
+				</div>
+			</div>
+			<!-- /prescription Actions -->
+		</div>
+		<!-- Offcanvas -->
 
-        <!-- /Offcanvas -->
+		<!-- Send prescription Sidebar -->
+		<div class="offcanvas offcanvas-end" id="sendprescriptionOffcanvas" aria-hidden="true">
+			<div class="offcanvas-header mb-3">
+				<h5 class="offcanvas-title">Send prescription</h5>
+				<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			</div>
+			<div class="offcanvas-body flex-grow-1">
+				<form>
+					<div class="mb-3">
+						<label for="prescription-from" class="form-label">From</label>
+						<input type="text" class="form-control" id="prescription-from" value="shelbyComapny@email.com" placeholder="KidsDoc@email.com" />
+					</div>
+					<div class="mb-3">
+						<label for="prescription-to" class="form-label">To</label>
+						<input type="text" class="form-control" id="prescription-to" value="{{prescription.patient.email}}" placeholder="Enter Recipient Email" />
+					</div>
+					<div class="mb-3">
+						<label for="prescription-subject" class="form-label">Subject</label>
+						<input type="text" class="form-control" id="prescription-subject" value="Your Prescription" placeholder="Email Subject" />
+					</div>
+					<div class="mb-3">
+						<label for="prescription-message" class="form-label">Message</label>
+						<textarea class="form-control" name="prescription-message" id="prescription-message" cols="3" rows="8">KidsDoc</textarea>
+					</div>
+					<div class="mb-4">
+						<span class="badge bg-label-primary">
+							<i class="bx bx-link bx-xs"></i>
+							<span class="align-middle">prescription Attached</span>
+						</span>
+					</div>
+					<div class="mb-3 d-flex flex-wrap">
+						<button type="button" class="btn btn-primary me-3" id="emailSendButton" data-bs-dismiss="offcanvas">Send</button>
+						<button type="button" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- /Send prescription Sidebar -->
 
+		<!-- /Offcanvas -->
 
+	</div>
+	<!-- / Content -->
 
-    </div>
-    <!-- / Content -->
-
-    <div class="content-backdrop fade"></div>
+	<div class="content-backdrop fade"></div>
 </div>
 <!-- Core JS -->
 <!-- build:js assets/vendor/js/core.js -->
@@ -322,148 +293,12 @@
 <script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
 
 <script>
-    $(document).ready(function () {
-        flatpickr(".datetime-picker", {
-            dateFormat: "d/m/Y",
-            defaultDate: new Date()
-        });
-
-        const sendButton = document.querySelector("#emailSendButton");
-        sendButton.addEventListener("click", async function () {
-            const from = document.querySelector("#prescription-from").value;
-            const patientEmail = document.querySelector("#prescription-to").value;
-            const subject = document.querySelector("#prescription-subject").value;
-            const message = document.querySelector("#prescription-message").value;
-            const prescriptionId = document.getElementById('prescriptionId').value;
-
-            const requestBody = {
-                subject: subject,
-                message: message,
-                patientEmail: patientEmail,
-                prescriptionId: prescriptionId
-            };
-
-            try {
-                const response = await fetch("/doctor/download-pdf", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (response.ok) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Prescription PDF sent successfully',
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Prescription PDF send request failed',
-                    });
-                }
-            } catch (error) {
-                console.error("An error occurred:", error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'An error occurred while processing your request',
-                });
-            }
-        });
-
-        $('#saveForm').on('click', function () {
-            var formData = {
-                medicines: [],
-                medicalIn: [],
-                prescriptionMsg: $('#prescriptionMsg').val(),
-                prescriptionId: $('#prescriptionId').val(),
-                prescriptionDate: $('#prescriptionDate').val(),
-                note: $('#note').val(),
-                prescriptionId: $('#prescriptionId').val(),
-                prescriptionPatientHeight : $('#prescriptionPatientHeight').val(),
-                prescriptionPatientWeight : $('#prescriptionPatientWeight').val()
-            };
-            console.log(formData)
-            // Validate and populate data for medicine sections
-            validateAndPopulateData('[data-repeater-list="medicines"]', formData.medicines);
-
-            // Validate and populate data for medical information sections
-            validateAndPopulateData('[data-repeater-list="medical-info"]', formData.medicalIn);
-
-            // Check if all data is valid before sending the AJAX request
-            if (formData.medicines.length === 0 || formData.medicalIn.length === 0) {
-                alert('Please fill in all required fields.');
-                return;
-            }
-
-            // Send the AJAX request to your server
-            $.ajax({
-                url: '/doctor/save-prescription', // Replace with your server endpoint
-                type: 'POST',
-                data: JSON.stringify(formData),
-                contentType: 'application/json',
-                success: function (response) {
-                    alert('Prescription saved successfully!');
-                },
-                error: function () {
-                    alert('Error while saving data.');
-                }
-            });
-        });
-
-        // Function to validate and populate data for a specific repeater section
-        function validateAndPopulateData(repeaterSelector, dataArray) {
-            var errorFields = [];
-
-            $(repeaterSelector).find('[data-repeater-item]').each(function () {
-                var dataObject = {};
-                var valid = true;
-
-                $(this).find('[name]').each(function () {
-                    var input = $(this).val().trim();
-                    if (!input) {
-                        valid = false;
-
-                        var fieldName = this.name;
-                        var extractedFieldName = fieldName.substring(fieldName.lastIndexOf("[") + 1, fieldName.lastIndexOf("]"));
-
-                        errorFields.push(extractedFieldName);
-
-                        return false; // Exit the loop
-                    }
-                    dataObject[this.name] = input;
-                });
-
-                if (valid) {
-                    dataArray.push(dataObject);
-                }
-            });
-
-            if (errorFields.length > 0) {
-                var errorMessage = 'Please fill in all required fields: ' + errorFields.join(', ');
-                alert(errorMessage);
-            }
-        }
-    });
+	$(document).ready(function () { flatpickr(".datetime-picker", { dateFormat: "d/m/Y", defaultDate: new Date() }); const sendButton = document.querySelector("#emailSendButton"); sendButton.addEventListener("click", async function () { const from = document.querySelector("#prescription-from").value; const patientEmail = document.querySelector("#prescription-to").value; const subject = document.querySelector("#prescription-subject").value; const message = document.querySelector("#prescription-message").value; const prescriptionId = document.getElementById('prescriptionId').value; const requestBody = { subject: subject, message: message, patientEmail: patientEmail, prescriptionId: prescriptionId }; try { const response = await fetch("/doctor/download-pdf", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(requestBody) }); if (response.ok) { Swal.fire({ icon: 'success', title: 'Success!', text: 'Prescription PDF sent successfully', }); } else {
+	Swal.fire({ icon: 'error', title: 'Error!', text: 'Prescription PDF send request failed', }); } } catch (error) { console.error("An error occurred:", error); Swal.fire({ icon: 'error', title: 'Error!', text: 'An error occurred while processing your request', }); } }); $('#saveForm').on('click', function () { var formData = { medicines: [], medicalIn: [], prescriptionMsg: $('#prescriptionMsg').val(), prescriptionId: $('#prescriptionId').val(), prescriptionDate: $('#prescriptionDate').val(), note: $('#note').val(), prescriptionId: $('#prescriptionId').val(), prescriptionPatientHeight : $('#prescriptionPatientHeight').val(), prescriptionPatientWeight : $('#prescriptionPatientWeight').val() }; console.log(formData) // Validate and populate data for medicine sections validateAndPopulateData('[data-repeater-list="medicines"]', formData.medicines); // Validate and populate data for medical information sections validateAndPopulateData('[data-repeater-list="medical-info"]',
+	formData.medicalIn); // Check if all data is valid before sending the AJAX request if (formData.medicines.length === 0 || formData.medicalIn.length === 0) { alert('Please fill in all required fields.'); return; } // Send the AJAX request to your server $.ajax({ url: '/doctor/save-prescription', // Replace with your server endpoint type: 'POST', data: JSON.stringify(formData), contentType: 'application/json', success: function (response) { alert('Prescription saved successfully!'); }, error: function () { alert('Error while saving data.'); } }); }); // Function to validate and populate data for a specific repeater section function validateAndPopulateData(repeaterSelector, dataArray) { var errorFields = []; $(repeaterSelector).find('[data-repeater-item]').each(function () { var dataObject = {}; var valid = true; $(this).find('[name]').each(function () { var input = $(this).val().trim(); if (!input) { valid = false; var fieldName = this.name; var extractedFieldName =
+	fieldName.substring(fieldName.lastIndexOf("[") + 1, fieldName.lastIndexOf("]")); errorFields.push(extractedFieldName); return false; // Exit the loop } dataObject[this.name] = input; }); if (valid) { dataArray.push(dataObject); } }); if (errorFields.length > 0) { var errorMessage = 'Please fill in all required fields: ' + errorFields.join(', '); alert(errorMessage); } } });
 </script>
 
 <script>
-    // Get the button element by its ID
-    const generateButton = document.getElementById('generatePrescriptionButton');
-
-    // Add a click event listener to the button
-    generateButton.addEventListener('click', () => {
-        // Get the prescription ID from the hidden input
-        const prescriptionId = document.getElementById('prescriptionId').value;
-
-        // Construct the URL with the prescription ID
-        const url = `/doctor/prescription-pdf/${prescriptionId}`;
-
-        // Navigate to the URL
-        window.location.href = url;
-    });
+	// Get the button element by its ID const generateButton = document.getElementById('generatePrescriptionButton'); // Add a click event listener to the button generateButton.addEventListener('click', () => { // Get the prescription ID from the hidden input const prescriptionId = document.getElementById('prescriptionId').value; // Construct the URL with the prescription ID const url = `/doctor/prescription-pdf/${prescriptionId}`; // Navigate to the URL window.location.href = url; });
 </script>

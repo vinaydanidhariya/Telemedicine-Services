@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../../models");
-const moment = require('moment');
+const moment = require("moment");
 const authentication = require("../../middleware/login_module").check_auth;
 
 var multer = require("multer");
@@ -24,11 +24,7 @@ const uploadSourceLeadFile = multer({
 	},
 	fileFilter: function (req, file, cb) {
 		// Filter the file based on the type.
-		if (
-			file.mimetype == "image/png" ||
-			file.mimetype == "image/jpg" ||
-			file.mimetype == "image/jpeg"
-		) {
+		if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
 			cb(null, true);
 		} else {
 			cb(null, false);
@@ -40,7 +36,7 @@ const uploadSourceLeadFile = multer({
 router.get("/add-event", authentication, checkAccess("event/add-event"), function (req, res, next) {
 	try {
 		res.render("events/add-event", {
-			title: "ChildDr | Add Event",
+			title: "KidsDoc | Add Event",
 			sessionUser: req.user,
 		});
 	} catch (error) {
@@ -53,11 +49,11 @@ router.post("/add-event", authentication, checkAccess("post/event/add-event"), a
 		uploadSourceLeadFile(req, res, async function (err) {
 			// Check err while upload
 			if (err) {
-				console.log('Error while uploading image');
+				console.log("Error while uploading image");
 				console.log(err);
 				return res.send({
-					type: 'error',
-					message: err.message
+					type: "error",
+					message: err.message,
 				});
 			} else {
 				const { description, sort_description, title } = req.body;
@@ -95,7 +91,6 @@ router.post("/add-event", authentication, checkAccess("post/event/add-event"), a
 						type: "error",
 					});
 				}
-
 			}
 		});
 	} catch (error) {
@@ -103,35 +98,34 @@ router.post("/add-event", authentication, checkAccess("post/event/add-event"), a
 	}
 });
 
-router.get('/', authentication, checkAccess("event/event-list"), async (req, res) => {
+router.get("/", authentication, checkAccess("event/event-list"), async (req, res) => {
 	try {
 		// Retrieve all event posts from the database using the event model
 		const eventPosts = await db.Event.findAll({
-			attributes: ['event_id', 'title', 'date', 'photo', 'description', 'sort_description'], // You can directly specify the attribute without an alias
-			raw: true,// Get raw JSON data instead of Sequelize instances
+			attributes: ["event_id", "title", "date", "photo", "description", "sort_description"], // You can directly specify the attribute without an alias
+			raw: true, // Get raw JSON data instead of Sequelize instances
 		});
 		if (eventPosts.length === 0) {
 			res.render("events/events", {
-				title: "ChildDR | Events List",
-				errorMsg: 'No event posts found',
+				title: "KidsDoc | Events List",
+				errorMsg: "No event posts found",
 				sessionUser: req.user,
 			});
-		}
-		else {
+		} else {
 			res.render("events/events", {
-				title: "ChildDR | Events List",
+				title: "KidsDoc | Events List",
 				eventPosts: eventPosts,
 				sessionUser: req.user,
 			});
 		}
 	} catch (error) {
-		console.error('Error retrieving event posts:', error);
+		console.error("Error retrieving event posts:", error);
 		// Handle errors appropriately
-		res.status(500).send('Error retrieving event posts'); // Return an error response to the client
+		res.status(500).send("Error retrieving event posts"); // Return an error response to the client
 	}
 });
 
-router.get('/:id', authentication, checkAccess("event/event-detail"), async (req, res) => {
+router.get("/:id", authentication, checkAccess("event/event-detail"), async (req, res) => {
 	try {
 		const { id } = req.params;
 		const event = await db.Event.findByPk(id);
@@ -139,49 +133,45 @@ router.get('/:id', authentication, checkAccess("event/event-detail"), async (req
 
 		if (!eventPost) {
 			// event post not found, handle error or redirect to an error page
-			res.status(404).send('event not found');
+			res.status(404).send("event not found");
 			return;
 		}
 
-		res.render('events/event-detail', {
+		res.render("events/event-detail", {
 			title: eventPost.title,
 			description: eventPost.description,
 			date: eventPost.date,
 			authorName: eventPost.authorName,
 			photo: eventPost.photo,
-			layout: 'blank',
+			layout: "blank",
 			sessionUser: req.user,
 		});
 	} catch (error) {
-		console.error('Error retrieving event post:', error);
+		console.error("Error retrieving event post:", error);
 		// Handle errors appropriately
-		res.status(500).send('Error retrieving event post');
+		res.status(500).send("Error retrieving event post");
 	}
 });
 
-router.get('/remove/:id', authentication, checkAccess("event/remove"), async (req, res) => {
+router.get("/remove/:id", authentication, checkAccess("event/remove"), async (req, res) => {
 	try {
 		const { id } = req.params;
-		const event = await db.Event.destroy(
-			{
-				where: {
-					eventId: id
-				}
-			}
-		);
+		const event = await db.Event.destroy({
+			where: {
+				eventId: id,
+			},
+		});
 		if (!event) {
-			res.status(404).send('event not found');
+			res.status(404).send("event not found");
 			return;
-		}
-		else {
-			res.redirect('/events');
+		} else {
+			res.redirect("/events");
 		}
 	} catch (error) {
-		console.error('Error retrieving event post:', error);
+		console.error("Error retrieving event post:", error);
 		// Handle errors appropriately
-		res.status(500).send('Error retrieving event post');
+		res.status(500).send("Error retrieving event post");
 	}
 });
-
 
 module.exports = router;

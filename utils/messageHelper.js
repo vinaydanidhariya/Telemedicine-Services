@@ -33,7 +33,6 @@ const getTextMessageInput = (recipient, text) => {
 };
 
 async function findAvailableTimeSlots(from, to, doctorId, user) {
-
 	const events = await db.Schedule.findAll({
 		where: {
 			doctorId: parseInt(doctorId),
@@ -70,15 +69,12 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 			}
 
 			// Round up the start time minutes to the nearest multiple of 15
-			const startRoundedMinutes =
-				Math.ceil(currentTime.minutes() / 15) * 15;
+			const startRoundedMinutes = Math.ceil(currentTime.minutes() / 15) * 15;
 			currentTime.minutes(startRoundedMinutes);
 
 			while (currentTime.isBefore(eventRange.end)) {
 				// Format the time in AM/PM format (e.g., "8:00 AM") in UTC
-				const timeString = currentTime
-					.utcOffset("+05:30")
-					.format("h:mm A");
+				const timeString = currentTime.utcOffset("+05:30").format("h:mm A");
 
 				// Only add time slots that are greater than or equal to now
 				if (currentTime.isSameOrAfter(now)) {
@@ -153,7 +149,6 @@ async function findAvailableTimeSlots(from, to, doctorId, user) {
 }
 
 async function SendSlotMessages(recipientNumber, res, daySelection) {
-
 	const user = await db.WhatsappUser.findOne({
 		where: { phone: recipientNumber, appointmentConfirmed: false },
 		attributes: ["selectedDoctor", "appointmentDate", "appointmentTime"],
@@ -164,29 +159,24 @@ async function SendSlotMessages(recipientNumber, res, daySelection) {
 
 	const doctor = await db.User.findOne({
 		where: { userId: user_selected_doctor },
-		attributes: [
-			"onlineConsultationTimeFrom",
-			"onlineConsultationTimeTo",
-			"userId",
-		],
+		attributes: ["onlineConsultationTimeFrom", "onlineConsultationTimeTo", "userId"],
 		raw: true,
 	});
 
 	const userAppointmentDate = new Date(user.appointmentDate);
-	const { onlineConsultationTimeFrom, onlineConsultationTimeTo, userId } =
-		doctor;
+	const { onlineConsultationTimeFrom, onlineConsultationTimeTo, userId } = doctor;
 
 	const [fromHours, fromMinutes] = onlineConsultationTimeFrom.split(":");
 	const [toHours, toMinutes] = onlineConsultationTimeTo.split(":");
 
 	// Convert onlineConsultationTimeFrom from IST to UTC
-	let fromUtc = moment(userAppointmentDate).set({ hour: parseInt(fromHours), minute: parseInt(fromMinutes), second: '00', milliseconds: '000' });
+	let fromUtc = moment(userAppointmentDate).set({ hour: parseInt(fromHours), minute: parseInt(fromMinutes), second: "00", milliseconds: "000" });
 
 	// Convert onlineConsultationTimeTo from IST to UTC
-	let toUtc = moment(userAppointmentDate).set({ hour: parseInt(toHours), minute: parseInt(toMinutes), second: '00', milliseconds: '000' });
+	let toUtc = moment(userAppointmentDate).set({ hour: parseInt(toHours), minute: parseInt(toMinutes), second: "00", milliseconds: "000" });
 
-	fromUtc = fromUtc.subtract(5, 'hours').subtract(30, "minutes");
-	toUtc = toUtc.subtract(5, 'hours').subtract(30, "minutes");
+	fromUtc = fromUtc.subtract(5, "hours").subtract(30, "minutes");
+	toUtc = toUtc.subtract(5, "hours").subtract(30, "minutes");
 
 	const timeSlots = await findAvailableTimeSlots(fromUtc, toUtc, userId, user);
 
@@ -196,54 +186,24 @@ async function SendSlotMessages(recipientNumber, res, daySelection) {
 			title: `${timePeriod}Time: ${time}`,
 			description: "Duration: 15 minutes",
 		}));
-	if (
-		!timeSlots.morningSlots.length &&
-		!timeSlots.afternoonSlots.length &&
-		!timeSlots.eveningSlots.length &&
-		!timeSlots.nightSlots.length &&
-		!timeSlots.midnight.length
-	) {
+	if (!timeSlots.morningSlots.length && !timeSlots.afternoonSlots.length && !timeSlots.eveningSlots.length && !timeSlots.nightSlots.length && !timeSlots.midnight.length) {
 		// Inform the user that the doctor is not available
-		await sendRegistrationMessage(
-			recipientNumber,
-			"🙁 Sorry, but we couldn't find any available slots for this doctor on the selected date.\n\n" +
-			"Please choose a different date or try again."
-		);
-		await db.WhatsappUser.update(
-			{ userStat: "DATE-SELECTION" },
-			{ where: { phone: recipientNumber, appointmentConfirmed: false } }
-		);
+		await sendRegistrationMessage(recipientNumber, "🙁 Sorry, but we couldn't find any available slots for this doctor on the selected date.\n\n" + "Please choose a different date or try again.");
+		await db.WhatsappUser.update({ userStat: "DATE-SELECTION" }, { where: { phone: recipientNumber, appointmentConfirmed: false } });
 		sendAppointmentDateReplyButton(recipientNumber);
 		return;
 	}
-	const convertedMorningSlots = timeSlotConvert(
-		timeSlots.morningSlots,
-		"Morning"
-	);
-	const convertedAfternoonSlots = timeSlotConvert(
-		timeSlots.afternoonSlots,
-		"Afternoon"
-	);
-	const convertedEveningSlots = timeSlotConvert(
-		timeSlots.eveningSlots,
-		"Evening"
-	);
+	const convertedMorningSlots = timeSlotConvert(timeSlots.morningSlots, "Morning");
+	const convertedAfternoonSlots = timeSlotConvert(timeSlots.afternoonSlots, "Afternoon");
+	const convertedEveningSlots = timeSlotConvert(timeSlots.eveningSlots, "Evening");
 	const convertedNightSlots = timeSlotConvert(timeSlots.nightSlots, "Night");
-	const convertedMidNightSlots = timeSlotConvert(
-		timeSlots.midnight,
-		"MidNight"
-	);
-
+	const convertedMidNightSlots = timeSlotConvert(timeSlots.midnight, "MidNight");
 
 	const sendTimeSlotsChunks = async (recipientNumber, slots, timePeriod) => {
 		const chunkSize = 10;
 		for (let i = 0; i < slots.length; i += chunkSize) {
 			const chunk = slots.slice(i, i + chunkSize);
-			await sendTimeListAppointmentMessage(
-				recipientNumber,
-				chunk,
-				timePeriod
-			);
+			await sendTimeListAppointmentMessage(recipientNumber, chunk, timePeriod);
 		}
 	};
 
@@ -252,7 +212,7 @@ async function SendSlotMessages(recipientNumber, res, daySelection) {
 	// await sendTimeSlotsChunks(recipientNumber, convertedEveningSlots, "Evening");
 	// await sendTimeSlotsChunks(recipientNumber, convertedNightSlots, "Night");
 	// await sendTimeSlotsChunks(recipientNumber, convertedMidNightSlots, "MidNight");
-	const sendPartOfDay = []
+	const sendPartOfDay = [];
 	if (convertedMorningSlots.length) {
 		sendPartOfDay.push({
 			id: "morning",
@@ -290,22 +250,21 @@ async function SendSlotMessages(recipientNumber, res, daySelection) {
 	}
 
 	if (daySelection) {
-		if (daySelection == 'morning') {
+		if (daySelection == "morning") {
 			await sendTimeSlotsChunks(recipientNumber, convertedMorningSlots, "Morning");
-		} else if (daySelection == 'afternoon') {
+		} else if (daySelection == "afternoon") {
 			await sendTimeSlotsChunks(recipientNumber, convertedAfternoonSlots, "Afternoon");
-		} else if (daySelection == 'evening') {
+		} else if (daySelection == "evening") {
 			await sendTimeSlotsChunks(recipientNumber, convertedEveningSlots, "Evening");
-		} else if (daySelection == 'night') {
+		} else if (daySelection == "night") {
 			await sendTimeSlotsChunks(recipientNumber, convertedNightSlots, "Night");
-		} else if (daySelection == 'midnight') {
+		} else if (daySelection == "midnight") {
 			await sendTimeSlotsChunks(recipientNumber, convertedMidNightSlots, "MidNight");
 		}
 	} else {
 		await sendDoctorDepartmentList2(recipientNumber, sendPartOfDay);
 	}
 	return;
-
 }
 
 let messageObject = (recipient) => {
@@ -376,10 +335,10 @@ const genderMessage = {
 	type: "button",
 	header: {
 		type: "text",
-		text: "ChildDR 🏥",
+		text: "KidsDoc 🏥",
 	},
 	body: {
-		text: "Choose Your Gender",
+		text: "Patient's Gender.",
 	},
 	footer: {
 		text: "Please select an option.",
@@ -408,7 +367,7 @@ const welcomeMessage = {
 	type: "button",
 	header: {
 		type: "text",
-		text: "Welcome to ChildDr! 🏥",
+		text: "Welcome to KidsDoc! 🏥",
 	},
 	body: {
 		text: "Do you want to consult our Pediatrician online?",
@@ -434,15 +393,11 @@ const sendWelcomeMessage = (recipient) => {
 		let newMessageObject = messageObject(recipient);
 		newMessageObject.interactive = welcomeMessage;
 
-		axios.post(
-			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
-			newMessageObject,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
+		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
 	} catch (error) {
 		console.log(error);
 	}
@@ -453,15 +408,11 @@ const sendGenderSelectionMessage = (recipient) => {
 		let newMessageObject = messageObject(recipient);
 		newMessageObject.interactive = genderMessage;
 
-		axios.post(
-			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
-			newMessageObject,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
+		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
 	} catch (error) {
 		console.log(error);
 	}
@@ -474,24 +425,15 @@ const handleMessage = async (message, recipientNumber) => {
 	});
 	switch (user.userStat) {
 		case "PAYMENT_DONE":
-			await db.WhatsappUser.update(
-				{ userStat: "END", paymentDone: message },
-				{ where: { phone: recipientNumber, appointmentConfirmed: false } }
-			);
+			await db.WhatsappUser.update({ userStat: "END", paymentDone: message }, { where: { phone: recipientNumber, appointmentConfirmed: false } });
 			return "Kindly note that it's an online consultation. If your symptoms worsen or in an emergency, please visit a nearby doctor. Thank you!";
 
 		case "END":
-			await db.WhatsappUser.update(
-				{ userStat: "COMPLETE", paymentDone: message },
-				{ where: { phone: recipientNumber, appointmentConfirmed: false } }
-			);
+			await db.WhatsappUser.update({ userStat: "COMPLETE", paymentDone: message }, { where: { phone: recipientNumber, appointmentConfirmed: false } });
 			return "Your Appointment Booked!!!!!!!";
 
 		default:
-			await db.WhatsappUser.update(
-				{ userStat: "START" },
-				{ where: { phone: recipientNumber, appointmentConfirmed: false } }
-			);
+			await db.WhatsappUser.update({ userStat: "START" }, { where: { phone: recipientNumber, appointmentConfirmed: false } });
 			// Handle additional userStats or conditions
 			return "Something went Wrong";
 	}
@@ -500,15 +442,11 @@ const handleMessage = async (message, recipientNumber) => {
 const sendRegistrationMessage = async (recipient, message) => {
 	try {
 		let newMessageObject = getTextMessageInput(recipient, message);
-		let response = await axios.post(
-			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
-			newMessageObject,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
+		let response = await axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
 		return response.data;
 	} catch (error) {
 		console.log(error);
@@ -549,20 +487,15 @@ const buttonInteractiveObject = {
 
 const sendReplyButton = (reply, recipient) => {
 	try {
-		buttonInteractiveObject.body.text =
-			reply.title + " (" + reply.description + ")";
+		buttonInteractiveObject.body.text = reply.title + " (" + reply.description + ")";
 		let newMessageObject = messageObject(recipient);
 		newMessageObject.interactive = buttonInteractiveObject;
 
-		axios.post(
-			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
-			newMessageObject,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
+		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
 	} catch (error) {
 		console.log(error);
 	}
@@ -572,7 +505,7 @@ const appointmentDateButtonInteractiveObject = {
 	type: "button",
 	header: {
 		type: "text",
-		text: "ChildDR 🏥",
+		text: "KidsDoc 🏥",
 	},
 	body: {
 		text: `On Which Day You Want to Book Appointment`,
@@ -612,15 +545,11 @@ const sendAppointmentDateReplyButton = (recipient) => {
 		let newMessageObject = messageObject(recipient);
 		newMessageObject.interactive = appointmentDateButtonInteractiveObject;
 
-		axios.post(
-			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
-			newMessageObject,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
+		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
 	} catch (error) {
 		console.log(error);
 	}
@@ -630,19 +559,13 @@ const sendDoctorDepartmentList = (recipient, listOfDoctorDepartment) => {
 	try {
 		let newMessageObject = messageObject(recipient);
 
-		let newDrListInteractiveObject = DoctorDepartmentListInteractiveObject(
-			listOfDoctorDepartment
-		);
+		let newDrListInteractiveObject = DoctorDepartmentListInteractiveObject(listOfDoctorDepartment);
 		newMessageObject.interactive = newDrListInteractiveObject;
-		axios.post(
-			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
-			newMessageObject,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
+		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
 	} catch (error) {
 		console.log(error);
 	}
@@ -652,19 +575,13 @@ const sendDoctorDepartmentList2 = (recipient, listOfDoctorDepartment) => {
 	try {
 		let newMessageObject = messageObject(recipient);
 
-		let newDrListInteractiveObject = DoctorDepartmentListInteractiveObject2(
-			listOfDoctorDepartment
-		);
+		let newDrListInteractiveObject = DoctorDepartmentListInteractiveObject2(listOfDoctorDepartment);
 		newMessageObject.interactive = newDrListInteractiveObject;
-		axios.post(
-			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
-			newMessageObject,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
+		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
 	} catch (error) {
 		console.log(error);
 	}
@@ -677,40 +594,27 @@ const sendListDoctorMessage = async (recipient, listOfDoctor) => {
 		let newDrListInteractiveObject = drListInteractiveObject(listOfDoctor);
 		newMessageObject.interactive = newDrListInteractiveObject;
 
-		await axios.post(
-			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
-			newMessageObject,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
+		await axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
 	} catch (error) {
 		console.log(error);
 	}
 };
 
-const sendTimeListAppointmentMessage = async (
-	recipient,
-	listOfAppointment,
-	slotType
-) => {
+const sendTimeListAppointmentMessage = async (recipient, listOfAppointment, slotType) => {
 	try {
 		const newMessageObject = messageObject(recipient, slotType);
 
-		const newAppointmentListInteractiveObject =
-			appointmentTimeListInteractiveObject(listOfAppointment, slotType);
+		const newAppointmentListInteractiveObject = appointmentTimeListInteractiveObject(listOfAppointment, slotType);
 		newMessageObject.interactive = newAppointmentListInteractiveObject;
-		await axios.post(
-			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
-			newMessageObject,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
+		await axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
 	} catch (error) {
 		console.log(error);
 	}
@@ -727,7 +631,7 @@ const DoctorDepartmentListInteractiveObject2 = (listOfDepartment) => {
 			text: "Please choose part of day",
 		},
 		footer: {
-			text: "ChildDr",
+			text: "KidsDoc",
 		},
 		action: {
 			button: "Choose",
@@ -752,7 +656,7 @@ const DoctorDepartmentListInteractiveObject = (listOfDepartment) => {
 			text: "Please select the department or category with which you would like to consult.",
 		},
 		footer: {
-			text: "ChildDr",
+			text: "KidsDoc",
 		},
 		action: {
 			button: "Choose Department",
@@ -777,7 +681,7 @@ const drListInteractiveObject = (listOfDoctor) => {
 			text: "Here are the available doctors 👨‍⚕️",
 		},
 		footer: {
-			text: "ChildDR",
+			text: "KidsDoc",
 		},
 		action: {
 			button: "Choose Doctor",
@@ -802,7 +706,7 @@ const appointmentTimeListInteractiveObject = (listOfAppointment, slotType) => {
 			text: `Please select the ⏰ appointment ${slotType.toLowerCase()} time that suits you best.`,
 		},
 		footer: {
-			text: "ChildDR",
+			text: "KidsDoc",
 		},
 		action: {
 			button: `${slotType} Time ⏰`,
@@ -822,12 +726,7 @@ const findDrList = async (department) => {
 		attributes: [
 			["user_id", "id"],
 			[Sequelize.literal("CONCAT(first_name,' ', last_name)"), "title"],
-			[
-				Sequelize.literal(
-					"CONCAT(qualifications, ' - ', department, ' - Price ', price)"
-				),
-				"description",
-			],
+			[Sequelize.literal("CONCAT(qualifications, ' - ', department, ' - Price ', price)"), "description"],
 		],
 		raw: true,
 		tableName: "user",
@@ -886,10 +785,10 @@ const tocBlock = {
 	type: "button",
 	header: {
 		type: "text",
-		text: "ChildDR 🏥",
+		text: "KidsDoc 🏥",
 	},
 	body: {
-		text: `As per govenment rules and policies we are bound to read and follow certain regulation and policies we insist you to read it first. link https://www.childdrofficial.com/terms-of-service.html`,
+		text: `As per govenment rules and policies we are bound to read and follow certain regulation and policies we insist you to read it first. link https://www.KidsDocofficial.com/terms-of-service.html`,
 	},
 	footer: {
 		text: "Please read Term & Conditions above.",
@@ -919,15 +818,11 @@ const sendTOCBlock = (recipient) => {
 		let newMessageObject = messageObject(recipient);
 		newMessageObject.interactive = tocBlock;
 
-		axios.post(
-			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
-			newMessageObject,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
+		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
 	} catch (error) {
 		console.log(error);
 	}
@@ -955,5 +850,5 @@ module.exports = {
 	validatePhoneNumber,
 	transactionMessage,
 	getPaymentTemplatedMessageInput,
-	sendDoctorDepartmentList2
+	sendDoctorDepartmentList2,
 };

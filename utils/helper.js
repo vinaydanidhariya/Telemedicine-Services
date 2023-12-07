@@ -3,7 +3,7 @@ const db = require("../models/");
 const nodemailer = require("nodemailer");
 const Config = require("../config/config.json")[process.env.NODE_ENV];
 const path = require("path");
-const fs = require('fs/promises');
+const fs = require("fs/promises");
 function convertToMd5(password) {
 	const hash = crypto.createHash("md5").update(password).digest("hex");
 	return hash;
@@ -50,7 +50,7 @@ const verifyOTP = async (phone_number, otp) => {
 	}
 };
 
-async function sendOTPEmail(email,otp,userName) {
+async function sendOTPEmail(email, otp, userName) {
 	try {
 		const transporter = nodemailer.createTransport({
 			service: "Gmail",
@@ -60,22 +60,16 @@ async function sendOTPEmail(email,otp,userName) {
 			},
 		});
 
-		const emailTemplatePath = path.join(
-			__dirname,
-			"../email-templates",
-			"otpTemplate.html"
-		);
+		const emailTemplatePath = path.join(__dirname, "../email-templates", "otpTemplate.html");
 		const template = await fs.readFile(emailTemplatePath, "utf-8"); // Use fs.readFile
 
-		const filledTemplate = template
-			.replace(/\[DoctorName\]/g, userName)
-			.replace(/\[OTPSTRING\]/g, otp);
+		const filledTemplate = template.replace(/\[DoctorName\]/g, userName).replace(/\[OTPSTRING\]/g, otp);
 
 		const mailOptions = {
-			from: `Child Dr <${Config.nodemailer.auth.user}>`,
+			from: `KidsDoc Dr <${Config.nodemailer.auth.user}>`,
 			to: email,
 			subject: "OTP",
-			html: filledTemplate
+			html: filledTemplate,
 		};
 
 		await transporter.sendMail(mailOptions);

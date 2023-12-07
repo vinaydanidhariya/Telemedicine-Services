@@ -114,10 +114,10 @@ router.post("/", async (req, res) => {
 										},
 										{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 									);
-									sendRegistrationMessage(recipientNumber, "Please enter the Birth-date of your Child/Patient. 📅 \nPlease enter it in the format DD/MM/YYYY (e.g., 01/01/2000)");
+									sendRegistrationMessage(recipientNumber, "Patient's Birth-date of your Child/Patient. 📅 \nPlease enter it in the format DD/MM/YYYY (e.g., 01/01/2000)");
 									return res.sendStatus(200);
 								} else {
-									sendRegistrationMessage(recipientNumber, "Enter Proper Patient Name ❌");
+									sendRegistrationMessage(recipientNumber, "Enter Proper Patient's Name ❌");
 									return res.sendStatus(200);
 								}
 							}
@@ -144,7 +144,7 @@ router.post("/", async (req, res) => {
 										},
 										{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 									);
-									sendRegistrationMessage(recipientNumber, "Please Enter your Phone Number ☎️?");
+									sendRegistrationMessage(recipientNumber, "Patient's Phone Number ☎️?");
 									return res.sendStatus(200);
 								} else {
 									await sendRegistrationMessage(recipientNumber, "Enter Proper Email Address ❌");
@@ -301,13 +301,13 @@ router.post("/", async (req, res) => {
 						const time = listReply.title.split(": ")[1];
 						await db.WhatsappUser.update({ userStat: "FULL-NAME", appointmentTime: time }, { where: { phone: recipientNumber, appointmentConfirmed: false } });
 						// await db.Schedule.update(
-						// 	{ userStat: "FULL-NAME", appointmentTime: time },
-						// 	{ where: { phone: recipientNumber } }
+						//  { userStat: "FULL-NAME", appointmentTime: time },
+						//  { where: { phone: recipientNumber } }
 						// );
-						sendRegistrationMessage(recipientNumber, "What's your child's/patient's Full Name?");
+						sendRegistrationMessage(recipientNumber, "Patient's Full Name?");
 					} else if (interactiveType === "button_reply" && user.userStat === "GENDER") {
 						await db.WhatsappUser.update({ userStat: "EMAIL", gender: reply.id }, { where: { phone: recipientNumber, appointmentConfirmed: false } });
-						await sendRegistrationMessage(recipientNumber, "Please Enter Your Email Address 📧?");
+						await sendRegistrationMessage(recipientNumber, "Patient's Email Address 📧?");
 					} else if (interactiveType === "button_reply" && user.userStat === "TERM-CONDITIONS") {
 						if (reply.id === "AGREE") {
 							// await db.WhatsappUser.update(
