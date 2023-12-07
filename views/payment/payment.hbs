@@ -1,5 +1,5 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 	var options = { "key": "rzp_test_I41VoSmePWbGQU", /** Enter the Key ID generated from the Dashboard */ "amount": "50000", /**Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise */"currency": "INR", "name": "KidsDoc Clinic", "description": "Appointment charge", "image": "https://img1.wsimg.com/isteam/ip/d15ac042-6efa-4f93-b6c9-7b1a168d0c10/blob.png", "order_id": `{{orderId}}`, /**This is a sample Order ID. Pass the `id` obtained in the response of Step 1 */"handler": function (response) { alert("Payment Done"); window.location.replace("https://wa.me/+15550852750"); }, "theme": { "color": "#696cff" } }; var rzp1 = new Razorpay(options); rzp1.on('payment.failed', function (response) { alert("Payment Failed") alert(response.error.code); alert(response.error.description); alert(response.error.source); alert(response.error.step); alert(response.error.reason); alert(response.error.metadata.order_id); alert(response.error.metadata.payment_id); });
-	document.getElementById('rzp-button1').onclick = function(e){ rzp1.open(); e.preventDefault(); //}
+	document.getElementById('rzp-button1').onclick = function(e){ rzp1.open(); e.preventDefault(); }
 </script>
