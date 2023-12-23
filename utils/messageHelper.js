@@ -922,7 +922,10 @@ const sendTOCBlock = async (recipient) => {
 				Authorization: `Bearer ${accessToken}`,
 			},
 		}).then((res) => {
-			console.log(res.toJSON());
+			if (res) {
+				console.log(res);
+				console.log(res.toJSON());
+			}
 		}).catch((err) => {
 			if (err) {
 				console.log(err);
