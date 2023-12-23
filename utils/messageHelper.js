@@ -295,6 +295,7 @@ let messageObject2 = (recipient) => {
 			language:{
 				code: "en_US"
 			},
+			components:[]
 		},
 	};
 }
