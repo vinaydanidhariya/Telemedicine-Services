@@ -924,7 +924,10 @@ const sendTOCBlock = async (recipient) => {
 		}).then((res) => {
 			console.log(res.toJSON());
 		}).catch((err) => {
-			console.log(err.toJSON());
+			if (err) {
+				console.log(err);
+				console.log(err.toJSON());
+			}
 		});
 	} catch (error) {
 		console.log("======================================");
