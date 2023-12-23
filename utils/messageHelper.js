@@ -912,16 +912,18 @@ const prefillform = {
 	]
 }
 
-const sendTOCBlock = (recipient) => {
+const sendTOCBlock = async (recipient) => {
 	try {
 		let newMessageObject = messageObject2(recipient);
 		// newMessageObject.interactive = tocBlock;
 
-		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+		const response = await axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
 			headers: {
 				Authorization: `Bearer ${accessToken}`,
 			},
 		});
+		const dataPromise = response.then((response) => response.data)
+		console.log(dataPromise);
 	} catch (error) {
 		console.log(error);
 	}
