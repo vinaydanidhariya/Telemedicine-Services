@@ -917,13 +917,15 @@ const sendTOCBlock = async (recipient) => {
 		let newMessageObject = messageObject2(recipient);
 		// newMessageObject.interactive = tocBlock;
 
-		const response = await axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
 			headers: {
 				Authorization: `Bearer ${accessToken}`,
 			},
+		}).then((res) => {
+			console.log(res);
+		}).catch((err) => {
+			console.log(err);
 		});
-		const dataPromise = response.then((response) => response.data)
-		console.log(dataPromise.data);
 	} catch (error) {
 		console.log(error);
 	}
