@@ -106,8 +106,8 @@
 			"key_secret": "7VaiVPaoK7oeK50U5FT8Am0C"
 		},
 		"GoogleCred": {
-			"clientId": "127925894032-scshjisrosrtn3jth8jm9knatvibhvoo.apps.googleusercontent.com",
-			"googleClientSecret": "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",
+			"clientId": "534249686762-ldp1pr9p96tunridkv6lgqveic8p8r9k.apps.googleusercontent.com",
+			"googleClientSecret": "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",
 			"callBackURL": "https://kidsdoc.online/whatsapp-payment/google-redirect"
 		}
 	}
