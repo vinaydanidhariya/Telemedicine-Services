@@ -914,8 +914,8 @@ const prefillform = {
 
 const sendTOCBlock = async (recipient) => {
 	try {
-		let newMessageObject = messageObject(recipient);
-		newMessageObject.interactive = tocBlock;
+		let newMessageObject = messageObject2(recipient);
+		// newMessageObject.interactive = tocBlock;
 
 		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
 			headers: {
