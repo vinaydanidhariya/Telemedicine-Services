@@ -284,6 +284,21 @@ let messageObject = (recipient) => {
 	};
 };
 
+let messageObject2 = (recipient) => {
+	return {
+		messaging_product: "whatsapp",
+		recipient_type: "individual",
+		to: `${recipient}`,
+		type: "template",
+		template: {
+			name: "user_information",
+			language:{
+				code: "en_US"
+			},
+		},
+	};
+}
+
 function getPaymentTemplatedMessageInput(recipient, name, amount, orderId) {
 	return {
 		messaging_product: "whatsapp",
@@ -899,8 +914,8 @@ const prefillform = {
 
 const sendTOCBlock = (recipient) => {
 	try {
-		let newMessageObject = messageObject(recipient);
-		newMessageObject.interactive = prefillform;
+		let newMessageObject = messageObject2(recipient);
+		// newMessageObject.interactive = tocBlock;
 
 		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
 			headers: {
