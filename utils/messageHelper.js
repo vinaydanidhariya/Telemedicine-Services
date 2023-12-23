@@ -268,12 +268,94 @@ async function SendSlotMessages(recipientNumber, res, daySelection) {
 }
 
 let messageObject = (recipient) => {
+	// return {
+	//  messaging_product: "whatsapp",
+	//  recipient_type: "individual",
+	//  to: `${recipient}`,
+	//  type: "interactive",
+	//  interactive: {},
+	// };
 	return {
 		messaging_product: "whatsapp",
 		recipient_type: "individual",
 		to: `${recipient}`,
 		type: "interactive",
-		interactive: {},
+		interactive: {
+			"version": "3.0",
+			"screens": [
+			  {
+				"id": "QUESTION_ONE",
+				"title": "Your basic details",
+				"data": {},
+				"terminal": true,
+				"layout": {
+				  "type": "SingleColumnLayout",
+				  "children": [
+					{
+					  "type": "Form",
+					  "name": "flow_path",
+					  "children": [
+						{
+						  "type": "TextBody",
+						  "text": "To communicate we are taking your basic details."
+						},
+						{
+						  "type": "TextInput",
+						  "label": "Email address",
+						  "name": "TextInput_b8b969",
+						  "required": true,
+						  "input-type": "email",
+						  "helper-text": ""
+						},
+						{
+						  "type": "TextInput",
+						  "label": "Patient's full name",
+						  "name": "TextInput_a07689",
+						  "required": true,
+						  "input-type": "text"
+						},
+						{
+						  "type": "DatePicker",
+						  "label": "Patient's bithdate",
+						  "required": true,
+						  "name": "DatePicker_613233"
+						},
+						{
+						  "type": "RadioButtonsGroup",
+						  "label": "Gender",
+						  "required": true,
+						  "name": "RadioButtonsGroup_0e3759",
+						  "data-source": [
+							{
+							  "id": "0_Male",
+							  "title": "Male"
+							},
+							{
+							  "id": "1_Female",
+							  "title": "Female"
+							}
+						  ]
+						},
+						{
+						  "type": "Footer",
+						  "label": "Submit",
+						  "on-click-action": {
+							"name": "complete",
+							"payload": {
+							  "screen_0_TextInput_0": "${form.TextInput_b8b969}",
+							  "screen_0_TextInput_1": "${form.TextInput_a07689}",
+							  "screen_0_DatePicker_2": "${form.DatePicker_613233}",
+							  "screen_0_RadioButtonsGroup_3": "${form.RadioButtonsGroup_0e3759}"
+							}
+						  }
+						}
+					  ]
+					}
+				  ]
+				}
+			  }
+			]
+		},
 	};
 };
 
