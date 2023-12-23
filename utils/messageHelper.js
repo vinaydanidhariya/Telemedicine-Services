@@ -923,7 +923,7 @@ const sendTOCBlock = async (recipient) => {
 			},
 		});
 		const dataPromise = response.then((response) => response.data)
-		console.log(dataPromise);
+		console.log(dataPromise.data);
 	} catch (error) {
 		console.log(error);
 	}
