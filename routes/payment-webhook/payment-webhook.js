@@ -180,7 +180,7 @@ router.post("/payment-callback1", async function (req, res, next) {
 							to: [userInfo.email, doctorInfo.email],
 							subject: "Online Consultation Booked",
 							text: `Hello, You have appointment at ${meetFormattedDate} Time: ${userInfo.appointmentTime} with ${userInfo.fullName}. Link to join ${result.link}`,
-							body: `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+							html: `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 							<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 							<head>
 							<!--[if gte mso 9]>
