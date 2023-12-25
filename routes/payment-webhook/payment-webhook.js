@@ -304,8 +304,8 @@ router.post("/payment-callback1", async function (req, res, next) {
 							<table width="100%" cellpadding="0" cellspacing="0" border="0">
 							  <tr>
 								<td style="padding-right: 0px;padding-left: 0px;" align="center">
-								  <a href="https://unlayer.com" target="_blank">
-								  <img align="center" border="0" src="images/image-2.png" alt="Logo" title="Logo" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 58%;max-width: 307.4px;" width="307.4"/>
+								  
+								  <img align="center" border="0" src="https://kidsdocindia.com/wp-content/uploads/2021/09/sndp.png" alt="Logo" title="Logo" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 58%;max-width: 307.4px;" width="307.4"/>
 								  </a>
 								</td>
 							  </tr>
@@ -393,7 +393,7 @@ router.post("/payment-callback1", async function (req, res, next) {
 							  <tr>
 								<td style="padding-right: 0px;padding-left: 0px;" align="center">
 								  
-								  <img align="center" border="0" src="images/image-1.png" alt="Calendar" title="Calendar" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 550px;" width="550"/>
+								  <img align="center" border="0" src="https://cdn.templates.unlayer.com/assets/1623155757689-gfgg.png" alt="Calendar" title="Calendar" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 550px;" width="550"/>
 								  
 								</td>
 							  </tr>
@@ -440,7 +440,7 @@ router.post("/payment-callback1", async function (req, res, next) {
 								  <td style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px 10px 15px;font-family:arial,helvetica,sans-serif;" align="left">
 									
 							  <!--[if mso]><table width="100%"><tr><td><![endif]-->
-								<h3 style="margin: 0px; color: #293c4b; line-height: 140%; text-align: left; word-wrap: break-word; font-family: 'Montserrat',sans-serif; font-size: 18px; font-weight: 400;"><span><strong>Hi ${userInfo.fullName},</strong></span></h3>
+								<h3 style="margin: 0px; color: #293c4b; line-height: 140%; text-align: left; word-wrap: break-word; font-family: 'Montserrat',sans-serif; font-size: 18px; font-weight: 400;"><span><strong>Hello There,</strong></span></h3>
 							  <!--[if mso]></td></tr></table><![endif]-->
 							
 								  </td>
