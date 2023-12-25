@@ -53,35 +53,6 @@ router.post("/", async (req, res) => {
 						);
 						sendTOCBlock(recipientNumber);
 						return res.sendStatus(200);
-					} else if (message.text.body === "Tester") {
-						await sendDoctorDepartmentList2(recipientNumber, [
-							{
-								id: "morning",
-								title: "Morning",
-								description: "Morning of the day",
-							},
-							{
-								id: "afternoon",
-								title: "Afternoon",
-								description: "Afternoon of the day",
-							},
-							{
-								id: "evening",
-								title: "Evening",
-								description: "Evening of the day",
-							},
-							{
-								id: "night",
-								title: "Night",
-								description: "Night of the day",
-							},
-							{
-								id: "midnight",
-								title: "Midnight",
-								description: "Midnight of the day",
-							},
-						]);
-						return res.sendStatus(200);
 					} else {
 						switch (user.userStat) {
 							case "TERM-CONDITIONS-AGREE": {
@@ -139,12 +110,15 @@ router.post("/", async (req, res) => {
 								if (mailFormat.test(textMessage)) {
 									await db.WhatsappUser.update(
 										{
-											userStat: "PHONE-NUMBER",
+											userStat: "PAYMENT-GATEWAY",
 											email: textMessage,
+											userEnterNumber: recipientNumber,
 										},
 										{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 									);
-									sendRegistrationMessage(recipientNumber, "Patient's Phone Number ☎️?");
+									const RespondUrl = await GetPaymentUrl(wa_id);
+									sendRegistrationMessage(recipientNumber, `Please Payment at this link and confirm your appointment 💳🔗\n${RespondUrl} \nOnce the payment is completed, your appointment will be confirmed.`);
+									// sendRegistrationMessage(recipientNumber, "Patient's Phone Number ☎️?");
 									return res.sendStatus(200);
 								} else {
 									await sendRegistrationMessage(recipientNumber, "Enter Proper Email Address ❌");
@@ -323,7 +297,7 @@ router.post("/", async (req, res) => {
 							}
 							return res.sendStatus(200);
 						} else {
-							sendRegistrationMessage(recipientNumber, "Apologies to inconvinience but we cannot proceed futher until you agreed with terms & condition");
+							sendRegistrationMessage(recipientNumber, "Apologies to inconvenience but we cannot proceed further until you agreed with terms & condition.");
 						}
 					}
 

@@ -216,35 +216,35 @@ async function SendSlotMessages(recipientNumber, res, daySelection) {
 	if (convertedMorningSlots.length) {
 		sendPartOfDay.push({
 			id: "morning",
-			title: "Morning",
+			title: "06:00 AM - 12:00 PM",
 			description: "Morning of the day",
 		});
 	}
 	if (convertedAfternoonSlots.length) {
 		sendPartOfDay.push({
 			id: "afternoon",
-			title: "Afternoon",
+			title: "12:00 PM - 05:00 PM",
 			description: "Afternoon of the day",
 		});
 	}
 	if (convertedEveningSlots.length) {
 		sendPartOfDay.push({
 			id: "evening",
-			title: "Evening",
+			title: "05:00 PM - 08:00 PM",
 			description: "Evening of the day",
 		});
 	}
 	if (convertedNightSlots.length) {
 		sendPartOfDay.push({
 			id: "night",
-			title: "Night",
+			title: "08:00 PM - 12:00 AM",
 			description: "Night of the day",
 		});
 	}
 	if (convertedMidNightSlots.length) {
 		sendPartOfDay.push({
 			id: "midnight",
-			title: "Midnight",
+			title: "12:00 AM - 06:00 AM",
 			description: "Midnight of the day",
 		});
 	}
@@ -291,11 +291,10 @@ let messageObject2 = (recipient) => {
 		to: `${recipient}`,
 		type: "template",
 		template: {
-			name: "user_information",
+			name: "hello_world",
 			language:{
 				code: "en_US"
-			},
-			components:[]
+			}
 		},
 	};
 }
@@ -811,7 +810,11 @@ const tocBlock = {
 		text: "KidsDoc 🏥",
 	},
 	body: {
-		text: `As per govenment rules and policies we are bound to read and follow certain regulation and policies we insist you to read it first. link https://www.childdrofficial.com/terms-of-service.html`,
+		text: ` Welcome to KidsDoc 🏥, the online platform for booking medical consultation.
+Before you proceed, please read and agree to our terms and conditions and give your consent. 
+This is required by the government rules and policies that we adhere to. 
+You can find the terms and conditions here: https://kidsdocindia.com/. 
+Thank you for choosing KidsDoc 🏥.`,
 	},
 	footer: {
 		text: "Please read Term & Conditions above.",
@@ -918,19 +921,14 @@ const sendTOCBlock = async (recipient) => {
 		let newMessageObject = messageObject(recipient);
 		newMessageObject.interactive = tocBlock;
 
-		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
+		const response = await axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
 			headers: {
 				Authorization: `Bearer ${accessToken}`,
 			},
-		}).then((res) => {
-			if (res) {
-				console.log(res);
-			}
-		}).catch((err) => {
-			if (err) {
-				console.log(err);
-			}
-		});
+		})
+
+		console.log(response.data);
+		
 	} catch (error) {
 		console.log("======================================");
 		console.log(error);
