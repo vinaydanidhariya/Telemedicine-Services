@@ -170,10 +170,20 @@ async function SendSlotMessages(recipientNumber, res, daySelection) {
 	const [toHours, toMinutes] = onlineConsultationTimeTo.split(":");
 
 	// Convert onlineConsultationTimeFrom from IST to UTC
-	let fromUtc = moment(userAppointmentDate).set({ hour: parseInt(fromHours), minute: parseInt(fromMinutes), second: "00", milliseconds: "000" });
+	let fromUtc = moment(userAppointmentDate).set({
+		hour: parseInt(fromHours),
+		minute: parseInt(fromMinutes),
+		second: "00",
+		milliseconds: "000",
+	});
 
 	// Convert onlineConsultationTimeTo from IST to UTC
-	let toUtc = moment(userAppointmentDate).set({ hour: parseInt(toHours), minute: parseInt(toMinutes), second: "00", milliseconds: "000" });
+	let toUtc = moment(userAppointmentDate).set({
+		hour: parseInt(toHours),
+		minute: parseInt(toMinutes),
+		second: "00",
+		milliseconds: "000",
+	});
 
 	fromUtc = fromUtc.subtract(5, "hours").subtract(30, "minutes");
 	toUtc = toUtc.subtract(5, "hours").subtract(30, "minutes");
@@ -186,10 +196,23 @@ async function SendSlotMessages(recipientNumber, res, daySelection) {
 			title: `${timePeriod}Time: ${time}`,
 			description: "Duration: 15 minutes",
 		}));
-	if (!timeSlots.morningSlots.length && !timeSlots.afternoonSlots.length && !timeSlots.eveningSlots.length && !timeSlots.nightSlots.length && !timeSlots.midnight.length) {
+	if (
+		!timeSlots.morningSlots.length &&
+		!timeSlots.afternoonSlots.length &&
+		!timeSlots.eveningSlots.length &&
+		!timeSlots.nightSlots.length &&
+		!timeSlots.midnight.length
+	) {
 		// Inform the user that the doctor is not available
-		await sendRegistrationMessage(recipientNumber, "🙁 Sorry, but we couldn't find any available slots for this doctor on the selected date.\n\n" + "Please choose a different date or try again.");
-		await db.WhatsappUser.update({ userStat: "DATE-SELECTION" }, { where: { phone: recipientNumber, appointmentConfirmed: false } });
+		await sendRegistrationMessage(
+			recipientNumber,
+			"🙁 Sorry, but we couldn't find any available slots for this doctor on the selected date.\n\n" +
+				"Please choose a different date or try again."
+		);
+		await db.WhatsappUser.update(
+			{ userStat: "DATE-SELECTION" },
+			{ where: { phone: recipientNumber, appointmentConfirmed: false } }
+		);
 		sendAppointmentDateReplyButton(recipientNumber);
 		return;
 	}
@@ -217,35 +240,35 @@ async function SendSlotMessages(recipientNumber, res, daySelection) {
 		sendPartOfDay.push({
 			id: "morning",
 			title: "06:00 AM - 12:00 PM",
-			description: "Morning of the day",
+			// description: "Morning of the day",
 		});
 	}
 	if (convertedAfternoonSlots.length) {
 		sendPartOfDay.push({
 			id: "afternoon",
 			title: "12:00 PM - 05:00 PM",
-			description: "Afternoon of the day",
+			// description: "Afternoon of the day",
 		});
 	}
 	if (convertedEveningSlots.length) {
 		sendPartOfDay.push({
 			id: "evening",
 			title: "05:00 PM - 08:00 PM",
-			description: "Evening of the day",
+			// description: "Evening of the day",
 		});
 	}
 	if (convertedNightSlots.length) {
 		sendPartOfDay.push({
 			id: "night",
 			title: "08:00 PM - 12:00 AM",
-			description: "Night of the day",
+			// description: "Night of the day",
 		});
 	}
 	if (convertedMidNightSlots.length) {
 		sendPartOfDay.push({
 			id: "midnight",
 			title: "12:00 AM - 06:00 AM",
-			description: "Midnight of the day",
+			// description: "Midnight of the day",
 		});
 	}
 
@@ -292,12 +315,12 @@ let messageObject2 = (recipient) => {
 		type: "template",
 		template: {
 			name: "hello_world",
-			language:{
-				code: "en_US"
-			}
+			language: {
+				code: "en_US",
+			},
 		},
 	};
-}
+};
 
 function getPaymentTemplatedMessageInput(recipient, name, amount, orderId) {
 	return {
@@ -415,11 +438,15 @@ const sendWelcomeMessage = (recipient) => {
 		let newMessageObject = messageObject(recipient);
 		newMessageObject.interactive = welcomeMessage;
 
-		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		});
+		axios.post(
+			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+			newMessageObject,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
@@ -430,11 +457,15 @@ const sendGenderSelectionMessage = (recipient) => {
 		let newMessageObject = messageObject(recipient);
 		newMessageObject.interactive = genderMessage;
 
-		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		});
+		axios.post(
+			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+			newMessageObject,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
@@ -447,15 +478,24 @@ const handleMessage = async (message, recipientNumber) => {
 	});
 	switch (user.userStat) {
 		case "PAYMENT_DONE":
-			await db.WhatsappUser.update({ userStat: "END", paymentDone: message }, { where: { phone: recipientNumber, appointmentConfirmed: false } });
+			await db.WhatsappUser.update(
+				{ userStat: "END", paymentDone: message },
+				{ where: { phone: recipientNumber, appointmentConfirmed: false } }
+			);
 			return "Kindly note that it's an online consultation. If your symptoms worsen or in an emergency, please visit a nearby doctor. Thank you!";
 
 		case "END":
-			await db.WhatsappUser.update({ userStat: "COMPLETE", paymentDone: message }, { where: { phone: recipientNumber, appointmentConfirmed: false } });
+			await db.WhatsappUser.update(
+				{ userStat: "COMPLETE", paymentDone: message },
+				{ where: { phone: recipientNumber, appointmentConfirmed: false } }
+			);
 			return "Your Appointment Booked!!!!!!!";
 
 		default:
-			await db.WhatsappUser.update({ userStat: "START" }, { where: { phone: recipientNumber, appointmentConfirmed: false } });
+			await db.WhatsappUser.update(
+				{ userStat: "START" },
+				{ where: { phone: recipientNumber, appointmentConfirmed: false } }
+			);
 			// Handle additional userStats or conditions
 			return "Something went Wrong";
 	}
@@ -464,11 +504,15 @@ const handleMessage = async (message, recipientNumber) => {
 const sendRegistrationMessage = async (recipient, message) => {
 	try {
 		let newMessageObject = getTextMessageInput(recipient, message);
-		let response = await axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		});
+		let response = await axios.post(
+			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+			newMessageObject,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
 		return response.data;
 	} catch (error) {
 		console.log(error);
@@ -513,11 +557,15 @@ const sendReplyButton = (reply, recipient) => {
 		let newMessageObject = messageObject(recipient);
 		newMessageObject.interactive = buttonInteractiveObject;
 
-		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		});
+		axios.post(
+			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+			newMessageObject,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
@@ -567,11 +615,15 @@ const sendAppointmentDateReplyButton = (recipient) => {
 		let newMessageObject = messageObject(recipient);
 		newMessageObject.interactive = appointmentDateButtonInteractiveObject;
 
-		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		});
+		axios.post(
+			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+			newMessageObject,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
@@ -581,13 +633,18 @@ const sendDoctorDepartmentList = (recipient, listOfDoctorDepartment) => {
 	try {
 		let newMessageObject = messageObject(recipient);
 
-		let newDrListInteractiveObject = DoctorDepartmentListInteractiveObject(listOfDoctorDepartment);
+		let newDrListInteractiveObject =
+			DoctorDepartmentListInteractiveObject(listOfDoctorDepartment);
 		newMessageObject.interactive = newDrListInteractiveObject;
-		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		});
+		axios.post(
+			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+			newMessageObject,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
@@ -597,13 +654,18 @@ const sendDoctorDepartmentList2 = (recipient, listOfDoctorDepartment) => {
 	try {
 		let newMessageObject = messageObject(recipient);
 
-		let newDrListInteractiveObject = DoctorDepartmentListInteractiveObject2(listOfDoctorDepartment);
+		let newDrListInteractiveObject =
+			DoctorDepartmentListInteractiveObject2(listOfDoctorDepartment);
 		newMessageObject.interactive = newDrListInteractiveObject;
-		axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		});
+		axios.post(
+			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+			newMessageObject,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
@@ -616,11 +678,15 @@ const sendListDoctorMessage = async (recipient, listOfDoctor) => {
 		let newDrListInteractiveObject = drListInteractiveObject(listOfDoctor);
 		newMessageObject.interactive = newDrListInteractiveObject;
 
-		await axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		});
+		await axios.post(
+			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+			newMessageObject,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
@@ -630,13 +696,20 @@ const sendTimeListAppointmentMessage = async (recipient, listOfAppointment, slot
 	try {
 		const newMessageObject = messageObject(recipient, slotType);
 
-		const newAppointmentListInteractiveObject = appointmentTimeListInteractiveObject(listOfAppointment, slotType);
+		const newAppointmentListInteractiveObject = appointmentTimeListInteractiveObject(
+			listOfAppointment,
+			slotType
+		);
 		newMessageObject.interactive = newAppointmentListInteractiveObject;
-		await axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		});
+		await axios.post(
+			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+			newMessageObject,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
@@ -748,7 +821,12 @@ const findDrList = async (department) => {
 		attributes: [
 			["user_id", "id"],
 			[Sequelize.literal("CONCAT(first_name,' ', last_name)"), "title"],
-			[Sequelize.literal("CONCAT(qualifications, ' - ', department, ' - Price ', price)"), "description"],
+			[
+				Sequelize.literal(
+					"CONCAT(qualifications, ' - Exp:' experience, ' - Charge ', price)"
+				),
+				"description",
+			],
 		],
 		raw: true,
 		tableName: "user",
@@ -775,7 +853,9 @@ const findDoctorDepartmentList = async () => {
 
 const GetPaymentUrl = async (wa_id) => {
 	try {
-		const user = await db.WhatsappUser.findOne({ where: { wa_id, appointmentConfirmed: false } });
+		const user = await db.WhatsappUser.findOne({
+			where: { wa_id, appointmentConfirmed: false },
+		});
 		let url = Config.serverUrl + "/whatsapp-payment/create-payment";
 		const response = await axios(url, {
 			method: "POST",
@@ -828,107 +908,111 @@ Thank you for choosing KidsDoc 🏥.`,
 					title: "AGREE",
 				},
 			},
-			{
-				type: "reply",
-				reply: {
-					id: "DISAGREE",
-					title: "DISAGREE",
-				},
-			},
+			// {
+			//  type: "reply",
+			//  reply: {
+			//      id: "DISAGREE",
+			//      title: "DISAGREE",
+			//  },
+			// },
 		],
 	},
 };
 
 const prefillform = {
-	"version": "3.0",
-	"screens": [
-	  {
-		"id": "QUESTION_ONE",
-		"title": "Your basic details",
-		"data": {},
-		"terminal": true,
-		"layout": {
-		  "type": "SingleColumnLayout",
-		  "children": [
-			{
-			  "type": "Form",
-			  "name": "flow_path",
-			  "children": [
-				{
-				  "type": "TextBody",
-				  "text": "To communicate we are taking your basic details."
-				},
-				{
-				  "type": "TextInput",
-				  "label": "Email address",
-				  "name": "TextInput_b8b969",
-				  "required": true,
-				  "input-type": "email",
-				  "helper-text": ""
-				},
-				{
-				  "type": "TextInput",
-				  "label": "Patient's full name",
-				  "name": "TextInput_a07689",
-				  "required": true,
-				  "input-type": "text"
-				},
-				{
-				  "type": "DatePicker",
-				  "label": "Patient's bithdate",
-				  "required": true,
-				  "name": "DatePicker_613233"
-				},
-				{
-				  "type": "RadioButtonsGroup",
-				  "label": "Gender",
-				  "required": true,
-				  "name": "RadioButtonsGroup_0e3759",
-				  "data-source": [
+	version: "3.0",
+	screens: [
+		{
+			id: "QUESTION_ONE",
+			title: "Your basic details",
+			data: {},
+			terminal: true,
+			layout: {
+				type: "SingleColumnLayout",
+				children: [
 					{
-					  "id": "0_Male",
-					  "title": "Male"
+						type: "Form",
+						name: "flow_path",
+						children: [
+							{
+								type: "TextBody",
+								text: "To communicate we are taking your basic details.",
+							},
+							{
+								type: "TextInput",
+								label: "Email address",
+								name: "TextInput_b8b969",
+								required: true,
+								"input-type": "email",
+								"helper-text": "",
+							},
+							{
+								type: "TextInput",
+								label: "Patient's full name",
+								name: "TextInput_a07689",
+								required: true,
+								"input-type": "text",
+							},
+							{
+								type: "DatePicker",
+								label: "Patient's bithdate",
+								required: true,
+								name: "DatePicker_613233",
+							},
+							{
+								type: "RadioButtonsGroup",
+								label: "Gender",
+								required: true,
+								name: "RadioButtonsGroup_0e3759",
+								"data-source": [
+									{
+										id: "0_Male",
+										title: "Male",
+									},
+									{
+										id: "1_Female",
+										title: "Female",
+									},
+								],
+							},
+							{
+								type: "Footer",
+								label: "Submit",
+								"on-click-action": {
+									name: "complete",
+									payload: {
+										screen_0_TextInput_0: "${form.TextInput_b8b969}",
+										screen_0_TextInput_1: "${form.TextInput_a07689}",
+										screen_0_DatePicker_2: "${form.DatePicker_613233}",
+										screen_0_RadioButtonsGroup_3:
+											"${form.RadioButtonsGroup_0e3759}",
+									},
+								},
+							},
+						],
 					},
-					{
-					  "id": "1_Female",
-					  "title": "Female"
-					}
-				  ]
-				},
-				{
-				  "type": "Footer",
-				  "label": "Submit",
-				  "on-click-action": {
-					"name": "complete",
-					"payload": {
-					  "screen_0_TextInput_0": "${form.TextInput_b8b969}",
-					  "screen_0_TextInput_1": "${form.TextInput_a07689}",
-					  "screen_0_DatePicker_2": "${form.DatePicker_613233}",
-					  "screen_0_RadioButtonsGroup_3": "${form.RadioButtonsGroup_0e3759}"
-					}
-				  }
-				}
-			  ]
-			}
-		  ]
-		}
-	  }
-	]
-}
+				],
+			},
+		},
+	],
+};
 
 const sendTOCBlock = async (recipient) => {
 	try {
 		let newMessageObject = messageObject(recipient);
 		newMessageObject.interactive = tocBlock;
 
-		const response = await axios.post(`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`, newMessageObject, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
+		const response = await axios.post(
+			`https://graph.facebook.com/${apiVersion}/${myNumberId}/messages`,
+			newMessageObject,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
 
 		console.log(response.data);
-		
 	} catch (error) {
 		console.log("======================================");
 		console.log(error);

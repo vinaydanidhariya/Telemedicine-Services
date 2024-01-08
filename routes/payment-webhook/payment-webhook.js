@@ -5,7 +5,12 @@ var crypto = require("crypto");
 const moment = require("moment");
 const Config = require("../../config/config.json")[process.env.NODE_ENV];
 const db = require("../../models");
-const { sendRegistrationMessage, getPaymentTemplatedMessageInput, sendMessage, transactionMessage } = require("../../utils/messageHelper");
+const {
+	sendRegistrationMessage,
+	getPaymentTemplatedMessageInput,
+	sendMessage,
+	transactionMessage,
+} = require("../../utils/messageHelper");
 const { appointmentMessage } = require("../../utils/messages");
 const nodeMailer = require("nodemailer");
 const { google } = require("googleapis");
@@ -48,7 +53,10 @@ router.post("/payment-callback1", async function (req, res, next) {
 	try {
 		const requestedBody = JSON.stringify(req.body);
 		const receivedSignature = req.headers["x-razorpay-signature"];
-		const expectedSignature = crypto.createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET).update(requestedBody).digest("hex");
+		const expectedSignature = crypto
+			.createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
+			.update(requestedBody)
+			.digest("hex");
 		if (receivedSignature === expectedSignature) {
 			const event = req.body.event;
 			if (event === "order.paid") {
@@ -83,7 +91,10 @@ router.post("/payment-callback1", async function (req, res, next) {
 						paymentStatus: status,
 					});
 
-					await db.WhatsappUser.update({ useStat: "PAYMENT-DONE", paymentId: orderId }, { where: { phone: mobile, appointmentConfirmed: false } });
+					await db.WhatsappUser.update(
+						{ useStat: "PAYMENT-DONE", paymentId: orderId },
+						{ where: { phone: mobile, appointmentConfirmed: false } }
+					);
 
 					const message = await transactionMessage(name, amount / 100, orderId);
 					await sendRegistrationMessage(mobile, `${message}`);
@@ -162,19 +173,39 @@ router.post("/payment-callback1", async function (req, res, next) {
 						};
 						const result = await meet(meetOptions);
 						console.log("🎉 Appointment scheduled successfully!");
-						console.log("💼 A virtual appointment has been scheduled with your doctor.");
+						console.log(
+							"💼 A virtual appointment has been scheduled with your doctor."
+						);
 						console.log("🕒 Date:", meetFormattedDate);
 						console.log("⏰ Time:", slotsStart, "-", slotsEnd);
 						console.log("📌 Location: Virtual venue");
 						console.log("📅 You will receive email reminders before the appointment.");
 
-						if (result.status == "success" || result.status == "confirmed" || result.status == "Confirmed") {
-							data1 = appointmentMessage(userInfo.fullName, formattedDate, userInfo.appointmentTime, result.link);
+						if (
+							result.status == "success" ||
+							result.status == "confirmed" ||
+							result.status == "Confirmed"
+						) {
+							data1 = appointmentMessage(
+								userInfo.fullName,
+								formattedDate,
+								userInfo.appointmentTime,
+								result.link,
+								doctorInfo.firstName + " " + doctorInfo.lastName
+							);
 						} else {
-							data1 = appointmentMessage(userInfo.fullName, formattedDate, userInfo.appointmentTime, "FAILED CASE LINK");
+							data1 = appointmentMessage(
+								userInfo.fullName,
+								formattedDate,
+								userInfo.appointmentTime,
+								"FAILED CASE LINK"
+							);
 						}
 						await sendRegistrationMessage(mobile, data1);
-						await sendRegistrationMessage(`91` + doctorInfo.phone, `Hello Doctor, You have new appointment at ${meetFormattedDate} from ${userInfo.appointmentTime} with ${userInfo.fullName}, Link to join ${result.link}`);
+						await sendRegistrationMessage(
+							`91` + doctorInfo.phone,
+							`Hello Doctor, You have new appointment at ${meetFormattedDate} from ${userInfo.appointmentTime} with ${userInfo.fullName}, Link to join ${result.link}`
+						);
 						const mailOptions = {
 							from: Config.nodemailer.auth.user,
 							to: [userInfo.email, doctorInfo.email],
@@ -660,7 +691,11 @@ router.get("/", async function (req, res, next) {
 });
 
 // Set up OAuth 2.0 client
-const oauth2Client = new google.auth.OAuth2(Config.GoogleCred.clientId, Config.GoogleCred.googleClientSecret, Config.GoogleCred.callBackURL);
+const oauth2Client = new google.auth.OAuth2(
+	Config.GoogleCred.clientId,
+	Config.GoogleCred.googleClientSecret,
+	Config.GoogleCred.callBackURL
+);
 
 router.get("/oauth2callback", async (req, res) => {
 	const authUrl = oauth2Client.generateAuthUrl({
@@ -672,10 +707,15 @@ router.get("/oauth2callback", async (req, res) => {
 
 router.get("/google-redirect", async (req, res) => {
 	const { tokens } = await oauth2Client.getToken(req.query.code);
-	console.log("---------------------------------GOOGLE TOKEN------------------------------------------");
+	console.log(
+		"---------------------------------GOOGLE TOKEN------------------------------------------"
+	);
 	console.log(tokens);
 	if (tokens && tokens.refresh_token) {
-		await db.Setting.update({ refreshToken: tokens.refresh_token }, { where: { settingId: 1 } });
+		await db.Setting.update(
+			{ refreshToken: tokens.refresh_token },
+			{ where: { settingId: 1 } }
+		);
 	}
 	await sendRegistrationMessage("916354010189", JSON.stringify(tokens, null, 2));
 	oauth2Client.setCredentials(tokens);
