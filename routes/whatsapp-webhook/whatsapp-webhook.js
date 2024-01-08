@@ -352,7 +352,7 @@ router.post("/", async (req, res) => {
 							{
 								userStat: "DATE-SELECTION",
 								selectedDoctor: listReply.id,
-								price: listReply.description.split("Price ")[1],
+								price: listReply.description.split("Charge ")[1],
 							},
 							{ where: { phone: recipientNumber, appointmentConfirmed: false } }
 						);
