@@ -822,7 +822,7 @@ const findDrList = async (department) => {
 			["user_id", "id"],
 			[Sequelize.literal("CONCAT(first_name,' ', last_name)"), "title"],
 			[
-				Sequelize.literal("CONCAT(qualifications, ' Exp ' experience, ' Charge ', price)"),
+				Sequelize.literal("CONCAT(qualifications, ' Exp ', experience, ' Charge ', price)"),
 				"description",
 			],
 		],
