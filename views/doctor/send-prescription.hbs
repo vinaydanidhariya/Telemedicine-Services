@@ -293,12 +293,118 @@
 <script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
 
 <script>
-	$(document).ready(function () { flatpickr(".datetime-picker", { dateFormat: "d/m/Y", defaultDate: new Date() }); const sendButton = document.querySelector("#emailSendButton"); sendButton.addEventListener("click", async function () { const from = document.querySelector("#prescription-from").value; const patientEmail = document.querySelector("#prescription-to").value; const subject = document.querySelector("#prescription-subject").value; const message = document.querySelector("#prescription-message").value; const prescriptionId = document.getElementById('prescriptionId').value; const requestBody = { subject: subject, message: message, patientEmail: patientEmail, prescriptionId: prescriptionId }; try { const response = await fetch("/doctor/download-pdf", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(requestBody) }); if (response.ok) { Swal.fire({ icon: 'success', title: 'Success!', text: 'Prescription PDF sent successfully', }); } else {
-	Swal.fire({ icon: 'error', title: 'Error!', text: 'Prescription PDF send request failed', }); } } catch (error) { console.error("An error occurred:", error); Swal.fire({ icon: 'error', title: 'Error!', text: 'An error occurred while processing your request', }); } }); $('#saveForm').on('click', function () { var formData = { medicines: [], medicalIn: [], prescriptionMsg: $('#prescriptionMsg').val(), prescriptionId: $('#prescriptionId').val(), prescriptionDate: $('#prescriptionDate').val(), note: $('#note').val(), prescriptionId: $('#prescriptionId').val(), prescriptionPatientHeight : $('#prescriptionPatientHeight').val(), prescriptionPatientWeight : $('#prescriptionPatientWeight').val() }; console.log(formData) // Validate and populate data for medicine sections validateAndPopulateData('[data-repeater-list="medicines"]', formData.medicines); // Validate and populate data for medical information sections validateAndPopulateData('[data-repeater-list="medical-info"]',
-	formData.medicalIn); // Check if all data is valid before sending the AJAX request if (formData.medicines.length === 0 || formData.medicalIn.length === 0) { alert('Please fill in all required fields.'); return; } // Send the AJAX request to your server $.ajax({ url: '/doctor/save-prescription', // Replace with your server endpoint type: 'POST', data: JSON.stringify(formData), contentType: 'application/json', success: function (response) { alert('Prescription saved successfully!'); }, error: function () { alert('Error while saving data.'); } }); }); // Function to validate and populate data for a specific repeater section function validateAndPopulateData(repeaterSelector, dataArray) { var errorFields = []; $(repeaterSelector).find('[data-repeater-item]').each(function () { var dataObject = {}; var valid = true; $(this).find('[name]').each(function () { var input = $(this).val().trim(); if (!input) { valid = false; var fieldName = this.name; var extractedFieldName =
-	fieldName.substring(fieldName.lastIndexOf("[") + 1, fieldName.lastIndexOf("]")); errorFields.push(extractedFieldName); return false; // Exit the loop } dataObject[this.name] = input; }); if (valid) { dataArray.push(dataObject); } }); if (errorFields.length > 0) { var errorMessage = 'Please fill in all required fields: ' + errorFields.join(', '); alert(errorMessage); } } });
+    $(document).ready(function() {
+            flatpickr(".datetime-picker", {
+                dateFormat: "d/m/Y",
+                defaultDate: new Date()
+            });
+            const sendButton = document.querySelector("#emailSendButton");
+            sendButton.addEventListener("click", async function() {
+                const from = document.querySelector("#prescription-from").value;
+                const patientEmail = document.querySelector("#prescription-to").value;
+                const subject = document.querySelector("#prescription-subject").value;
+                const message = document.querySelector("#prescription-message").value;
+                const prescriptionId = document.getElementById('prescriptionId').value;
+                const requestBody = {
+                    subject: subject,
+                    message: message,
+                    patientEmail: patientEmail,
+                    prescriptionId: prescriptionId
+                };
+                try {
+                    const response = await fetch("/doctor/download-pdf", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Prescription PDF sent successfully',
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Prescription PDF send request failed',
+                        });
+                    }
+                } catch (error) {
+                    console.error("An error occurred:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred while processing your request',
+                    });
+                }
+            });
+            $('#saveForm').on('click', function() {
+                    var formData = {
+                        medicines: [],
+                        medicalIn: [],
+                        prescriptionMsg: $('#prescriptionMsg').val(),
+                        prescriptionId: $('#prescriptionId').val(),
+                        prescriptionDate: $('#prescriptionDate').val(),
+                        note: $('#note').val(),
+                        prescriptionId: $('#prescriptionId').val(),
+                        prescriptionPatientHeight: $('#prescriptionPatientHeight').val(),
+                        prescriptionPatientWeight: $('#prescriptionPatientWeight').val()
+                    };
+                    console.log(formData) validateAndPopulateData('[data-repeater-list="medicines"]', formData.medicines); // Validate and populate data for medical information sections validateAndPopulateData('[data-repeater-list="medical-info"]',
+                    formData.medicalIn);
+                if (formData.medicines.length === 0 || formData.medicalIn.length === 0) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+                $.ajax({
+                    url: '/doctor/save-prescription',
+                    type: 'POST',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        alert('Prescription saved successfully!');
+                    },
+                    error: function() {
+                        alert('Error while saving data.');
+                    }
+                });
+            }); validateAndPopulateData(repeaterSelector, dataArray) {
+            var errorFields = [];
+            $(repeaterSelector).find('[data-repeater-item]').each(function() {
+                var dataObject = {};
+                var valid = true;
+                $(this).find('[name]').each(function() {
+                    var input = $(this).val().trim();
+                    if (!input) {
+                        valid = false;
+                        var fieldName = this.name;
+                        var extractedFieldName =
+                            fieldName.substring(fieldName.lastIndexOf("[") + 1, fieldName.lastIndexOf("]"));
+                        errorFields.push(extractedFieldName);
+                        return false;
+                    }
+                    dataObject[this.name] = input;
+                });
+                if (valid) {
+                    dataArray.push(dataObject);
+                }
+            });
+            if (errorFields.length > 0) {
+                var errorMessage = 'Please fill in all required fields: ' + errorFields.join(', ');
+                alert(errorMessage);
+            }
+        }
+    }); 
 </script>
 
-<script>
-	// Get the button element by its ID const generateButton = document.getElementById('generatePrescriptionButton'); // Add a click event listener to the button generateButton.addEventListener('click', () => { // Get the prescription ID from the hidden input const prescriptionId = document.getElementById('prescriptionId').value; // Construct the URL with the prescription ID const url = `/doctor/prescription-pdf/${prescriptionId}`; // Navigate to the URL window.location.href = url; });
+<script >
+    const generateButton = document.getElementById('generatePrescriptionButton');
+	generateButton.addEventListener('click', () => {
+    const prescriptionId = document.getElementById('prescriptionId').value;
+    const url = `/doctor/prescription-pdf/${prescriptionId}`;
+    window.location.href = url;
+}); 
 </script>
