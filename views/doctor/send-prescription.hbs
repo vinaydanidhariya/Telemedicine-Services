@@ -353,8 +353,9 @@
                         prescriptionPatientHeight: $('#prescriptionPatientHeight').val(),
                         prescriptionPatientWeight: $('#prescriptionPatientWeight').val()
                     };
-                    console.log(formData) validateAndPopulateData('[data-repeater-list="medicines"]', formData.medicines); // Validate and populate data for medical information sections validateAndPopulateData('[data-repeater-list="medical-info"]',
-                    formData.medicalIn);
+                    console.log(formData) 
+					validateAndPopulateData('[data-repeater-list="medicines"]', formData.medicines);
+					validateAndPopulateData('[data-repeater-list="medical-info"]', formData.medicalIn);
                 if (formData.medicines.length === 0 || formData.medicalIn.length === 0) {
                     alert('Please fill in all required fields.');
                     return;
@@ -371,7 +372,8 @@
                         alert('Error while saving data.');
                     }
                 });
-            }); validateAndPopulateData(repeaterSelector, dataArray) {
+            }); 
+			validateAndPopulateData(repeaterSelector, dataArray) {
             var errorFields = [];
             $(repeaterSelector).find('[data-repeater-item]').each(function() {
                 var dataObject = {};
