@@ -301,7 +301,7 @@ async function sendEmail(pdfBuffer, userInfo) {
 			.replace(/\[Your Dynamic Message Here\]/g, dynamicMessage);
 
 		const mailOptions = {
-			from: `Child Dr <${Config.nodemailer.auth.user}>`,
+			from: `KidsDoc <${Config.nodemailer.auth.user}>`,
 			to: userInfo.patientEmail,
 			subject: subject,
 			html: filledTemplate,
@@ -696,6 +696,7 @@ router.post(
 			],
 			attributes: ["appointment_id", "prescription_id", "status"],
 			// raw: true
+			 order: [['createdAt', 'DESC']]
 		});
 		console.log(appointment);
 		res.status(200).json(appointment);
