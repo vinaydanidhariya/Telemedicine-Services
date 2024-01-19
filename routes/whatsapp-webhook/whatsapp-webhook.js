@@ -36,6 +36,7 @@ const triggerPhase = [
 router.post("/", async (req, res) => {
 	try {
 		const { body } = req;
+		console.log(JSON.stringify(body,null,2));
 		if (
 			body.object &&
 			body.entry &&
