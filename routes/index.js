@@ -91,7 +91,7 @@ router.post("/forgot-password", async (req, res) => {
 
 			// Send password reset email
 			const mailOptions = {
-				from: nodeMailer.auth.user,
+				from: Config.nodemailer.auth.user,
 				to: email,
 				subject: "Password Reset Request",
 				text: `Click the link to reset your password: ${Config.serverUrl}/reset-password/${resetToken}`,
