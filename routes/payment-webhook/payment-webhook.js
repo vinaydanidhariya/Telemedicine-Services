@@ -51,6 +51,7 @@ router.post("/create-payment", async function (req, res, next) {
 
 router.post("/payment-callback1", async function (req, res, next) {
 	try {
+		console.log(JSON.stringify(req.body,null,2));
 		const requestedBody = JSON.stringify(req.body);
 		const receivedSignature = req.headers["x-razorpay-signature"];
 		const expectedSignature = crypto
