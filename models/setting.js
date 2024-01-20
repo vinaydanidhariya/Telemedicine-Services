@@ -33,6 +33,11 @@ module.exports = (sequelize, DataTypes) => {
 				field: "reach_number",
 				allowNull: true,
 			},
+			reachNumber2: {
+				type: DataTypes.INTEGER,
+				field: "reach_number2",
+				allowNull: true,
+			},
 		},
 		{
 			sequelize,
