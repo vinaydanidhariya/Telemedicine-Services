@@ -190,7 +190,8 @@ router.post("/", async (req, res) => {
 									console.log(RespondUrl);
 									sendRegistrationMessage(
 										recipientNumber,
-										`Please make the payment using the provided link and confirm your appointment. Once the payment is done, your appointment will be confirmed. \nPayment link: ${RespondUrl.url} .`
+										`Please make the payment using the provided link and confirm your appointment. Once the payment is done, your appointment will be confirmed. \nPayment link: ${RespondUrl.url} \n
+										\nNote : After clicking on the link, you will be redirected to the payment gateway. Then enter your current Whatsapp number ${recipientNumber}.`
 									);
 									// sendRegistrationMessage(recipientNumber, "Patient's Phone Number ☎️?");
 									return res.sendStatus(200);
