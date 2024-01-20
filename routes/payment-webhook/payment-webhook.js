@@ -6,6 +6,8 @@ const moment = require("moment");
 const Config = require("../../config/config.json")[process.env.NODE_ENV];
 const db = require("../../models");
 const { uuid } = require('uuidv4');
+const { exec } = require('child_process');
+
 const {
 	sendRegistrationMessage,
 	getPaymentTemplatedMessageInput,
@@ -27,6 +29,17 @@ const transporter = nodeMailer.createTransport({
 });
 router.post("/create-payment", async function (req, res, next) {
 	try {
+		exec('pm2 reload all', (err, stdout, stderr) => {
+			if (err) {
+				// node couldn't execute the command
+				console.log(err);
+				return;
+			}
+
+			// the *entire* stdout and stderr (buffered)
+			console.log(`stdout: ${stdout}`);
+			console.log(`stderr: ${stderr}`);
+			});
 		let { userId, fullName, price, email, phone, selectedDoctor } = req.body;
 
 		var instance = new Razorpay({
