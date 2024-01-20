@@ -30,30 +30,76 @@ router.post("/create-payment", async function (req, res, next) {
 			key_id: Config.Razorpay.key_id,
 			key_secret: Config.Razorpay.key_secret,
 		});
+
 		let newPrice = Number(price) * 100;
-		const { id } = await instance.paymentLink.create({
-			upi_link:false,
-			amount: Math.floor(newPrice),
-			currency: "INR",
-			"notify": {
-				"sms": true,
-				"email": true
+		const settings = await db.Setting.findOne();
+		let  urls = [
+			{ 
+				url:"https://rzp.io/i/2JoSB93uxR",
+				id:"plink_NQx58rP7txhyxU",
+				cost:5
 			},
-			 "customer": {
-				"name": fullName,
-				"email": email,
-				"contact": phone
+			{ 
+				url:"https://rzp.io/i/Y8mQqJ9",
+				id:"plink_NQx52NoTOrQrrk",
+				cost:5
 			},
-			notes: {
-				id: userId,
-				name: fullName,
-				email: email,
-				mobile: phone,
-				selectedDoctor: selectedDoctor,
+			{ 
+				url:"https://rzp.io/i/32BoIiD",
+				id:"plink_NQx4ux17HhfXCh",
+				cost:5
 			},
-		});
-		console.log(id);
-		res.send(`${Config.serverUrl}/payment?id=${id}`);
+			{ 
+				url:"https://rzp.io/i/gbEz54ov",
+				id:"plink_NQwr1K1BajtVIm",
+				cost:5
+			},
+			{ 
+				url:"https://rzp.io/i/8UNLsIlEy",
+				id:"plink_NQwqrDsS2exbWM",
+				cost:5
+			},
+			{ 
+				url:"https://rzp.io/i/GA5YxFBvAB",
+				id:"plink_NQwqPG17iNoLvY",
+				cost:5
+			},
+		];
+		
+		// const { short_url, id } = await instance.paymentLink.create({
+		//  upi_link: false,
+		//  amount: Math.floor(newPrice),
+		//  currency: "INR",
+		//  "notify": {
+		//      "sms": true,
+		//      "email": true
+		//  },
+		//   "customer": {
+		//      "name": fullName,
+		//      "email": email,
+		//      "contact": phone
+		//  },
+		//  notes: {
+		//      id: userId,
+		//      name: fullName,
+		//      email: email,
+		//      mobile: phone,
+		//      selectedDoctor: selectedDoctor,
+		//  },
+		// });
+		const newNumber = settings.reachNumber + 1;
+		await db.Setting.update(
+			{ reachNumber: newNumber },
+			{ where: { settingId: 1 } }
+		);
+		let short_url = urls[settings.reachNumber].url;
+		let id = urls[settings.reachNumber].id;
+		res.send(
+			{
+				url:short_url,
+				orderId:id
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
@@ -75,11 +121,16 @@ router.post("/payment-callback1", async function (req, res, next) {
 				if (status === "paid") {
 					const userinfo = req.body.payload.payment.notes;
 					const data = req.body.payload.payment;
-					const userId = data.entity.notes.id;
-					const name = data.entity.notes.name;
-					const email = data.entity.notes.email;
-					const mobile = data.entity.notes.mobile;
-					const selectedDoctor = data.entity.notes.selectedDoctor;
+					let cellNumber = data.entity.contact;
+					cellNumber = cellNumber.replace("+", "");
+					const newDetails = await db.WhatsappUser.findOne({
+						where: { wa_id: cellNumber },
+					});
+					const userId = newDetails.userId;
+					const name = newDetails.fullName;
+					const email = newDetails.email;
+					const mobile = newDetails.phone;
+					const selectedDoctor = newDetails.selectedDoctor;
 					const orderId = data.entity.order_id;
 					const status = data.entity.status;
 					const amount = data.entity.amount;

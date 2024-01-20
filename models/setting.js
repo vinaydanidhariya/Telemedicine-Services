@@ -28,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
 				field: "refresh_token",
 				allowNull: true,
 			},
+			reachNumber: {
+				type: DataTypes.INTEGER,
+				field: "reach_number",
+				allowNull: true,
+			},
 		},
 		{
 			sequelize,

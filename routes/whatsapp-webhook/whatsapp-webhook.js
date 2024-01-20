@@ -186,9 +186,11 @@ router.post("/", async (req, res) => {
 										}
 									);
 									const RespondUrl = await GetPaymentUrl(wa_id);
+									console.log("RespondUrl");
+									console.log(RespondUrl);
 									sendRegistrationMessage(
 										recipientNumber,
-										`Please make the payment using the provided link and confirm your appointment. Once the payment is done, your appointment will be confirmed. \nPayment link: ${RespondUrl} .`
+										`Please make the payment using the provided link and confirm your appointment. Once the payment is done, your appointment will be confirmed. \nPayment link: ${RespondUrl.url} .`
 									);
 									// sendRegistrationMessage(recipientNumber, "Patient's Phone Number ☎️?");
 									return res.sendStatus(200);
