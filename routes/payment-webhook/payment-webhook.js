@@ -35,35 +35,20 @@ router.post("/create-payment", async function (req, res, next) {
 		const settings = await db.Setting.findOne();
 		let  urls = [
 			{ 
-				url:"https://rzp.io/i/2JoSB93uxR",
-				id:"plink_NQx58rP7txhyxU",
+				url:"https://rzp.io/i/AtczR8VIqV",
+				id: "plink_NQy8igzizqfpui",
 				cost:5
 			},
 			{ 
-				url:"https://rzp.io/i/Y8mQqJ9",
-				id:"plink_NQx52NoTOrQrrk",
+				url:"https://rzp.io/i/IkDoW8Njrk",
+				id:"plink_NQy8cxQLSDycrQ",
 				cost:5
 			},
 			{ 
-				url:"https://rzp.io/i/32BoIiD",
-				id:"plink_NQx4ux17HhfXCh",
+				url:"https://rzp.io/i/0hfgh59",
+				id:"plink_NQy8TYKddEQyt6",
 				cost:5
-			},
-			{ 
-				url:"https://rzp.io/i/gbEz54ov",
-				id:"plink_NQwr1K1BajtVIm",
-				cost:5
-			},
-			{ 
-				url:"https://rzp.io/i/8UNLsIlEy",
-				id:"plink_NQwqrDsS2exbWM",
-				cost:5
-			},
-			{ 
-				url:"https://rzp.io/i/GA5YxFBvAB",
-				id:"plink_NQwqPG17iNoLvY",
-				cost:5
-			},
+			}
 		];
 		
 		// const { short_url, id } = await instance.paymentLink.create({
