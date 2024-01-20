@@ -822,7 +822,7 @@ const findDrList = async (department) => {
 			["user_id", "id"],
 			[Sequelize.literal("CONCAT('Dr ',first_name,' ', last_name)"), "title"],
 			[
-				Sequelize.literal("CONCAT(qualifications, ' Exp ', experience, ' Charge ', price)"),
+				Sequelize.literal("CONCAT(qualifications, ' Exp ', experience, 'Yr, Charge ', price)"),
 				"description",
 			],
 		],
@@ -891,8 +891,10 @@ const tocBlock = {
 		text: ` Welcome to KidsDoc 🏥, the online platform for booking medical consultation.
 Before you proceed, please read and agree to our terms and conditions and give your consent. 
 This is required by the government rules and policies that we adhere to. 
-You can find the terms and conditions here: https://kidsdocindia.com/. 
-Thank you for choosing KidsDoc 🏥.`,
+You can find the terms and conditions here: https://kidsdocindia.com/terms-and-conditions/. 
+Thank you for choosing KidsDoc 🏥.
+https://kidsdocindia.com/
+`,
 	},
 	footer: {
 		text: "Please read Term & Conditions above.",
