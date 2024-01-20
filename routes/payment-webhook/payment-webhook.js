@@ -30,7 +30,7 @@ router.post("/create-payment", async function (req, res, next) {
 			key_secret: Config.Razorpay.key_secret,
 		});
 		let newPrice = Number(price) * 100;
-		const { id } = await instance.orders.create({
+		const { id } = await instance.paymentLink.create({
 			amount: Math.floor(newPrice),
 			currency: "INR",
 			receipt: "receipt#1",
@@ -60,7 +60,7 @@ router.post("/payment-callback1", async function (req, res, next) {
 			.digest("hex");
 		if (receivedSignature === expectedSignature) {
 			const event = req.body.event;
-			if (event === "order.paid") {
+			if (event === "payment_link.paid") {
 				const status = req.body.payload.order.entity.status;
 				if (status === "paid") {
 					const userinfo = req.body.payload.payment.notes;
@@ -664,7 +664,7 @@ router.post("/payment-callback1", async function (req, res, next) {
 						 */
 						res.status(200).send("RECEIVED");
 					} catch (error) {
-						await sendRegistrationMessage(`916354010189`, `Refresh token expired`);
+						await sendRegistrationMessage(`916354010189`, `Appointment booking failed for ${userInfo.userId}`);
 						console.error("❌ Appointment scheduling failed:", error);
 						res.status(501).send("received but unverified resp");
 					}
@@ -673,12 +673,13 @@ router.post("/payment-callback1", async function (req, res, next) {
 				res.status(200).send("received");
 			}
 		} else {
-			res.status(501).send("received but unverified resp");
+			console.log("❌ Event not processed");
+			res.status(200).send("Unverified");
 		}
 	} catch (error) {
-		await sendRegistrationMessage(`916354010189`, `Refresh token expired`);
 		console.log(error);
-		res.status(501).send("received but unverified resp");
+		await sendRegistrationMessage(`916354010189`, 'Something went wrong');
+		res.status(200).send("received but unverified resp");
 	}
 });
 
