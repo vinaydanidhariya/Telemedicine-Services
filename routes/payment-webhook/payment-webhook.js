@@ -5,6 +5,7 @@ var crypto = require("crypto");
 const moment = require("moment");
 const Config = require("../../config/config.json")[process.env.NODE_ENV];
 const db = require("../../models");
+const { uuid } = require('uuidv4');
 const {
 	sendRegistrationMessage,
 	getPaymentTemplatedMessageInput,
@@ -31,9 +32,19 @@ router.post("/create-payment", async function (req, res, next) {
 		});
 		let newPrice = Number(price) * 100;
 		const { id } = await instance.paymentLink.create({
+			upi_link:false,
 			amount: Math.floor(newPrice),
 			currency: "INR",
-			receipt: "receipt#1",
+			receipt: `receipt#${uuid()}`,
+			"notify": {
+				"sms": true,
+				"email": true
+			},
+			 "customer": {
+				"name": fullName,
+				"email": email,
+				"contact": phone
+			},
 			notes: {
 				id: userId,
 				name: fullName,
