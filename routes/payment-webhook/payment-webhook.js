@@ -114,7 +114,7 @@ router.post("/payment-callback1", async function (req, res, next) {
 				 * CODE GOES HERE
 				 */
 				const fs = require('fs');
-				fs.readFile('data.json', 'utf8', (err, data) => {
+				fs.readFile('./data.json', 'utf8', (err, data) => {
 					if (err) {
 						console.error(err);
 						return;
@@ -123,7 +123,7 @@ router.post("/payment-callback1", async function (req, res, next) {
 					const jsonData = JSON.parse(data);
 					const filteredData = jsonData.filter(obj => obj.id !== req.body.payload.payment_link.entity.id);
 
-					fs.writeFile('data.json', JSON.stringify(filteredData), 'utf8', err => {
+					fs.writeFile('./data.json', JSON.stringify(filteredData), 'utf8', err => {
 						if (err) {
 							console.error(err);
 							return;
