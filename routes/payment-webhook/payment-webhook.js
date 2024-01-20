@@ -35,7 +35,6 @@ router.post("/create-payment", async function (req, res, next) {
 			upi_link:false,
 			amount: Math.floor(newPrice),
 			currency: "INR",
-			receipt: `receipt#${uuid()}`,
 			"notify": {
 				"sms": true,
 				"email": true
