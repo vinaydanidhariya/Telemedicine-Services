@@ -34,140 +34,11 @@ router.post("/create-payment", async function (req, res, next) {
 		let newPrice = Number(price) * 100;
 		const settings = await db.Setting.findOne();
 		if (price == "500" || price === 500) {
-			let urls = [
-							{
-								"id": "plink_NQyiQFI8WOCvKg",
-								"cost": 500,
-								"url": "https://rzp.io/i/KoWcjBxC5"
-							},
-							{
-								"id": "plink_NQyiHz73RxrO3N",
-								"cost": 500,
-								"url": "https://rzp.io/i/z5nmm7zS"
-							},
-							{
-								"id": "plink_NQyiCSL13wCTsg",
-								"cost": 500,
-								"url": "https://rzp.io/i/WOhJ312"
-							},
-							{
-								"id": "plink_NQyi6xcSVpFuSM",
-								"cost": 500,
-								"url": "https://rzp.io/i/z0iIIaOEF"
-							},
-							{
-								"id": "plink_NQyhyGWLR36VI6",
-								"cost": 500,
-								"url": "https://rzp.io/i/fxoXRIlzqw"
-							},
-							{
-								"id": "plink_NQyhnrZ0YjaLfQ",
-								"cost": 500,
-								"url": "https://rzp.io/i/H8qJbc4A"
-							},
-							{
-								"id": "plink_NQyhicstFbTizs",
-								"cost": 500,
-								"url": "https://rzp.io/i/OQnONkJ"
-							},
-							{
-								"id": "plink_NQyhdBUg7FnDPr",
-								"cost": 500,
-								"url": "https://rzp.io/i/FISdmJzH"
-							},
-							{
-								"id": "plink_NQyhSvTfw1kOl7",
-								"cost": 500,
-								"url": "https://rzp.io/i/6qbVQr6JW"
-							},
-							{
-								"id": "plink_NQyhNGsE61JvGl",
-								"cost": 500,
-								"url": "https://rzp.io/i/KGlE4Dfrh"
-							},
-							{
-								"id": "plink_NQyhHSy2owR4P4",
-								"cost": 500,
-								"url": "https://rzp.io/i/NTOyqlcAm"
-							},
-							{
-								"id": "plink_NQygovAwInO4le",
-								"cost": 500,
-								"url": "https://rzp.io/i/higocSxACH"
-							},
-							{
-								"id": "plink_NQyghjnDQ3x6b7",
-								"cost": 500,
-								"url": "https://rzp.io/i/Y11Plex6R"
-							},
-							{
-								"id": "plink_NQygbmYrht6eKk",
-								"cost": 500,
-								"url": "https://rzp.io/i/V4RAZ8AFF"
-							},
-							{
-								"id": "plink_NQygWgDwqq9Jqk",
-								"cost": 500,
-								"url": "https://rzp.io/i/EdubniqWk7"
-							},
-							{
-								"id": "plink_NQygROXtZXXjQf",
-								"cost": 500,
-								"url": "https://rzp.io/i/24QgSXe"
-							},
-							{
-								"id": "plink_NQygLBKQLKPOFi",
-								"cost": 500,
-								"url": "https://rzp.io/i/QgaqMxZ0"
-							},
-							{
-								"id": "plink_NQygDU8a1CtQFB",
-								"cost": 500,
-								"url": "https://rzp.io/i/3t0oDuy"
-							},
-							{
-								"id": "plink_NQyg6vAuVMdJzk",
-								"cost": 500,
-								"url": "https://rzp.io/i/ff7Y9O9eP5"
-							},
-							{
-								"id": "plink_NQyg13lOAbwXee",
-								"cost": 500,
-								"url": "https://rzp.io/i/GdpW0oCO"
-							},
-							{
-								"id": "plink_NQyfuy0J4TJ7GL",
-								"cost": 500,
-								"url": "https://rzp.io/i/g8i2NEsKU9"
-							},
-							{
-								"id": "plink_NQyfpK8zUXsxAW",
-								"cost": 500,
-								"url": "https://rzp.io/i/r8UsrcYts"
-							},
-							{
-								"id": "plink_NQyfiv4MezN6Jp",
-								"cost": 500,
-								"url": "https://rzp.io/i/WPo6BQ3m4"
-							},
-							{
-								"id": "plink_NQyfcwINNc3nLF",
-								"cost": 500,
-								"url": "https://rzp.io/i/H3hNWqOx"
-							},
-							{
-								"id": "plink_NQyewGP7G5pr4n",
-								"cost": 500,
-								"url": "https://rzp.io/i/1ImeyHYC"
-							}
-			];
-			const newNumber = settings.reachNumber + 1;
-			await db.Setting.update(
-				{ reachNumber: newNumber },
-				{ where: { settingId: 1 } }
-			);
-			let short_url = urls[settings.reachNumber].url;
-			let id = urls[settings.reachNumber].id;
+			const data = require("./data.json");
+			const firstElement = data.find(item => item.cost === 500);
+			
+			let short_url = firstElement.url;
+			let id = firstElement.id;
 			return res.send(
 				{
 					url:short_url,
@@ -175,140 +46,10 @@ router.post("/create-payment", async function (req, res, next) {
 				}
 			);
 		} else if (price == "1000" || price === 1000) {
-			let urls = [
-				{
-					"id": "plink_NQzTOy8lRokJjG",
-					"const": 1000,
-					"url": "https://rzp.io/i/Q0gvRR3"
-				},
-				{
-					"id": "plink_NQzT2QsgpVtbDT",
-					"const": 1000,
-					"url": "https://rzp.io/i/Nzu4Te7"
-				},
-				{
-					"id": "plink_NQzSxITeK1QNgV",
-					"const": 1000,
-					"url": "https://rzp.io/i/aUWtJXjAl4"
-				},
-				{
-					"id": "plink_NQzSsfSVnd120A",
-					"const": 1000,
-					"url": "https://rzp.io/i/eyDAXspre"
-				},
-				{
-					"id": "plink_NQzSmOjExBDvaE",
-					"const": 1000,
-					"url": "https://rzp.io/i/PJVvcyj"
-				},
-				{
-					"id": "plink_NQzSgRYwYT0S0s",
-					"const": 1000,
-					"url": "https://rzp.io/i/E44qqt3lj"
-				},
-				{
-					"id": "plink_NQzSaUnVEkofiK",
-					"const": 1000,
-					"url": "https://rzp.io/i/QeRDZnb"
-				},
-				{
-					"id": "plink_NQzSVQ2SQurSRm",
-					"const": 1000,
-					"url": "https://rzp.io/i/scpPPlMa5"
-				},
-				{
-					"id": "plink_NQzSQM8jBJeRHH",
-					"const": 1000,
-					"url": "https://rzp.io/i/48bF0Df"
-				},
-				{
-					"id": "plink_NQzSKPyn5JxDO2",
-					"const": 1000,
-					"url": "https://rzp.io/i/4kV0xRW"
-				},
-				{
-					"id": "plink_NQzSF0oXbzuYnl",
-					"const": 1000,
-					"url": "https://rzp.io/i/AhQBfPXn"
-				},
-				{
-					"id": "plink_NQzS9gFQiJBVaY",
-					"const": 1000,
-					"url": "https://rzp.io/i/nHZBlD4z"
-				},
-				{
-					"id": "plink_NQzS5XCrX2rHEZ",
-					"const": 1000,
-					"url": "https://rzp.io/i/EzqRpqcI"
-				},
-				{
-					"id": "plink_NQzRyqsntfS2Du",
-					"const": 1000,
-					"url": "https://rzp.io/i/1lyvYde1"
-				},
-				{
-					"id": "plink_NQzRuYsyfGIIIq",
-					"const": 1000,
-					"url": "https://rzp.io/i/l3ZVYPSWA0"
-				},
-				{
-					"id": "plink_NQzRpYuln4p4Ls",
-					"const": 1000,
-					"url": "https://rzp.io/i/9hva0cQK"
-				},
-				{
-					"id": "plink_NQzRkTQId0UIOj",
-					"const": 1000,
-					"url": "https://rzp.io/i/Op6kOnBYX5"
-				},
-				{
-					"id": "plink_NQzRfEqw5MxDts",
-					"const": 1000,
-					"url": "https://rzp.io/i/RzvaLukZuh"
-				},
-				{
-					"id": "plink_NQzRZa2cB6GeAE",
-					"const": 1000,
-					"url": "https://rzp.io/i/qw5SaoYLh5"
-				},
-				{
-					"id": "plink_NQzRUjBYfJnYRb",
-					"const": 1000,
-					"url": "https://rzp.io/i/E3LbHwcJJ"
-				},
-				{
-					"id": "plink_NQzRPWFvT7gkew",
-					"const": 1000,
-					"url": "https://rzp.io/i/a2rXvkr"
-				},
-				{
-					"id": "plink_NQzRJQ45aAD3H4",
-					"const": 1000,
-					"url": "https://rzp.io/i/thxeMJgg"
-				},
-				{
-					"id": "plink_NQzREfoo88hntv",
-					"const": 1000,
-					"url": "https://rzp.io/i/rk40oQFLT"
-				},
-				{
-					"id": "plink_NQzR9HOHGzHUIo",
-					"const": 1000,
-					"url": "https://rzp.io/i/i6jWP2zSt"
-				},
-				{
-					"id": "plink_NQzQPfXH7t0xwX",
-					"const": 1000,
-					"url": "https://rzp.io/i/s8WHJIavq"
-				}
-			];
-			const newNumber = settings.reachNumber2 + 1;
-			await db.Setting.update(
-				{ reachNumber2: newNumber },
-				{ where: { settingId: 1 } }
-			);
-			let short_url = urls[settings.reachNumber2].url;
-			let id = urls[settings.reachNumber2].id;
+			const data = require("./data.json");
+			const firstElement = data.find(item => item.cost === 1000);
+			let short_url = firstElement.url;
+			let id = firstElement.id;
 			return res.send(
 				{
 					url:short_url,
@@ -369,6 +110,32 @@ router.post("/payment-callback1", async function (req, res, next) {
 		if (receivedSignature === expectedSignature) {
 			const event = req.body.event;
 			if (event === "payment_link.paid") {
+				/**
+				 * CODE GOES HERE
+				 */
+				const fs = require('fs');
+				fs.readFile('data.json', 'utf8', (err, data) => {
+					if (err) {
+						console.error(err);
+						return;
+					}
+
+					const jsonData = JSON.parse(data);
+					const filteredData = jsonData.filter(obj => obj.id !== req.body.payload.payment_link.entity.id);
+
+					fs.writeFile('data.json', JSON.stringify(filteredData), 'utf8', err => {
+						if (err) {
+							console.error(err);
+							return;
+						}
+						console.log('Object removed successfully!');
+					});
+				});
+
+				/***
+				 * -------------------------
+				 */
+
 				const status = req.body.payload.order.entity.status;
 				if (status === "paid") {
 					const userinfo = req.body.payload.payment.notes;
