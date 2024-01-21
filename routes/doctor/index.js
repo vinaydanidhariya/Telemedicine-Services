@@ -228,7 +228,7 @@ router.post("/download-pdf", async (req, res) => {
 			pdfBuffer,
 			req,
 			res,
-			"91" + recipientNumber
+			recipientNumber
 		);
 
 		return res.send({
