@@ -13,7 +13,7 @@ class db {
     }
 
     try {
-      sequelize = new Sequelize(Config.database, Config.username, Config.password, Config, {
+      sequelize = new Sequelize(Config.database, Config.replication.read.username, Config.replication.read.password, Config, {
         logging: console.log,
         logging: function (str) {
           console.log(str);
@@ -50,14 +50,14 @@ class db {
     db.webSlider.associate(db);
     db.Prescription.associate(db);
 
-    // sequelize.sync({
-    // }).then(() => {
-    //   console.log('Database & tables created!');
-    // }, error => {
-    //   console.error('Error while syncing database');
-    //   console.error(error);
-    //   throw new Error('Error while syncing database');
-    // });
+    sequelize.sync({
+    }).then(() => {
+      console.log('Database & tables created!');
+    }, error => {
+      console.error('Error while syncing database');
+      console.error(error);
+      throw new Error('Error while syncing database');
+    });
 
     db.sequelize = sequelize;
     db.Sequelize = Sequelize;
