@@ -4,7 +4,7 @@
 		"x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
 		"project": "telemedicine service",
 		"secret": "SHC#100&ShreeHariClinic@333",
-		"serverUrl": "https://childdr-nodejs1.onrender.com",
+		"serverUrl": "https://telemedicine-services.onrender.com",
 		"database": "telemedicine_09ie",
 		"username": "vinay4114",
 		"schema": "telemedicine_DEV",
@@ -60,7 +60,7 @@
 		"x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
 		"project": "telemedicine service",
 		"secret": "SHC#100&ShreeHariClinic@333",
-		"serverUrl": "https://kidsdoc.online",
+		"serverUrl": "https://telemedicine-services.onrender.com",
 		"database": "telemedicine_09ie",
 		"username": "vinay4114",
 		"schema": "telemedicine_09ie_DEV",
@@ -108,7 +108,7 @@
 		"GoogleCred": {
 			"clientId": "534249686762-ldp1pr9p96tunridkv6lgqveic8p8r9k.apps.googleusercontent.com",
 			"googleClientSecret": "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",
-			"callBackURL": "https://kidsdoc.online/whatsapp-payment/google-redirect"
+			"callBackURL": "https://telemedicine-services.onrender.com/whatsapp-payment/google-redirect"
 		}
 	}
 }
