@@ -1,0 +1,114 @@
+{
+	"local": {
+		"port_no": 5000,
+		"x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
+		"project": "Shree Hari Clinic",
+		"secret": "SHC#100&ShreeHariClinic@333",
+		"serverUrl": "https://childdr-nodejs1.onrender.com",
+		"database": "child_dr",
+		"username": "nirav2565",
+		"schema": "CHILD_DR_DEV",
+		"dialect": "postgres",
+		"logging": true,
+		"dialectOptions": {
+			"ssl": {
+				"require": true,
+				"rejectUnauthorized": false
+			}
+		},
+		"port": 5432,
+		"nodemailer": {
+			"host": "smtp.gmail.com",
+			"port": 587,
+			"secure": false,
+			"auth": {
+				"user": "kidsdocindia@gmail.com",
+				"pass": "jtkbghztbzqgbgel"
+			}
+		},
+		"replication": {
+			"read": [
+				{
+					"host": "dpg-cjgfsrc1ja0c73clp4h0-a.oregon-postgres.render.com",
+					"username": "nirav2565",
+					"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
+				}
+			],
+			"write": {
+				"host": "dpg-cjgfsrc1ja0c73clp4h0-a.oregon-postgres.render.com",
+				"username": "nirav2565",
+				"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
+			}
+		},
+		"pool": {
+			"max": 15,
+			"min": 0,
+			"idle": 10000
+		},
+		"Razorpay": {
+			"key_id": "rzp_test_I41VoSmePWbGQU",
+			"key_secret": "7VaiVPaoK7oeK50U5FT8Am0C"
+		},
+		"GoogleCred": {
+			"clientId": "127925894032-scshjisrosrtn3jth8jm9knatvibhvoo.apps.googleusercontent.com",
+			"googleClientSecret": "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",
+			"callBackURL": "http://localhost:3000/whatsapp-payment/google-redirect"
+		}
+	},
+	"production": {
+		"port_no": 5000,
+		"x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
+		"project": "Shree Hari Clinic",
+		"secret": "SHC#100&ShreeHariClinic@333",
+		"serverUrl": "https://kidsdoc.online",
+		"database": "tinywings",
+		"username": "postgres",
+		"schema": "CHILD_DR_DEV",
+		"dialect": "postgres",
+		"logging": true,
+		"dialectOptions": {
+			"ssl": {
+				"require": true,
+				"rejectUnauthorized": false
+			}
+		},
+		"port": 5432,
+		"nodemailer": {
+			"host": "smtp.gmail.com",
+			"port": 587,
+			"secure": false,
+			"auth": {
+				"user": "kidsdocindia@gmail.com",
+				"pass": "jtkbghztbzqgbgel"
+			}
+		},
+		"replication": {
+			"read": [
+				{
+					"host": "tinywings.coonqjiiu9zw.ap-south-1.rds.amazonaws.com",
+					"username": "postgres",
+					"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
+				}
+			],
+			"write": {
+				"host": "tinywings.coonqjiiu9zw.ap-south-1.rds.amazonaws.com",
+				"username": "postgres",
+				"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
+			}
+		},
+		"pool": {
+			"max": 15,
+			"min": 0,
+			"idle": 10000
+		},
+		"Razorpay": {
+			"key_id": "rzp_test_I41VoSmePWbGQU",
+			"key_secret": "7VaiVPaoK7oeK50U5FT8Am0C"
+		},
+		"GoogleCred": {
+			"clientId": "534249686762-ldp1pr9p96tunridkv6lgqveic8p8r9k.apps.googleusercontent.com",
+			"googleClientSecret": "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",
+			"callBackURL": "https://kidsdoc.online/whatsapp-payment/google-redirect"
+		}
+	}
+}

@@ -1,0 +1,128 @@
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Web-Setting/</span> Add-Slider</h4>
+        <!-- Basic Layout & Basic with Icons -->
+        <div class="row">
+            <!-- Basic with Icons -->
+            <div class="col-xxl">
+                <div class="card mb-4">
+
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0">Add-Slider</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="add-slider" class="row g-3" method="post" enctype="multipart/form-data">
+                            <div class="col-md-6">
+                                <label class="form-label" for="slider-title">Slider Title</label>
+                                <input type="text" id="slider_title" value="" class="form-control"
+                                    placeholder="Slider Title" name="slider_title" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="basic-default-upload-file">Slider Photo</label>
+                                <input type="file" class="form-control" name="slider_photo" />
+                            </div>
+                            <div class="md-6">
+                                <label class="form-label" for="Short Discription">Short Description</label>
+                                <textarea type="text" id="short_discription" value="" class="form-control"
+                                    placeholder="Short Description" name="short_description" /></textarea>
+                            </div>
+                            <div class="row pt-4">
+                                <button type="submit" id="submit" class="btn btn-primary" name="submitButton"
+                                    style="width: 30rem; margin: 0 auto;">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+</div>
+<script src="../../assets/vendor/libs/quill/quill.js"></script>
+<script src="../../assets/vendor/libs/quill/image-resize.js"></script>
+<!-- Content wrapper -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
+
+<script src="/assets/vendor/libs/jquery/jquery.js"></script>
+<script src="/assets/vendor/libs/jquery/jquery.validate.js"></script>
+<script src="/assets/vendor/libs/jquery/additional-methods.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#add-slider').validate({
+            rules: {
+                slider_title: {
+                    required: true,
+                },
+                short_description: {
+                    required: true,
+                },
+                slider_photo: {
+                    required: true,
+                },
+            },
+            messages: {
+                slider_title: {
+                    required: '*Please enter title ',
+                },
+                short_description: {
+                    required: '*Please enter description',
+                },
+                photo: {
+                    required: '*Please enter chose photo',
+                },
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).closest('.form-group').addClass(errorClass).removeClass(validClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).closest('.form-group').removeClass(errorClass).addClass(validClass);
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element);
+            },
+            submitHandler: function (form) {
+                if ($("#submit").valid()) {
+                    var sliderForm = $('#add-slider');
+                    var sliderformdata = new FormData();
+                    sliderformdata.append('slider_title', sliderForm.find('[name="slider_title"]').val());
+                    sliderformdata.append('short_description', sliderForm.find('[name="short_description"]').val());
+                    const image = sliderForm.find('[name="slider_photo"]').prop('files')[0];
+                    sliderformdata.append('slider_photo', image);
+
+                    $.ajax({
+                        url: '/web-setting/add-slider-photo',
+                        type: 'POST',
+                        data: sliderformdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            if (response.type === 'success') {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: response.message,
+                                    showConfirmButton: !1,
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: "btn btn-primary"
+                                    },
+                                    buttonsStyling: !1,
+                                }).then(function () {
+                                    window.location.href = window.location.href;
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            // Handle the error if the AJAX request fails
+                            console.error('Error saving event post:', error);
+                        }
+                    });
+                }
+            }
+        });
+    });
+</script>

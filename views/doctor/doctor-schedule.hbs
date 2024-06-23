@@ -1,0 +1,102 @@
+{{!--
+<link rel="stylesheet" href="https://cdn.dhtmlx.com/scheduler/edge/dhtmlxscheduler.css"> --}}
+<link rel="stylesheet" href="/assets/vendor/libs/dhtmlx/dhtmlxscheduler_material.css">
+<script src="/assets/vendor/libs/dhtmlx/dhtmlxscheduler.js"></script>
+<script src="/assets/vendor/libs/jquery/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<style>
+    html,
+    body {
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+        overflow: hidden;
+    }
+</style>
+<script>
+    function init(from, to) {
+        scheduler.config.xml_date = "%Y-%m-%d %H:%i";
+        scheduler.config.server_utc = true;
+
+        // Convert from and to times to UTC
+        const fromTimeUTC = moment.utc().startOf('day').add(from.hours, 'hours').add(from.minutes, 'minutes');
+        const toTimeUTC = moment.utc().startOf('day').add(to.hours, 'hours').add(to.minutes, 'minutes');
+
+        // Set the start and end time of the day in UTC
+        scheduler.config.first_hour = from;
+        scheduler.config.last_hour = to;
+        scheduler.config.start_date = fromTimeUTC.toDate();
+        const startDate = fromTimeUTC.toDate();
+
+        scheduler.init("scheduler_here", startDate, "week");
+
+        // Set the scheduler to start on the next Monday
+        scheduler.config.start_on_monday = true;
+
+        // Enables dynamic loading for the scheduler
+        scheduler.setLoadMode("day");
+
+        // Load data from the backend
+        scheduler.load("/doctor/events", "json", function () {
+            // After loading data, loop through events and convert UTC dates to local time zone
+            scheduler.forEachEvent(function (event) {
+                event.start_date = moment(event.start_date).utc().toDate();
+                event.end_date = moment(event.end_date).utc().toDate();
+            });
+        });
+
+
+        scheduler.plugins({
+            recurring: true
+        });
+
+        const dp = scheduler.createDataProcessor({
+            url: '/doctor/events/',
+            mode: "REST",
+        });
+
+        // Set data exchange mode
+        dp.setTransactionMode("REST");
+        dp.init(scheduler);
+        dp.setTransactionMode("POST", false);
+
+    }
+</script>
+
+<body>
+    <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
+        <div class="dhx_cal_navline">
+            <div class="dhx_cal_prev_button">&nbsp;</div>
+            <div class="dhx_cal_next_button">&nbsp;</div>
+            <div class="dhx_cal_today_button"></div>
+            <div class="dhx_cal_date"></div>
+        </div>
+        <div class="dhx_cal_header">
+        </div>
+        <div class="dhx_cal_data">
+        </div>
+    </div>
+</body>
+<script>
+    // Convert time string to Date object
+    const consultationStartTime = "{{ doctor.onlineConsultationTimeFrom }}"; // Assuming the format is "08:00"
+    const consultationEndTime = "{{ doctor.onlineConsultationTimeTo }}";   // Assuming the format is "21:00"
+
+    function convertTimeStringToHoursMinutes(timeString) {
+        const [hours, minutes] = timeString.split(":");
+        return {
+            hours: parseInt(hours, 10),
+            minutes: parseInt(minutes, 10)
+        };
+    }
+
+    // Trigger the scheduler initialization when the page loads
+    window.onload = function () {
+        const fromTime = convertTimeStringToHoursMinutes(consultationStartTime);
+        const toTime = convertTimeStringToHoursMinutes(consultationEndTime);
+
+        // Initialize the scheduler with the extracted hours and minutes
+        init(fromTime.hours, toTime.hours);
+
+    };
+</script>

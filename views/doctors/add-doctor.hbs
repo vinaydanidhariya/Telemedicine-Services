@@ -1,0 +1,721 @@
+<div class="content-wrapper">
+	<!-- Content -->
+	<div class="container-xxl flex-grow-1 container-p-y">
+		<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">CONSULTANT/</span>ADD CONSULTANT</h4>
+		<!-- Basic Layout & Basic with Icons -->
+		<div class="row">
+			<!-- Basic with Icons -->
+			<div class="col-xxl">
+				<div class="card mb-4">
+
+					<div class="card-header d-flex align-items-center justify-content-between">
+						<h5 class="mb-0">ADD-CONSULTANT</h5>
+					</div>
+
+					<div class="card-body">
+						<form id="addDoctor" enctype="multipart/form-data" class="row g-3" method="post">
+							<!-- Account Details -->
+							<div class="col-12">
+								<h6 class="fw-semibold">1. Account Details</h6>
+								<hr class="mt-0" />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="formValidationFirstName">First Name</label>
+								<input type="text" id="formValidationFirstName" class="form-control" placeholder="John"
+									name="formValidationFirstName" />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="formValidationLastName">Last Name</label>
+								<input type="text" id="formValidationLastName" class="form-control" placeholder="Doe"
+									name="formValidationLastName" />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="formValidationEmail">Email</label>
+								<input class="form-control" type="Email" name="formValidationEmail"
+									placeholder="JonhDoe@mail.com" />
+							</div>
+
+							<div class="col-md-6">
+								<div class="row">
+									{{!-- <div class="col-md-3">
+										<label class="form-label" for="phonePrefix">Code</label>
+										<select class="form-control" name="countryCode">
+											<option value="+91" selected>India</option>
+											<option value="+1">United States</option>
+											<option value="+359">Bulgaria</option>
+											<option value="+55">Brazil</option>
+											<option value="+86">China</option>
+											<option value="+420">Czech Republic</option>
+											<option value="+45">Denmark</option>
+											<option value="+33">France</option>
+											<option value="+49">Germany</option>
+											<option value="+212">Morocco</option>
+											<option value="+31">Netherlands</option>
+											<option value="+92">Pakistan</option>
+											<option value="+40">Romania</option>
+											<option value="+7">Russia</option>
+											<option value="+421">Slovakia</option>
+											<option value="+34">Spain</option>
+											<option value="+66">Thailand</option>
+											<option value="+971">United Arab Emirates</option>
+											<option value="+44">United Kingdom</option>
+											<option value="+58">Venezuela</option>
+										</select>
+									</div> --}}
+									<div class="col-md-8">
+										<label class="form-label" for="formValidationMobile">Phone Number</label>
+										<input type="number" id="formValidationMobile" class="form-control "
+											placeholder="9994567890" name="formValidationMobile" />
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="form-password-toggle">
+									<label class="form-label" for="formValidationPassword">Password</label>
+									<div class="input-group input-group-merge">
+										<input class="form-control" type="password" autocomplete="one-time-code"
+											name="formValidationPassword"
+											placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+											aria-describedby="multicol-password2" />
+										<span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="form-password-toggle">
+									<label class="form-label" for="formValidationConfirmPass">Confirm Password</label>
+									<div class="input-group input-group-merge">
+										<input class="form-control" autocomplete="one-time-code" type="password"
+											name="formValidationConfirmPass"
+											placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+											aria-describedby="multicol-password2" />
+										<span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-12">
+								<h6 class="mt-2">2. Personal Info</h6>
+								<hr class="mt-0">
+							</div>
+
+							<div class="col-md-6">
+								<label for="formValidationFile" class="form-label">Profile Pic</label>
+								<input class="form-control" type="file" name="formValidationFile"
+									accept="image/png, image/jpg, image/jpeg" id="formValidationFile">
+								<small class="form-text text-danger">Please upload a profile picture in PNG, JPG, or
+									JPEG format and not exceeding 400KB in size.</small>
+							</div>
+
+
+							<div class="col-md-6">
+								<label class="form-label" for="formValidationDob">DOB</label>
+								<input type="text" class="form-control flatpickr-validation" name="formValidationDob"
+									id="formValidationDob" required />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="formValidationPrice">Price</label>
+								<input type="number" class="form-control" name="formValidationPrice"
+									id="formValidationPrice" />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="formValidationQualifications">Qualifications</label>
+								<input type="text" class="form-control" name="formValidationQualifications" />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="formValidationSelectDepartment">Department</label>
+								<select id="formValidationSelectDepartment" name="formValidationSelectDepartment"
+									class="form-select select2" data-allow-clear="true">
+								</select>
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="formValidationSelectDepartment">Experience In
+									Year</label>
+								<input type="number" id="FormValidationExperience" name="FormValidationExperience"
+									class="form-control" />
+							</div>
+
+							<div class="col-md-6 mb-3">
+								<label class="form-label" for="basic-default-bio">Physical Practice
+									Location</label>
+								<textarea class="form-control" id="basic-default-bio"
+									name="FormValidationPhysicalPractice" required="" autocomplete="off"
+									spellcheck="false"></textarea>
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label">Gender</label>
+								<div class="form-check custom">
+									<input type="radio" id="addFormValidationGender" name="addFormValidationGender"
+										class="form-check-input" value="male" />
+									<label class="form-check-label" for="addFormValidationGender">Male</label>
+								</div>
+								<div class="form-check custom">
+									<input type="radio" id="addFormValidationGender2" name="addFormValidationGender"
+										class="form-check-input" value="female" />
+									<label class="form-check-label" for="addFormValidationGender2">Female</label>
+								</div>
+							</div>
+
+							<div class="col-12">
+								<h6 class="mt-2">3. Graduation Education Info</h6>
+								<hr class="mt-0">
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="formValidationPrice">University/College:</label>
+								<input type="text" class="form-control" name="formValidationUniversity" />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="Degree">Degree:</label>
+								<input type="text" class="form-control" name="formValidationDegreeText" />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="GraduationYear">Graduation Year:</label>
+								<input type="text" class="form-control" name="formValidationGradYear" />
+							</div>
+
+							<div class="col-12">
+								<h6 class="mt-2">4. Timing</h6>
+								<hr class="mt-0">
+							</div>
+
+							<div class="col-md-6">
+								<div class="row">
+									<p>Timing For Online Consultation</p>
+									<div class="col-md-3">
+										<label class="form-label" for="formValidationDegree">From:</label>
+										<input type="time" class="form-control" placeholder="HH:MM"
+											name="onlineConsultationTimeFrom" />
+									</div>
+									<div class="col-md-3">
+										<label class="form-label" for="formValidationDegree">To:</label>
+										<input type="time" class="form-control" placeholder="HH:MM"
+											name="onlineConsultationTimeTo" />
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="row">
+									<p>Timing For Clinic</p>
+									<div class="col-md-3">
+										<label class="form-label" for="formValidationDegree">From:</label>
+										<input type="time" class="form-control" placeholder="HH:MM"
+											name="clinicTimeFrom" />
+									</div>
+									<div class="col-md-3">
+										<label class="form-label" for="formValidationDegree">To:</label>
+										<input type="time" class="form-control" placeholder="HH:MM"
+											name="clinicTimeTo" />
+									</div>
+								</div>
+							</div>
+
+
+							<div class="col-12">
+								<h6 class="mt-2">5. Documents</h6>
+								<p class="error">Please upload the required documents in PDF format only.</p>
+								<hr class="mt-0">
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="formValidationDegree">Doctor Registration Number:</label>
+								<input type="text" class="form-control" name="formValidationDoctorRegistrationNumber" />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="formValidationDegree">Degree:</label>
+								<input type="file" class="form-control" name="formValidationFileDegreePhoto" />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="Degree">Aadhar Card:</label>
+								<input type="file" class="form-control" name="formValidationFileAadharCard"
+									id="aadharCard" />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="GraduationYear">Pan Card:</label>
+								<input type="file" class="form-control" name="formValidationFilePanCard" />
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label" for="GraduationYear">Digital Signature:</label>
+								<input type="file" class="form-control" name="formValidationFileDigitalSignature" />
+							</div>
+
+							<div class="row pt-4">
+								<button type="submit" id="addDoctorSubmit" class="btn btn-primary" name="submitButton"
+									style="width: 30rem; margin: 0 auto;">Submit</button>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- / Content -->
+	<div class="content-backdrop fade"></div>
+</div>
+<!-- Content wrapper -->
+<script>
+	document.addEventListener("DOMContentLoaded", async function (e) {
+		{
+			const onlineConsultationTimeFrom = document.querySelector("[name=onlineConsultationTimeFrom]");
+			const clinicTimeFrom = document.querySelector("[name=clinicTimeFrom]");
+			const onlineConsultationTimeTo = document.querySelector("[name=onlineConsultationTimeTo]");
+			const clinicTimeTo = document.querySelector("[name=clinicTimeTo]");
+
+			if (onlineConsultationTimeFrom) {
+				onlineConsultationTimeFrom.flatpickr({ enableTime: true, noCalendar: true });
+			}
+
+
+			if (onlineConsultationTimeTo) {
+				onlineConsultationTimeTo.flatpickr({ enableTime: true, noCalendar: true });
+			}
+
+
+			if (clinicTimeFrom) {
+				clinicTimeFrom.flatpickr({ enableTime: true, noCalendar: true });
+			}
+
+
+			if (clinicTimeTo) {
+				clinicTimeTo.flatpickr({ enableTime: true, noCalendar: true });
+			}
+			flatpickr("[name=formValidationGradYear]", { altInput: true, altFormat: "F , Y", dateFormat: "m-Y" });
+
+			function fetchData() {
+				$.ajax({
+					url: '/doctors/doctor-department',
+					method: 'POST',
+					data: {
+						code: 778899
+					},
+					success: function (responseData) {
+						populateOptions(responseData);
+					},
+					error: function (xhr, status, error) {
+						console.log('Request failed. Status:', status);
+					}
+				});
+			}
+
+			function populateOptions(data) {
+				var selectElement = $('#formValidationSelectDepartment');
+
+				// Clear any existing options
+				selectElement.empty();
+
+				// Add a default option
+				selectElement.append($('<option>').val("").text("Select Department"));
+
+				// Iterate over the data and create options
+				$.each(data, function (index, item) {
+					var option = $('<option>').val(item.title).text(item.title);
+					selectElement.append(option);
+				});
+			}
+
+			fetchData()
+
+			const t = document.getElementById("addDoctor"),
+				submitButton = document.getElementById('addDoctorSubmit'),
+				o = jQuery(t.querySelector('[name="formValidationSelectDepartment"]')),
+				i = jQuery(t.querySelector('[name="formValidationDepartment"]')),
+				r = FormValidation.formValidation(t, {
+					fields: {
+						formValidationFirstName: {
+							validators: {
+								notEmpty: {
+									message: "Please enter your First name"
+								},
+								stringLength: {
+									min: 3,
+									max: 15,
+									message: "The name must be more than 6 and less than 30 characters long"
+								},
+								regexp: {
+									regexp: /^[a-zA-Z]+$/,
+									message: "The name can only consist of alphabetical, not number"
+								}
+							}
+						},
+						formValidationLastName: {
+							validators: {
+								notEmpty: {
+									message: "Please enter your Last name"
+								},
+								stringLength: {
+									min: 3,
+									max: 15,
+									message: "The name must be more than 6 and less than 30 characters long"
+								},
+								regexp: {
+									regexp: /^[a-zA-Z]+$/,
+									message: "The name can only consist of alphabetical,not number"
+								}
+							}
+						},
+						formValidationEmail: {
+							validators: {
+								notEmpty: {
+									message: "Please enter your email"
+								},
+								emailAddress: {
+									message: "The value is not a valid email address"
+								}
+							}
+						},
+						formValidationPassword: {
+							validators: {
+								notEmpty: {
+									message: "Please enter your password"
+								}
+							}
+						},
+						formValidationConfirmPass: {
+							validators: {
+								notEmpty: {
+									message: "Please confirm password"
+								},
+								identical: {
+									compare: function () {
+										return t.querySelector('[name="formValidationPassword"]').value
+									},
+									message: "The password and its confirm are not the same"
+								}
+							}
+						},
+						//countryCode: {
+						//	validators: {
+						//		notEmpty: {
+						//			message: "Please Select Country Code of Mobile"
+						//		}
+						//	}
+						//},
+						formValidationMobile: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter Phone Number"
+								},
+								regexp: {
+									regexp: /^\+?\d+$/,
+									message: "The Phone number can only consist of number digit"
+								}
+							},
+						},
+						formValidationFile: {
+							validators: {
+								notEmpty: {
+									message: "Please select the file"
+								}
+							}
+						},
+						formValidationDob: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter your DOB"
+								},
+								date: {
+									format: "DD/MM/YYYY",
+									message: "The value is not a valid date"
+								}
+							}
+						},
+						formValidationPrice: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter charge of Doctor"
+								}
+							}
+						},
+						formValidationSelectDepartment: {
+							validators: {
+								notEmpty: {
+									message: "Please select your Department"
+								}
+							}
+						},
+						formValidationQualifications: {
+							validators: {
+								notEmpty: {
+									message: "Please add your Qualifications"
+								}
+							}
+						},
+						FormValidationPhysicalPractice: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter Address of Physical Practice Location"
+								}
+							}
+						},
+						FormValidationExperience: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter Doctor Experience"
+								},
+								between: {
+									min: 0,
+									max: 99,
+									message: "The year of experience must be between 0 and 99"
+								}
+							}
+						},
+						addFormValidationGender: {
+							validators: {
+								notEmpty: {
+									message: "Please select Gender"
+								}
+							}
+						},
+						formValidationUniversity: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter College/University"
+								}
+							}
+						},
+						formValidationDegreeText: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter College/University Degree"
+								}
+							}
+						},
+						formValidationGradYear: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter Graduation Year"
+								}
+							}
+						},
+						formValidationDoctorRegistrationNumber: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter Doctor Registration Number"
+								}
+							}
+						},
+						formValidationFileDegreePhoto: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter Degree Certificate *pdf*"
+								}
+							}
+						},
+						formValidationFilePanCard: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter Pan Card *pdf*"
+								}
+							}
+						},
+						formValidationFileDigitalSignature: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter Digital Signature *pdf*"
+								}
+							}
+						},
+						formValidationFileAadharCard: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter Aadhar Card *pdf*"
+								}
+							}
+						},
+						onlineConsultationTimeFrom: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter online Consultation Time From"
+								}
+							}
+						},
+						onlineConsultationTimeTo: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter online Consultation Time To"
+								}
+							}
+						},
+						clinicTimeFrom: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter clinic Time From"
+								}
+							}
+						},
+						clinicTimeTo: {
+							validators: {
+								notEmpty: {
+									message: "Please Enter clinic Time To"
+								}
+							}
+						},
+					},
+					plugins: {
+						trigger: new FormValidation.plugins.Trigger,
+						bootstrap5: new FormValidation.plugins.Bootstrap5({
+							eleValidClass: "",
+							rowSelector: function (e, a) {
+								switch (e) {
+									case "formValidationFirstName":
+									case "formValidationLastName":
+									case "formValidationEmail":
+									case "formValidationMobile":
+									case "formValidationFile":
+									case "formValidationDob":
+									case "formValidationPrice":
+									case "formValidationQualifications":
+									case "formValidationSelectDepartment":
+									case "formValidationDoctorRegistrationNumber":
+									case "FormValidationExperience":
+									case "FormValidationPhysicalPractice":
+									case "formValidationUniversity":
+									case "formValidationDegreeText":
+									case "formValidationGradYear":
+									case "onlineConsultationTimeFrom":
+									case "onlineConsultationTimeTo":
+									case "clinicTimeFrom":
+									case "clinicTimeTo":
+									case "FormValidationGender":
+										return ".col-md-6";
+									case "formValidationPlan":
+										return ".col-xl-3";
+									case "formValidationCheckbox":
+										return ".col-12";
+									default:
+										return ".row"
+								}
+							}
+						}),
+						submitButton: new FormValidation.plugins.SubmitButton,
+						autoFocus: new FormValidation.plugins.AutoFocus
+					},
+					init: e => {
+						e.on("plugins.message.placed", function (e) {
+							e.element.parentElement.classList.contains("input-group") && e.element.parentElement.insertAdjacentElement("afterend", e.messageElement), e.element.parentElement.parentElement.classList.contains("custom-option") && e.element.closest(".row").insertAdjacentElement("afterend", e.messageElement)
+						})
+					}
+				});
+
+			r.on('core.form.valid', function (e) {
+				try {
+					let demoForm = document.getElementById('addDoctor')
+					var doctorFormData = new FormData();
+					// Append the text fields
+					doctorFormData.append('firstName', demoForm.querySelector('[name="formValidationFirstName"]').value);
+					doctorFormData.append('lastName', demoForm.querySelector('[name="formValidationLastName"]').value);
+					doctorFormData.append('email', demoForm.querySelector('[name="formValidationEmail"]').value);
+					doctorFormData.append('password', demoForm.querySelector('[name="formValidationPassword"]').value);
+					doctorFormData.append('phone', demoForm.querySelector('[name="formValidationMobile"]').value);
+					//doctorFormData.append('countryCode', demoForm.querySelector('[name="countryCode"]').value);
+					doctorFormData.append('dateOfBirth', demoForm.querySelector('[name="formValidationDob"]').value);
+					doctorFormData.append('price', demoForm.querySelector('[name="formValidationPrice"]').value);
+					doctorFormData.append('qualification', demoForm.querySelector('[name="formValidationQualifications"]').value);
+					doctorFormData.append('department', demoForm.querySelector('[name="formValidationSelectDepartment"]').value);
+					doctorFormData.append('gender', demoForm.querySelector('input[name="addFormValidationGender"]:checked').value);
+
+					doctorFormData.append('doctorRegistrationNumber', demoForm.querySelector('[name="formValidationDoctorRegistrationNumber"]').value);
+					doctorFormData.append('experience', demoForm.querySelector('[name="FormValidationExperience"]').value);
+					doctorFormData.append('physicalPractice', demoForm.querySelector('[name="FormValidationPhysicalPractice"]').value);
+					doctorFormData.append('university', demoForm.querySelector('[name="formValidationUniversity"]').value);
+					doctorFormData.append('degreeText', demoForm.querySelector('[name="formValidationDegreeText"]').value);
+					doctorFormData.append('graduationYear', demoForm.querySelector('[name="formValidationGradYear"]').value);
+					doctorFormData.append('onlineConsultationTimeFrom', demoForm.querySelector('[name="onlineConsultationTimeFrom"]').value);
+					doctorFormData.append('onlineConsultationTimeTo', demoForm.querySelector('[name="onlineConsultationTimeTo"]').value);
+					doctorFormData.append('clinicTimeFrom', demoForm.querySelector('[name="clinicTimeFrom"]').value);
+					doctorFormData.append('clinicTimeTo', demoForm.querySelector('[name="clinicTimeTo"]').value);
+
+
+
+					const profileImage = demoForm.querySelector('[name="formValidationFile"]');
+					if (profileImage.files.length > 0) {
+						doctorFormData.append('profile', profileImage.files[0]);
+					}
+
+					const degreeCertificate = demoForm.querySelector('[name="formValidationFileDegreePhoto"]');
+					if (profileImage.files.length > 0) {
+						doctorFormData.append('degreeCertificate', degreeCertificate.files[0]);
+					}
+					const aadharCard = demoForm.querySelector('[name="formValidationFileAadharCard"]');
+					if (aadharCard.files.length > 0) {
+						doctorFormData.append('aadharCard', aadharCard.files[0]);
+					}
+					const panCard = demoForm.querySelector('[name="formValidationFilePanCard"]');
+					if (panCard.files.length > 0) {
+						doctorFormData.append('panCard', panCard.files[0]);
+					}
+					const digitalSignature = demoForm.querySelector('[name="formValidationFileDigitalSignature"]');
+					if (digitalSignature.files.length > 0) {
+						doctorFormData.append('digitalSignature', digitalSignature.files[0]);
+					}
+					axios.post('/doctors/add-doctor', doctorFormData, {
+						headers: {
+							'Content-Type': 'multipart/form-data'
+						}
+					}).then(function (response) {
+						if (response.data.type === 'success') { // Check response.data.type instead of response.type
+							Swal.fire({
+								icon: "success",
+								title: response.data.message,
+								showConfirmButton: !1,
+								timer: 1500,
+								customClass: {
+									confirmButton: "btn btn-primary"
+								},
+								buttonsStyling: !1,
+							}).then(function () {
+								window.location.href = window.location.href;
+							});
+						} else {
+							Swal.fire({
+								icon: "error",
+								title: response.data.message,
+								showConfirmButton: !1,
+								timer: 1500,
+								customClass: {
+									confirmButton: "btn btn-primary"
+								},
+								buttonsStyling: !1,
+							});
+						}
+					})
+				} catch (error) {
+					console.error(error);
+				}
+			})
+
+			var a, n;
+			flatpickr(t.querySelector('[name="formValidationDob"]'), {
+				enableTime: !1,
+				dateFormat: "d/m/Y",
+				onChange: function () {
+					r.revalidateField("formValidationDob")
+				}
+			}),
+				o.length && (o.wrap('<div class="position-relative"></div>'), o.select2({
+					placeholder: "Select Department",
+					dropdownParent: o.parent()
+				}).on("change.select2", function () {
+					r.revalidateField("formValidationSelectDepartment")
+				}));
+		}
+	});
+</script>

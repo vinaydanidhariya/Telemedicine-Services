@@ -1,0 +1,141 @@
+<!-- Content wrapper -->
+<!-- Jquery js -->
+<script type="text/javascript" src="/assets/vendor/libs/jquery/jquery.js"></script>
+
+<!-- Popper js -->
+<script src="/assets/vendor/libs/popper/popper.js"></script>
+
+<!-- Bootstrap js -->
+<script src="/assets/vendor/js/bootstrap.js"></script>
+<link rel="stylesheet" href="/assets/vendor/libs/flatpickr/flatpickr.css" />
+<script src="/assets/vendor/libs/flatpickr/flatpickr.js"></script>
+
+<!-- jQuery Validation JS -->
+<script type="text/javascript" src="/assets/vendor/libs/jquery/jquery.validate.js"></script>
+<link rel="stylesheet" href="/assets/vendor/libs/sweetalert2/sweetalert2.css" />
+
+<script src="/assets/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
+<script src="/assets/vendor/libs/select2/select2.js"></script>
+<link rel="stylesheet" href="/assets/vendor/libs/select2/select2.css">
+<link rel="stylesheet" href="../../assets/vendor/libs/quill/typography.css" />
+<link rel="stylesheet" href="../../assets/vendor/libs/quill/katex.css" />
+<link rel="stylesheet" href="../../assets/vendor/libs/quill/editor.css" />
+
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Department/</span> Add-Department</h4>
+        <!-- Basic Layout & Basic with Icons -->
+        <div class="row">
+            <!-- Basic with Icons -->
+            <div class="col-xxl">
+                <div class="card mb-4">
+
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0">Add-Department</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="add-department" class="row g-3" method="post">
+                            <div class="col-md-6">
+                                <label class="form-label" for="department-title">department Title</label>
+                                <input type="text" id="department_name" required maxlength="24" value="{{data.departmentName}}"
+                                    class="form-control" placeholder="Department Title" name="department_name" />
+                                <input type="hidden" value="{{data.departmentId}}" name="department_id" />
+                            </div>
+                            <div class="md-6">
+                                <label class="form-label" for="Short Discription">Short Description</label>
+                                <textarea type="text" id="description"  required maxlength="72" value="" class="form-control"
+                                    placeholder="Short Description" rows="4"
+                                    name="description" />{{data.description}}</textarea>
+                            </div>
+                            <div class="row pt-4">
+                                <button type="submit" id="submit" class="btn btn-primary" name="submitButton"
+                                    style="width: 30rem; margin: 0 auto;">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+</div>
+<script src="../../assets/vendor/libs/quill/quill.js"></script>
+<script src="../../assets/vendor/libs/quill/image-resize.js"></script>
+<!-- Content wrapper -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
+
+<script src="/assets/vendor/libs/jquery/jquery.js"></script>
+<script src="/assets/vendor/libs/jquery/jquery.validate.js"></script>
+<script src="/assets/vendor/libs/jquery/additional-methods.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#add-department').validate({
+            rules: {
+                department_name: {
+                    required: true,
+                },
+                description: {
+                    required: true,
+                },
+            },
+            messages: {
+                department_name: {
+                    required: '*Please enter title ',
+                },
+                description: {
+                    required: '*Please enter description',
+                },
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).closest('.form-group').addClass(errorClass).removeClass(validClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).closest('.form-group').removeClass(errorClass).addClass(validClass);
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element);
+            },
+            submitHandler: function (form) {
+                if ($("#submit").valid()) {
+                    var sliderForm = $('#add-department');
+                    const data = {
+                        department_id: sliderForm.find('[name="department_id"]').val(),
+                        department_name: sliderForm.find('[name="department_name"]').val(),
+                        description: sliderForm.find('[name="description"]').val()
+                    }
+                    console.log(data)
+                    $.ajax({
+                        url: '/department/edit-department',
+                        type: 'POST',
+                        data: data,
+                        cache: false,
+                        success: function (response) {
+                            if (response.type === 'success') {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: response.message,
+                                    showConfirmButton: !1,
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: "btn btn-primary"
+                                    },
+                                    buttonsStyling: !1,
+                                }).then(function () {
+                                    window.location.href = window.location.href;
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            // Handle the error if the AJAX request fails
+                            console.error('Error saving event post:', error);
+                        }
+                    });
+                }
+            }
+        });
+    });
+</script>

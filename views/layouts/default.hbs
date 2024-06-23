@@ -1,0 +1,30 @@
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed " dir="ltr" data-theme="theme-default"
+	data-assets-path="/assets/" data-template="vertical-menu-template">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+	<meta charset="utf-8" />
+	<title>{{title}}</title>
+
+	{{> style}}
+</head>
+
+<body>
+	<div class="layout-wrapper layout-content-navbar">
+		<div class="layout-container">
+			{{#compare userSession.type '==' 'DOCTOR'}}{{> doctor_sidebar}}{{/compare}}
+			{{#compare userSession.type '==' 'ADMIN'}}{{> admin_sidebar}}{{/compare}}
+			<div class="layout-page">
+				{{> header}}
+
+				{{{body}}}
+			</div>
+		</div>
+	</div>
+	{{> script}}
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<!-- blogs/blogs.hbs -->
+
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Blog</title>
+	</head>
+	<body>
+		<div class="container pt-4">
+			<h3 class="card-text">{{errorMsg}}</h3>
+			<div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+				{{#each blogPosts}}
+					<div class="col-md-6 col-lg-3">
+						<div class="card">
+							<img
+								class="card-img-top"
+								src="../../images/{{this.photo}}"
+								alt="Card image cap"
+							/>
+							<div class="card-body">
+								<h5 class="card-title">{{this.title}}</h5>
+								<p class="card-text">
+									{{this.sort_description}}
+								</p>
+							</div>
+
+							<ul class="list-group list-group-flush">
+								<li class="list-group-item">{{this.date}}</li>
+								<li
+									class="list-group-item"
+								>{{this.author_name}}</li>
+							</ul>
+							<div class="card-body">
+								<!-- Link to the full blog post -->
+								<a
+									href="/blogs/{{this.blog_id}}"
+									class="card-link"
+								>Read More</a>
+								<a
+									href="/blogs/remove/{{this.blog_id}}"
+									class="card-link"
+								>Delete</a>
+							</div>
+						</div>
+					</div>
+				{{/each}}
+			</div>
+		</div>
+	</body>
+</html>

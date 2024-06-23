@@ -1,0 +1,1 @@
+html,body{background:#fff !important}body>:not(.prescription-print){display:none !important}.prescription-print{min-width:768px !important;font-size:15px !important}.prescription-print svg{fill:#697a8d !important}.prescription-print *{border-color:rgba(67,89,113,.5) !important;color:#697a8d !important}.dark-style .prescription-print th{color:#fff !important}

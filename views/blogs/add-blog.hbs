@@ -1,0 +1,291 @@
+<!-- Content wrapper -->
+<!-- Jquery js -->
+<script type="text/javascript" src="/assets/vendor/libs/jquery/jquery.js"></script>
+
+<!-- Popper js -->
+<script src="/assets/vendor/libs/popper/popper.js"></script>
+
+<!-- Bootstrap js -->
+<script src="/assets/vendor/js/bootstrap.js"></script>
+<link rel="stylesheet" href="/assets/vendor/libs/flatpickr/flatpickr.css" />
+<script src="/assets/vendor/libs/flatpickr/flatpickr.js"></script>
+
+<!-- jQuery Validation JS -->
+<script type="text/javascript" src="/assets/vendor/libs/jquery/jquery.validate.js"></script>
+<link rel="stylesheet" href="/assets/vendor/libs/sweetalert2/sweetalert2.css" />
+
+<script src="/assets/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
+<script src="/assets/vendor/libs/select2/select2.js"></script>
+<link rel="stylesheet" href="/assets/vendor/libs/select2/select2.css">
+<link rel="stylesheet" href="../../assets/vendor/libs/quill/typography.css" />
+<link rel="stylesheet" href="../../assets/vendor/libs/quill/katex.css" />
+<link rel="stylesheet" href="../../assets/vendor/libs/quill/editor.css" />
+
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Blogs/</span> Add-Blogs</h4>
+        <!-- Basic Layout & Basic with Icons -->
+        <div class="row">
+            <!-- Basic with Icons -->
+            <div class="col-xxl">
+                <div class="card mb-4">
+
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0">ADD-BLOGS</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="add-blog" class="row g-3" method="post" enctype="multipart/form-data">
+
+                            <div class="col-md-6">
+                                <label class="form-label" for="Title">Title</label>
+                                <input type="text" id="Title" value="" class="form-control" placeholder="Title"
+                                    name="title" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="basic-default-upload-file">Cover Photo</label>
+                                <input type="file" class="form-control" name="blog_photo" />
+                            </div>
+
+                            <label class="col-sm-2 col-form-label" for="basic-default-message">Content</label>
+                            <div id="editor-container"></div>
+                            <input type="hidden" name="quill-html" id="quill-html">
+
+                            <div class="col-md-6">
+                                <label class="form-label" for="AuthorName">Author Name</label>
+                                <input type="text" id="author_name" class="form-control" placeholder="Author Name"
+                                    name="author_name" value="" />
+                            </div>
+
+                            <div class="row pt-4">
+                                <button type="submit" id="submit" class="btn btn-primary" name="submitButton"
+                                    style="width: 30rem; margin: 0 auto;">Submit</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+</div>
+<script src="../../assets/vendor/libs/quill/quill.js"></script>
+<script src="../../assets/vendor/libs/quill/image-resize.js"></script>
+<script>
+    const editor = new Quill('#editor-container', {
+        modules: {
+            imageResize: {
+                displaySize: true
+            },
+            toolbar: [
+                [{ font: [] }, { size: [] }],
+                ["bold", "italic", "underline", "strike"],
+                [{ color: [] }, { background: [] }],
+                [{ script: "super" }, { script: "sub" }],
+                [{ align: [] }],
+                [{ header: "1" }, { header: "2" }, "blockquote", "code-block"],
+                [
+                    { list: "ordered" },
+                    { list: "bullet" },
+                    { indent: "-1" },
+                    { indent: "+1" },
+                ],
+                [{ direction: "rtl" }],
+                ["link", "image", "video", "formula"],
+                ["clean"],
+            ],
+        },
+        placeholder: 'Write an epic...',
+        theme: 'snow'
+    });
+
+    /**
+  * Step1. select local image
+  *
+  */
+    function selectLocalImage() {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('value', 'blog_file');
+        input.click();
+
+        // Listen upload local image and save to server
+        input.onchange = () => {
+            const file = input.files[0];
+
+            // file type is only image.
+            if (/^image\//.test(file.type)) {
+                saveToServer(file);
+            } else {
+                console.warn('You could only upload images.');
+            }
+        };
+    }
+
+    /**
+     * Step2. save to server
+     *
+     * @param {File} file
+     */
+    function saveToServer(file) {
+        const fd = new FormData();
+        fd.append('image', file);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:3000/upload/image', true);
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                // this is callback data: url
+                const url = JSON.parse(xhr.responseText).data;
+                insertToEditor(url);
+            }
+        };
+        xhr.send(fd);
+    }
+
+    /**
+     * Step3. insert image url to rich editor.
+     *
+     * @param {string} url
+     */
+    function insertToEditor(url) {
+        // push image url to rich editor.
+        const range = editor.getSelection();
+        editor.insertEmbed(range.index, 'image', `http://localhost:3000${url}`);
+    }
+
+    // quill editor add image handler
+    editor.getModule('toolbar').addHandler('image', () => {
+        selectLocalImage();
+    });
+
+    function getFirstParagraph() {
+        const quillContent = editor.root.innerHTML;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(quillContent, 'text/html');
+        const firstParagraph = doc.querySelector('p');
+
+        if (firstParagraph) {
+            return firstParagraph.textContent;
+        } else {
+            return;
+        }
+    }
+</script>
+<!-- Content wrapper -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
+
+<script src="/assets/vendor/libs/jquery/jquery.js"></script>
+<script src="/assets/vendor/libs/jquery/jquery.validate.js"></script>
+<script src="/assets/vendor/libs/jquery/additional-methods.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        jQuery.validator.setDefaults({
+            // This will ignore all hidden elements alongside `contenteditable` elements
+            // that have no `name` attribute
+            ignore: ":hidden, [contenteditable='true']:not([name])"
+        });
+        jQuery.validator.addMethod("domain", function (value, element) {
+            return this.optional(element) || /^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,}$/.test(value);
+        }, "Please specify the correct domain for your documents");
+
+        $('#add-blog').validate({
+            rules: {
+                author_name: {
+                    required: true,
+                },
+                title: {
+                    required: true,
+                },
+                description: {
+                    required: true,
+                },
+                date: {
+                    required: true,
+                },
+                blog_photo: {
+                    required: true,
+                },
+            },
+            messages: {
+                author_name: {
+                    required: '*Please enter author Name',
+                },
+                title: {
+                    required: '*Please enter title ',
+                },
+                description: {
+                    required: '*Please enter description',
+                },
+                date: {
+                    required: '*Please enter Date',
+                },
+                photo: {
+                    required: '*Please enter chose photo',
+                },
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).closest('.form-group').addClass(errorClass).removeClass(validClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).closest('.form-group').removeClass(errorClass).addClass(validClass);
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element);
+            },
+            submitHandler: function (form) {
+                if ($("#submit").valid()) {
+                    // Get HTML content
+                    var html = editor.root.innerHTML;
+
+                    // Copy HTML content in hidden form
+                    $('#quill-html').val(html)
+
+                    var blogForm = $('#add-blog');
+                    var blogFormData = new FormData();
+                    blogFormData.append('author_name', blogForm.find('[name="author_name"]').val());
+                    blogFormData.append('title', blogForm.find('[name="title"]').val());
+                    blogFormData.append('description', blogForm.find('[name="quill-html"]').val());
+                    const firstParagraph = getFirstParagraph();
+                    blogFormData.append('sort_description', firstParagraph);
+                    const image = blogForm.find('[name="blog_photo"]').prop('files')[0];
+                    blogFormData.append('blog_photo', image);
+
+                    $.ajax({
+                        url: '/blogs/add-blog',
+                        type: 'POST',
+                        data: blogFormData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            if (response.type === 'success') {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: response.message,
+                                    showConfirmButton: !1,
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: "btn btn-primary"
+                                    },
+                                    buttonsStyling: !1,
+                                }).then(function () {
+                                    window.location.href = window.location.href;
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            // Handle the error if the AJAX request fails
+                            console.error('Error saving blog post:', error);
+                        }
+                    });
+                }
+            }
+        });
+    });
+</script>
