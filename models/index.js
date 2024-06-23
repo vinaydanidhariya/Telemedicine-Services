@@ -13,7 +13,7 @@ class db {
     }
 
     try {
-      sequelize = new Sequelize(Config.database, Config.username, Config.password, Config, {
+      sequelize = new Sequelize(Config.database, Config.replication.read.username, Config.replication.read.password, Config, {
         logging: console.log,
         logging: function (str) {
           console.log(str);

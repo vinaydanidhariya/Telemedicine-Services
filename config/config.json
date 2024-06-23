@@ -2,12 +2,12 @@
 	"local": {
 		"port_no": 5000,
 		"x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
-		"project": "Shree Hari Clinic",
+		"project": "telemedicine service",
 		"secret": "SHC#100&ShreeHariClinic@333",
-		"serverUrl": "https://childdr-nodejs1.onrender.com",
-		"database": "child_dr",
-		"username": "nirav2565",
-		"schema": "CHILD_DR_DEV",
+		"serverUrl": "https://telemedicine-services.onrender.com",
+		"database": "telemedicine_09ie",
+		"username": "vinay4114",
+		"schema": "telemedicine_DEV",
 		"dialect": "postgres",
 		"logging": true,
 		"dialectOptions": {
@@ -22,22 +22,22 @@
 			"port": 587,
 			"secure": false,
 			"auth": {
-				"user": "kidsdocindia@gmail.com",
-				"pass": "jtkbghztbzqgbgel"
+				"user": "vinaydanidhariya4114@gmail.com",
+				"pass": "jpatxruyuflbkofs"
 			}
 		},
 		"replication": {
 			"read": [
 				{
-					"host": "dpg-cjgfsrc1ja0c73clp4h0-a.oregon-postgres.render.com",
-					"username": "nirav2565",
-					"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
+					"host": "dpg-cps4po2j1k6c738hj8lg-a.oregon-postgres.render.com",
+					"username": "vinay4114",
+					"password": "n28NdpPbyNfsmdWNoNcT3WgjW0qvhL0c"
 				}
 			],
 			"write": {
-				"host": "dpg-cjgfsrc1ja0c73clp4h0-a.oregon-postgres.render.com",
-				"username": "nirav2565",
-				"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
+				"host": "dpg-cps4po2j1k6c738hj8lg-a.oregon-postgres.render.com",
+				"username": "vinay4114",
+				"password": "n28NdpPbyNfsmdWNoNcT3WgjW0qvhL0c"
 			}
 		},
 		"pool": {
@@ -58,12 +58,12 @@
 	"production": {
 		"port_no": 5000,
 		"x-api-key": "as5241165sv4g84ehw4e6rc64er5g1vw6643468b4657u4i465576bw354vca1g3fds1g5mloul1hu51m",
-		"project": "Shree Hari Clinic",
+		"project": "telemedicine service",
 		"secret": "SHC#100&ShreeHariClinic@333",
-		"serverUrl": "https://kidsdoc.online",
-		"database": "tinywings",
-		"username": "postgres",
-		"schema": "CHILD_DR_DEV",
+		"serverUrl": "https://telemedicine-services.onrender.com",
+		"database": "telemedicine_09ie",
+		"username": "vinay4114",
+		"schema": "telemedicine_09ie_DEV",
 		"dialect": "postgres",
 		"logging": true,
 		"dialectOptions": {
@@ -78,22 +78,22 @@
 			"port": 587,
 			"secure": false,
 			"auth": {
-				"user": "kidsdocindia@gmail.com",
-				"pass": "jtkbghztbzqgbgel"
+				"user": "vinaydanidhariya4114@gmail.com",
+				"pass": "jpatxruyuflbkofs"
 			}
 		},
 		"replication": {
 			"read": [
 				{
-					"host": "tinywings.coonqjiiu9zw.ap-south-1.rds.amazonaws.com",
-					"username": "postgres",
-					"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
+					"host": "dpg-cps4po2j1k6c738hj8lg-a.oregon-postgres.render.com",
+					"username": "vinay4114",
+					"password": "n28NdpPbyNfsmdWNoNcT3WgjW0qvhL0c"
 				}
 			],
 			"write": {
-				"host": "tinywings.coonqjiiu9zw.ap-south-1.rds.amazonaws.com",
-				"username": "postgres",
-				"password": "sGx6hSV4zr5TBjGCc7cwDv6tkZtLmXq5"
+				"host": "dpg-cps4po2j1k6c738hj8lg-a.oregon-postgres.render.com",
+				"username": "vinay4114",
+				"password": "n28NdpPbyNfsmdWNoNcT3WgjW0qvhL0c"
 			}
 		},
 		"pool": {
@@ -108,7 +108,7 @@
 		"GoogleCred": {
 			"clientId": "534249686762-ldp1pr9p96tunridkv6lgqveic8p8r9k.apps.googleusercontent.com",
 			"googleClientSecret": "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",
-			"callBackURL": "https://kidsdoc.online/whatsapp-payment/google-redirect"
+			"callBackURL": "https://telemedicine-services.onrender.com/whatsapp-payment/google-redirect"
 		}
 	}
 }
