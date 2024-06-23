@@ -45,7 +45,7 @@ const loginLimiter = rateLimit({
 	message: { error: "Too many login attempts, please try again later." },
 });
 
-router.post("/", loginLimiter, function (req, res, next) {
+router.post("/", function (req, res, next) {
 	try {
 		passport.authenticate("local", async function (err, user, info) {
 			if (err || !user) {
