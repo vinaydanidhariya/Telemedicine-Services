@@ -1,6 +1,4 @@
 
----
-
 # Telemedicine-Service
 
 Node.js Monolithic Application for WhatsApp chatbot and admin panel for two users.
@@ -31,5 +29,6 @@ Patients can book appointments online and consult with doctors in emergencies th
 ---
 ## DEMO VIDEO OF WHATSAPP CHATBOT USING META API
 
-https://github.com/user-attachments/assets/047c5296-f385-4ab7-8874-9e2ac9b14ad4
+https://github.com/user-attachments/assets/e909dd20-5408-438a-9909-c2348459802c
 
+---
