@@ -46,8 +46,8 @@
 			"idle": 10000
 		},
 		"Razorpay": {
-			"key_id": "rzp_test_I41VoSmePWbGQU",
-			"key_secret": "7VaiVPaoK7oeK50U5FT8Am0C"
+			"key_id": "",
+			"key_secret": ""
 		},
 		"GoogleCred": {
 			"clientId": "",
