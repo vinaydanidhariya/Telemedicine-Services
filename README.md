@@ -29,7 +29,7 @@ Patients can book appointments online and consult with doctors in emergencies th
 - Nginx
 
 ---
-##DEMO VIDEO OF WHATSAPP CHATBOT VIA META API
+## DEMO VIDEO OF WHATSAPP CHATBOT USING META API
 
 https://github.com/user-attachments/assets/047c5296-f385-4ab7-8874-9e2ac9b14ad4
 
