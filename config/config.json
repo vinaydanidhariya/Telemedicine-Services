@@ -23,7 +23,7 @@
 			"secure": false,
 			"auth": {
 				"user": "vinaydanidhariya4114@gmail.com",
-				"pass": "jpatxruyuflbkofs"
+				"pass": ""
 			}
 		},
 		"replication": {
@@ -31,13 +31,13 @@
 				{
 					"host": "dpg-cps4po2j1k6c738hj8lg-a.oregon-postgres.render.com",
 					"username": "vinay4114",
-					"password": "n28NdpPbyNfsmdWNoNcT3WgjW0qvhL0c"
+					"password": ""
 				}
 			],
 			"write": {
 				"host": "dpg-cps4po2j1k6c738hj8lg-a.oregon-postgres.render.com",
 				"username": "vinay4114",
-				"password": "n28NdpPbyNfsmdWNoNcT3WgjW0qvhL0c"
+				"password": ""
 			}
 		},
 		"pool": {
@@ -50,9 +50,9 @@
 			"key_secret": "7VaiVPaoK7oeK50U5FT8Am0C"
 		},
 		"GoogleCred": {
-			"clientId": "127925894032-scshjisrosrtn3jth8jm9knatvibhvoo.apps.googleusercontent.com",
-			"googleClientSecret": "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",
-			"callBackURL": "http://localhost:3000/whatsapp-payment/google-redirect"
+			"clientId": "",
+			"googleClientSecret": "",
+			"callBackURL": ""
 		}
 	},
 	"production": {
@@ -79,7 +79,7 @@
 			"secure": false,
 			"auth": {
 				"user": "vinaydanidhariya4114@gmail.com",
-				"pass": "jpatxruyuflbkofs"
+				"pass": ""
 			}
 		},
 		"replication": {
@@ -87,13 +87,13 @@
 				{
 					"host": "dpg-cps4po2j1k6c738hj8lg-a.oregon-postgres.render.com",
 					"username": "vinay4114",
-					"password": "n28NdpPbyNfsmdWNoNcT3WgjW0qvhL0c"
+					"password": ""
 				}
 			],
 			"write": {
 				"host": "dpg-cps4po2j1k6c738hj8lg-a.oregon-postgres.render.com",
 				"username": "vinay4114",
-				"password": "n28NdpPbyNfsmdWNoNcT3WgjW0qvhL0c"
+				"password": ""
 			}
 		},
 		"pool": {
@@ -103,11 +103,11 @@
 		},
 		"Razorpay": {
 			"key_id": "rzp_test_I41VoSmePWbGQU",
-			"key_secret": "7VaiVPaoK7oeK50U5FT8Am0C"
+			"key_secret": ""
 		},
 		"GoogleCred": {
-			"clientId": "534249686762-ldp1pr9p96tunridkv6lgqveic8p8r9k.apps.googleusercontent.com",
-			"googleClientSecret": "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",
+			"clientId": "",
+			"googleClientSecret": "",
 			"callBackURL": "https://telemedicine-services.onrender.com/whatsapp-payment/google-redirect"
 		}
 	}
