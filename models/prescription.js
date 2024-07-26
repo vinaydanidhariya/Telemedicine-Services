@@ -83,7 +83,7 @@ module.exports = (sequelize, DataTypes) => {
             timestamps: true,
             modelName: "Prescription",
             tableName: "prescription",
-            schema: Config.schema,
+            schema: process.env.SCHEMA,
             freezeTableName: true,
             hasTrigger: true,
             indexes: [

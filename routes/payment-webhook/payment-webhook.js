@@ -3,7 +3,6 @@ var router = express.Router();
 let Razorpay = require("razorpay");
 var crypto = require("crypto");
 const moment = require("moment");
-const Config = require("../../config/config.json")[process.env.NODE_ENV];
 const db = require("../../models");
 const { uuid } = require('uuidv4');
 const { exec } = require('child_process');
@@ -23,8 +22,8 @@ var fs = require('fs'),
 const transporter = nodeMailer.createTransport({
 	service: "Gmail",
 	auth: {
-		user: Config.nodemailer.auth.user,
-		pass: Config.nodemailer.auth.pass,
+		user: process.env.NODEMAILER_USER,
+		pass: process.env.NODEMAILER_PASS,
 	},
 });
 router.post("/create-payment", async function (req, res, next) {
@@ -43,8 +42,8 @@ router.post("/create-payment", async function (req, res, next) {
 		let { userId, fullName, price, email, phone, selectedDoctor } = req.body;
 
 		var instance = new Razorpay({
-			key_id: Config.Razorpay.key_id,
-			key_secret: Config.Razorpay.key_secret,
+			key_id: process.env.RAZORPAY_KEY_ID,
+			key_secret: process.env.RAZORPAY_KEY_SECRET,
 		});
 
 		let newPrice = Number(price) * 100;
@@ -236,12 +235,12 @@ router.post("/payment-callback1", async function (req, res, next) {
 					const settings = await db.Setting.findOne();
 					try {
 						const meetOptions = {
-							clientId: Config.GoogleCred.clientId,
+							clientId: process.env.GOOGLE_CLIENT_ID,
 							refreshToken: settings.refreshToken,
 							date: meetFormattedDate,
 							startTime: slotsStart,
 							endTime: slotsEnd,
-							clientSecret: Config.GoogleCred.googleClientSecret,
+							clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 							summary: "KidsDoc-Online doctor consultation!",
 							location: "Virtual venue",
 							description: "Online consultation with your doctor",
@@ -303,7 +302,7 @@ router.post("/payment-callback1", async function (req, res, next) {
 							`Hello Doctor, You have new appointment at ${meetFormattedDate} from ${userInfo.appointmentTime} with ${userInfo.fullName}, Link to join ${result.link}`
 						);
 						const mailOptions = {
-							from: Config.nodemailer.auth.user,
+							from: process.env.NODEMAILER_USER,
 							to: [userInfo.email, doctorInfo.email],
 							subject: "Online Consultation Booked",
 							text: `Hello, You have appointment at ${meetFormattedDate} Time: ${userInfo.appointmentTime} with ${userInfo.fullName}. Link to join ${result.link}`,
@@ -789,9 +788,9 @@ router.get("/", async function (req, res, next) {
 
 // Set up OAuth 2.0 client
 const oauth2Client = new google.auth.OAuth2(
-	Config.GoogleCred.clientId,
-	Config.GoogleCred.googleClientSecret,
-	Config.GoogleCred.callBackURL
+	process.env.GOOGLE_CLIENT_ID,
+	process.env.GOOGLE_CLIENT_SECRET,
+	process.env.GOOGLE_CALLBACK_URL
 );
 
 router.get("/oauth2callback", async (req, res) => {

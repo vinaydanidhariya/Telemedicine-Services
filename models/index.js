@@ -1,8 +1,5 @@
 // import path from 'path';
 const { Sequelize, DataTypes, QueryInterface } = require('sequelize');
-
-const Config = require('../config/config.json')[process.env.NODE_ENV];
-
 // const db = {};
 let sequelize;
 
@@ -13,13 +10,46 @@ class db {
     }
 
     try {
-      sequelize = new Sequelize(Config.database, Config.replication.read.username, Config.replication.read.password, Config, {
-        logging: console.log,
-        logging: function (str) {
-          console.log(str);
-          // do your own logging
-        }
-      });
+      console.log(`${process.env.DATABASE}`,`${process.env.DATABASE_USERNAME}`, `${process.env.REPLICATION_READ_PASSWORD}`)
+      sequelize = new Sequelize(
+        `${process.env.DATABASE}`,`${process.env.DATABASE_USERNAME}`, `${process.env.REPLICATION_READ_PASSWORD}`,
+        {
+          host: process.env.REPLICATION_READ_HOST,
+          logging: true,
+          dialect: 'postgres',
+          dialectOptions: {
+            "ssl": {
+              "require": true,
+              "rejectUnauthorized": false
+            }
+          },
+          replication: {
+            read: [
+              {
+                host: `${process.env.REPLICATION_READ_HOST}`,
+                username: `${process.env.USERNAME}`,
+                password: `${process.env.REPLICATION_READ_PASSWORD}`
+              }
+            ],
+            write: {
+              host: `${process.env.REPLICATION_READ_HOST}`,
+              username: `${process.env.USERNAME}`,
+              password: `${process.env.REPLICATION_READ_PASSWORD}`
+            }
+          },
+          pool: {
+            "max": 15,
+            "min": 0,
+            "idle": 10000
+          },
+        },
+        {
+          logging: console.log,
+          logging: function (str) {
+            console.log(str);
+            // do your own logging
+          }
+        });
     } catch (error) {
       console.log(error);
       throw 'Error while connecting database';
@@ -50,14 +80,14 @@ class db {
     db.webSlider.associate(db);
     db.Prescription.associate(db);
 
-    // sequelize.sync({
-    // }).then(() => {
-    //   console.log('Database & tables created!');
-    // }, error => {
-    //   console.error('Error while syncing database');
-    //   console.error(error);
-    //   throw new Error('Error while syncing database');
-    // });
+    sequelize.sync({
+    }).then(() => {
+      console.log('Database & tables created!');
+    }, error => {
+      console.error('Error while syncing database');
+      console.error(error);
+      throw new Error('Error while syncing database');
+    });
 
     db.sequelize = sequelize;
     db.Sequelize = Sequelize;

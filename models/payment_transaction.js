@@ -72,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: true,
         modelName: 'PaymentTransaction',
         tableName: 'payment_transaction',
-        schema: Config.schema,
+        schema: process.env.SCHEMA,
         freezeTableName: true,
         hasTrigger: true,
         indexes: [

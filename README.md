@@ -32,3 +32,7 @@ Patients can book appointments online and consult with doctors in emergencies th
 https://github.com/user-attachments/assets/e909dd20-5408-438a-9909-c2348459802c
 
 ---
+
+
+npm run start:dev   # For development
+npm run start:prod  # For production

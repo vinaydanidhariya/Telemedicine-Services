@@ -131,3 +131,13 @@ out
 
 # notes
 *.md
+
+# .gitignore
+.env.development
+.env.production
+.env.testing
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault

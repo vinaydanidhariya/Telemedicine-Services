@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
       modelName: "webSlider",
       tableName: "web_slider",
-      schema: Config.schema,
+      schema: process.env.SCHEMA,
       freezeTableName: true,
       hasTrigger: true,
       indexes: [

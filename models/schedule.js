@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
 			timestamps: true,
 			modelName: "Schedule",
 			tableName: "schedule",
-			schema: Config.schema,
+			schema: process.env.SCHEMA,
 			freezeTableName: true,
 			hasTrigger: true,
 			indexes: [

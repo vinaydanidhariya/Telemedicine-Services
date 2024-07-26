@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
+    "start:dev": "node app.js",
+    "start:prod": "NODE_ENV=production node app.js",
     "nodemon": "nodemon -e js,hbs, etc extensions"
   },
   "engines": {
@@ -17,7 +19,7 @@
     "crypto": "^1.0.1",
     "crypto-js": "^4.1.1",
     "debug": "~2.6.9",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.4.5",
     "express": "~4.16.1",
     "express-handlebars": "^7.0.7",
     "express-rate-limit": "^6.9.0",

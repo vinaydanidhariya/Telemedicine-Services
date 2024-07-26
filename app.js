@@ -3,7 +3,15 @@ const express = require("express");
 const logger = require('morgan');
 const path = require("path");
 const cors = require('cors');
-require('dotenv').config();
+const dotenv = require('dotenv')
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
+const envFile =`.env.${process.env.NODE_ENV}`
+dotenv.config({
+  path: envFile,
+});
+
+console.log(`Running in ${process.env.NODE_ENV} mode ${envFile}`);
 const cookieParser = require("cookie-parser");
 global.checkAccess = require("./middleware/authorization").checkAccess;
 const indexRouter = require("./routes/index");
