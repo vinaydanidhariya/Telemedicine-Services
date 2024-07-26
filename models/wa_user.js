@@ -1,6 +1,6 @@
 "use strict";
 const { Sequelize, DataTypes, Model } = require("sequelize");
-const Config = require("../config/config.json")[process.env.NODE_ENV];
+
 
 module.exports = (sequelize, DataTypes) => {
   class WhatsappUser extends Model {

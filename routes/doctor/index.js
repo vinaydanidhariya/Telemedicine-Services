@@ -13,7 +13,6 @@ const util = require("util");
 const readFileAsync = util.promisify(fs.readFile);
 const request = require("request");
 const { validateMediaSize, mediaLimits } = require("../../helpers/validations"); // Make sure to adjust the path accordingly
-const Config = require("../../config/config.json")[process.env.NODE_ENV];
 const myNumberId = process.env.PHONE_NUMBER_ID;
 
 router.get(
@@ -278,8 +277,8 @@ async function sendEmail(pdfBuffer, userInfo) {
 		const transporter = nodemailer.createTransport({
 			service: "Gmail",
 			auth: {
-				user: Config.nodemailer.auth.user,
-				pass: Config.nodemailer.auth.pass,
+				user: process.env.NODEMAILER_USER,
+				pass: process.env.NODEMAILER_PASS,
 			},
 		});
 
@@ -301,7 +300,7 @@ async function sendEmail(pdfBuffer, userInfo) {
 			.replace(/\[Your Dynamic Message Here\]/g, dynamicMessage);
 
 		const mailOptions = {
-			from: `KidsDoc <${Config.nodemailer.auth.user}>`,
+			from: `KidsDoc <${process.env.NODEMAILER_USER}>`,
 			to: userInfo.patientEmail,
 			subject: subject,
 			html: filledTemplate,

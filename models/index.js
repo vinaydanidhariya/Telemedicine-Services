@@ -2,46 +2,46 @@
 const { Sequelize, DataTypes, QueryInterface } = require('sequelize');
 // const db = {};
 let sequelize;
-
 class db {
   constructor() {
     if (Object.keys(db) && Object.keys(db).length) {
       return db;
     }
-
     try {
-      console.log(`${process.env.DATABASE}`,`${process.env.DATABASE_USERNAME}`, `${process.env.REPLICATION_READ_PASSWORD}`)
       sequelize = new Sequelize(
-        `${process.env.DATABASE}`,`${process.env.DATABASE_USERNAME}`, `${process.env.REPLICATION_READ_PASSWORD}`,
+        process.env.DATABASE, process.env.DATABASE_USERNAME, process.env.REPLICATION_READ_PASSWORD,
         {
-          host: process.env.REPLICATION_READ_HOST,
-          logging: true,
-          dialect: 'postgres',
-          dialectOptions: {
+          "database": process.env.DATABASE,
+          "username": process.env.DATABASE_USERNAME,
+          "schema": process.env.DATABASE_SCHEMA,
+          "dialect": process.env.DATABASE_DIALECT,
+          "logging": true,
+          "dialectOptions": {
             "ssl": {
               "require": true,
               "rejectUnauthorized": false
             }
           },
-          replication: {
-            read: [
+          "port": 5432,
+          "replication": {
+            "read": [
               {
-                host: `${process.env.REPLICATION_READ_HOST}`,
-                username: `${process.env.USERNAME}`,
-                password: `${process.env.REPLICATION_READ_PASSWORD}`
+                "host": process.env.REPLICATION_READ_HOST,
+                "username": process.env.DATABASE_USERNAME,
+                "password": process.env.REPLICATION_READ_PASSWORD
               }
             ],
-            write: {
-              host: `${process.env.REPLICATION_READ_HOST}`,
-              username: `${process.env.USERNAME}`,
-              password: `${process.env.REPLICATION_READ_PASSWORD}`
+            "write": {
+              "host": process.env.REPLICATION_WRITE_HOST,
+              "username": process.env.DATABASE_USERNAME,
+              "password": process.env.REPLICATION_WRITE_PASSWORD
             }
           },
-          pool: {
-            "max": 15,
-            "min": 0,
-            "idle": 10000
-          },
+          "pool": {
+            "max": parseInt(process.env.POOL_MAX),
+            "min": parseInt(process.env.POOL_MIN),
+            "idle": parseInt(process.env.POOL_IDLE)
+          }
         },
         {
           logging: console.log,

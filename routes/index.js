@@ -1,5 +1,4 @@
 "use strict";
-const Config = require("../config/config.json")[process.env.NODE_ENV];
 const { sendApiResponse, convertToMd5 } = require("../utils/helper");
 const nodeMailer = require("nodemailer");
 const { v4: uuidv4 } = require("uuid");
@@ -55,8 +54,8 @@ router.post("/forgot-password", async (req, res) => {
 	const transporter = nodeMailer.createTransport({
 		service: "Gmail",
 		auth: {
-			user: Config.nodemailer.auth.user,
-			pass: Config.nodemailer.auth.pass,
+			user: process.env.NODEMAILER_USER,
+			pass: process.env.NODEMAILER_PASS,
 		},
 	});
 
@@ -91,10 +90,10 @@ router.post("/forgot-password", async (req, res) => {
 
 			// Send password reset email
 			const mailOptions = {
-				from: Config.nodemailer.auth.user,
+				from: process.env.NODEMAILER_USER,
 				to: email,
 				subject: "Password Reset Request",
-				text: `Click the link to reset your password: ${Config.serverUrl}/reset-password/${resetToken}`,
+				text: `Click the link to reset your password: ${process.env.SERVER_URL}/reset-password/${resetToken}`,
 			};
 
 			await transporter.sendMail(mailOptions);

@@ -5,7 +5,7 @@ const appSecret = process.env.APP_SECRET;
 const apiVersion = process.env.VERSION;
 const recipientNumber = process.env.RECIPIENT_PHONE_NUMBER;
 const myNumberId = process.env.PHONE_NUMBER_ID;
-const Config = require("../config/config.json")[process.env.NODE_ENV];
+
 const Sequelize = require("sequelize");
 const moment = require("moment");
 const { Op } = require("sequelize");

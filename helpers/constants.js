@@ -1,13 +1,11 @@
-const properties = require("../config/config.json");
-
 const Constants = {
     PROJECT: {
-        NAME: "SHREEHARICLINIC",
+        NAME: "TeleMedicinService",
     },
     STATE: {
         ALL: "All",
     },
-    CURRENT_SCHEMA: properties[process.env.NODE_ENV].schema,
+    CURRENT_SCHEMA: process.env.DATABASE_SCHEMA,
     DEFAULT_PORTAL_ID: 1,
     CACHING_PERIOD: "1 hour",
     TOKEN_EXPIRE_DAYS: "30d",

@@ -4,6 +4,17 @@ const logger = require('morgan');
 const path = require("path");
 const cors = require('cors');
 const dotenv = require('dotenv')
+// i want to run the app in development mode by default
+// can you give script and package.json file command to run the app in production mode
+
+
+
+
+
+
+
+
+
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 const envFile =`.env.${process.env.NODE_ENV}`
@@ -39,7 +50,7 @@ const config = require('./config/config.js')
 // const OnboardingRouter = require('./modules/onboarding/onboarding-route');
 
 const app = express();
-const debug = require("debug")("shreehariclinic:server");
+const debug = require("debug")("TeleMedicinService:server");
 const http = require("http");
 const port = normalizePort(process.env.PORT || "3000");
 let expressHandlebar = require('express-handlebars');

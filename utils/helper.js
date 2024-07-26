@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const db = require("../models/");
 const nodemailer = require("nodemailer");
-const Config = require("../config/config.json")[process.env.NODE_ENV];
+
 const path = require("path");
 const fs = require("fs/promises");
 function convertToMd5(password) {
