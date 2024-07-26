@@ -1,8 +1,9 @@
 
 # Telemedicine-Service
 
-Node.js Monolithic Application for WhatsApp chatbot and admin panel for two users.
+- Node.js Monolithic Application for WhatsApp chatbot and admin panel for two users.
 
+- Telemedicine Services project. Today, we will show you how patients can easily book appointments and consult with doctors during emergencies using our WhatsApp Chatbot.
 **Online Appointment Booking and Emergency Consultation Chatbot**
 
 Patients can book appointments online and consult with doctors in emergencies through a WhatsApp Chatbot.
