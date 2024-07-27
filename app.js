@@ -7,14 +7,6 @@ const dotenv = require('dotenv')
 // i want to run the app in development mode by default
 // can you give script and package.json file command to run the app in production mode
 
-
-
-
-
-
-
-
-
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 const envFile =`.env.${process.env.NODE_ENV}`
@@ -52,7 +44,7 @@ const config = require('./config/config.js')
 const app = express();
 const debug = require("debug")("TeleMedicinService:server");
 const http = require("http");
-const port = normalizePort(process.env.PORT || "3000");
+const port = normalizePort(process.env.SERVER_PORT || "3000");
 let expressHandlebar = require('express-handlebars');
 app.set("port", port);
 const server = http.createServer(app);

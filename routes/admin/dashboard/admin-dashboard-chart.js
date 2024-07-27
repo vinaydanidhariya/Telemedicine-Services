@@ -110,7 +110,9 @@ router.get("/month-revenue", authentication, checkAccess('chart/doctor'), async 
 			monthTotalPaymentAmount: `₹ ${totalTransactionAmount}`,
 			dayArrayForMonth,
 			currentMonth: currentUtcDate.format('MM-YYYY'),
-			totalRevenue: `₹ ${totalRevenue}`,
+
+			totalRevenue: `₹ ${todayRevenueResult}`,
+
 		};
 
 		console.log(response);
@@ -153,7 +155,6 @@ router.get("/annual-revenue", authentication, checkAccess('chart/doctor'), async
 			raw: true,
 		});
 
-		console.log(results);
 
 		// Create an array of months in MM/YYYY format for the x-axis labels
 		const monthYearLabels = moment.months().map((month, index) => `${index + 1}/${currentUtcDate.year()}`);
@@ -167,20 +168,24 @@ router.get("/annual-revenue", authentication, checkAccess('chart/doctor'), async
 			const monthIndex = parseInt(month) - 1; // Adjust for 0-based index
 			transactionCounts[monthIndex] = parseInt(result.transaction_count);
 		});
+		let totalRevenue= await db.PaymentTransaction.sum('payment_amount', {
+			where: {
+				// receiverUserId: req.user.userId,
+			},
+		})
+		if (totalRevenue === null) {
+			totalRevenue = 0;
+		}
 
 		const response = {
 			monthYearLabels,
 			transactionCounts,
 			yearTotalPaymentAmount: results.reduce((total, oneMonth) => total + parseFloat(oneMonth.month_paymentAmount), 0),
 			currentYear: currentUtcDate.year(),
-			totalRevenue: await db.PaymentTransaction.sum('payment_amount', {
-				where: {
-					// receiverUserId: req.user.userId,
-				},
-			}),
+			totalRevenue: `₹ ${totalRevenue}`,
 		};
 
-		console.log(response);
+		console.log(response+ "annual revenue-----------------------------------------");
 		res.json(response);
 	} catch (error) {
 		console.error(error);

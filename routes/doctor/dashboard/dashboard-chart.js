@@ -93,6 +93,9 @@ router.get("/month-revenue", authentication, checkAccess('chart/doctor'), async 
 				receiverUserId: req.user.userId
 			},
 		});
+		if (totalRevenue==null) {
+			totalRevenue = 0;
+		}
 
 		const today = moment.utc().startOf('day'); // Set the time to the beginning of the day
 
@@ -172,17 +175,20 @@ router.get("/annual-revenue", authentication, checkAccess('chart/doctor'), async
 			const monthIndex = parseInt(month) - 1; // Adjust for 0-based index
 			transactionCounts[monthIndex] = parseInt(result.transaction_count);
 		});
-
+		let totalRevenue= await db.PaymentTransaction.sum('payment_amount', {
+			where: {
+				receiverUserId: req.user.userId,
+			}	
+		})
+		if(!totalRevenue){
+			totalRevenue=0;
+		}
 		const response = {
 			monthYearLabels,
 			transactionCounts,
 			yearTotalPaymentAmount: results.reduce((total, oneMonth) => total + parseFloat(oneMonth.month_paymentAmount), 0),
 			currentYear: currentUtcDate.year(),
-			totalRevenue: await db.PaymentTransaction.sum('payment_amount', {
-				where: {
-					receiverUserId: req.user.userId,
-				},
-			}),
+			totalRevenue
 		};
 
 		console.log(response);
