@@ -88,7 +88,7 @@ router.get("/month-revenue", authentication, checkAccess('chart/doctor'), async 
 
 		const totalTransactionAmount = results.reduce((total, oneDay) => total + parseFloat(oneDay.day_paymentAmount), 0);
 
-		const totalRevenue = await db.PaymentTransaction.sum('payment_amount', {
+		let totalRevenue = await db.PaymentTransaction.sum('payment_amount', {
 			where: {
 				receiverUserId: req.user.userId
 			},
