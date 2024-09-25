@@ -1,5 +1,9 @@
 
 # Telemedicine-Service
+FrontEnd Website 
+https://vinaydanidhariya.github.io/CHILD_DR-FrontEnd/
+Admin Panel
+https://telemedicine-services.onrender.com/admin
 
 - Node.js Monolithic Application for WhatsApp chatbot and admin panel for two users.
 
@@ -35,5 +39,14 @@ https://github.com/user-attachments/assets/e909dd20-5408-438a-9909-c2348459802c
 ---
 
 
-npm run start:dev   # For development
-npm run start:prod  # For production
+## For development
+npm run start:dev  
+## For production
+npm run start:prod 
+
+
+
+
+Admin Dashboard
+![Screenshot 2024-07-27 163216](https://github.com/user-attachments/assets/bc310405-3025-4003-871b-176bbfb3bef9)
+

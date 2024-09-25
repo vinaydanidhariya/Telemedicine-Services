@@ -86,7 +86,7 @@ router.get("/month-revenue", authentication, checkAccess('chart/doctor'), async 
 
 		const totalTransactionAmount = results.reduce((total, oneDay) => total + parseFloat(oneDay.day_paymentAmount), 0);
 
-		const totalRevenue = await db.PaymentTransaction.sum('payment_amount', {
+		let totalRevenue = await db.PaymentTransaction.sum('payment_amount', {
 		});
 
 		const today = moment.utc().startOf('day'); // Set the time to the beginning of the day
@@ -110,8 +110,7 @@ router.get("/month-revenue", authentication, checkAccess('chart/doctor'), async 
 			monthTotalPaymentAmount: `₹ ${totalTransactionAmount}`,
 			dayArrayForMonth,
 			currentMonth: currentUtcDate.format('MM-YYYY'),
-
-			totalRevenue: `₹ ${todayRevenueResult}`,
+			totalRevenue: `₹ ${totalRevenue}`,
 
 		};
 
