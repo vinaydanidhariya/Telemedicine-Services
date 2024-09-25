@@ -49,7 +49,7 @@ module.exports = {
 	},
 	validateApiKey: function (req, res, next) {
 		const api_key = req.headers['x-api-key'];
-		if (api_key === Config['x-api-key']) {
+		if (api_key === process.env.X_API_KEY) {
 			next();
 		} else {
 			Logger.error({ message: Message.INVALID_KEY });

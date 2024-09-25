@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node app.js",
     "start:dev": "node app.js",
+    "start:local": "NODE_ENV=local node app.js",
     "start:prod": "NODE_ENV=production node app.js",
     "nodemon": "nodemon -e js,hbs, etc extensions"
   },

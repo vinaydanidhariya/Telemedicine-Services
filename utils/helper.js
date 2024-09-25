@@ -55,8 +55,8 @@ async function sendOTPEmail(email, otp, userName) {
 		const transporter = nodemailer.createTransport({
 			service: "Gmail",
 			auth: {
-				user: Config.nodemailer.auth.user,
-				pass: Config.nodemailer.auth.pass,
+				user: process.env.NODEMAILER_USER,
+				pass: process.env.NODEMAILER_PASS,
 			},
 		});
 
@@ -66,7 +66,7 @@ async function sendOTPEmail(email, otp, userName) {
 		const filledTemplate = template.replace(/\[DoctorName\]/g, userName).replace(/\[OTPSTRING\]/g, otp);
 
 		const mailOptions = {
-			from: `KidsDoc Dr <${Config.nodemailer.auth.user}>`,
+			from: `KidsDoc Dr <${process.env.NODEMAILER_USER}>`,
 			to: email,
 			subject: "OTP",
 			html: filledTemplate,

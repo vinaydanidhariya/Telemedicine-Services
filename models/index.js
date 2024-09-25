@@ -80,15 +80,17 @@ class db {
     db.webSlider.associate(db);
     db.Prescription.associate(db);
 
-    // sequelize.sync({
-    // }).then(() => {
-    //   console.log('Database & tables created!');
-    // }, error => {
-    //   console.error('Error while syncing database');
-    //   console.error(error);
-    //   throw new Error('Error while syncing database');
-    // });
+    if(sequelize.schema) {
+      sequelize.sync({
+      }).then(() => {
+        console.log('Database & tables created!');
+      }, error => {
+        console.error('Error while syncing database');
+        console.error(error);
+        throw new Error('Error while syncing database');
+      });
 
+    }
     db.sequelize = sequelize;
     db.Sequelize = Sequelize;
     return db;
